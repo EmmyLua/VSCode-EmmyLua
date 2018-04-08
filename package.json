@@ -1,0 +1,71 @@
+{
+    "name": "emmylua",
+    "displayName": "emmylua",
+    "description": "EmmyLua plugin for vscode",
+    "version": "0.0.1",
+    "publisher": "tangzx",
+    "engines": {
+        "vscode": "^1.21.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:EmmyLua"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "commands": [],
+        "languages": [
+            {
+                "id": "EmmyLua",
+                "extensions": [
+                    ".lua"
+                ],
+                "aliases": [
+                    "Lua"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "EmmyLua",
+                "scopeName": "source.lua",
+                "path": "./syntaxes/lua.tmLanguage.json"
+            }
+        ],
+        "configuration": {
+            "title": "EmmyLua",
+            "properties": {
+                
+            }
+        },
+        "configurationDefaults": {
+            "[EmmyLua]": {
+                "editor.quickSuggestions": {
+                    "other": true,
+                    "comments": true,
+                    "strings": false
+                }
+            }
+        },
+        "colors": [
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "vscode-languageclient": "^3.3.0",
+        "tslint": "^5.8.0",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    }
+}

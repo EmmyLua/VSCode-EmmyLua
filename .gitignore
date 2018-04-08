@@ -1,0 +1,9 @@
+out
+node_modules
+.vscode-test
+*.vsix
+
+*.iml
+.gradle
+.idea
+build
