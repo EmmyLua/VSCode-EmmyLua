@@ -36,7 +36,13 @@ export function deactivate() {
 
 function startClient() {
     let clientOptions: LanguageClientOptions = {
-        documentSelector: [ { scheme: 'file', language: 'EmmyLua' } ]
+        documentSelector: [ { scheme: 'file', language: 'EmmyLua' } ],
+        synchronize: {
+            configurationSection: 'EmmyLua',
+            fileEvents: [
+                vscode.workspace.createFileSystemWatcher("**/*.lua")
+            ]
+        }
     };
 
     // The server is a started as a separate app and listens on port 5007
@@ -74,4 +80,11 @@ function startClient() {
     });
     let disposable = client.start();
     savedContext.subscriptions.push(disposable);
+    
+    vscode.languages.setLanguageConfiguration("EmmyLua", {
+        indentationRules: {
+            increaseIndentPattern: /do|else|then|repeat/,
+            decreaseIndentPattern: /end|else|elseif|until/,
+        }
+    });
 }
