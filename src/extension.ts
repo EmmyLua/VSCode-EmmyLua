@@ -42,6 +42,10 @@ function startClient() {
             fileEvents: [
                 vscode.workspace.createFileSystemWatcher("**/*.lua")
             ]
+        },
+        initializationOptions: {
+            stdFolder: vscode.Uri.file(path.resolve(savedContext.extensionPath, "res/std")).toString(),
+            workspaceFolders: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.map(f => f.uri.toString()) : null,
         }
     };
 
@@ -56,7 +60,7 @@ function startClient() {
             writer: socket,
             reader: socket as NodeJS.ReadableStream
         };
-        socket.on("close", ()=>{
+        socket.on("close", () => {
             console.log("client connect error!");
         });
         return Promise.resolve(result);
