@@ -7,17 +7,21 @@ import * as net from "net";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
 import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
+import findJava from "./findJava";
 
 var savedContext: vscode.ExtensionContext;
 var client: LanguageClient;
 var activeEditor: vscode.TextEditor;
 var progressBar: vscode.StatusBarItem;
+var javaExecutablePath: string;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
     savedContext = context;
     progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     startClient();
+
+    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
 
     vscode.window.onDidChangeActiveTextEditor(editor => {
         activeEditor = editor as vscode.TextEditor;
@@ -35,6 +39,13 @@ export function activate(context: vscode.ExtensionContext) {
 // this method is called when your extension is deactivated
 export function deactivate() {
     stopServer();
+}
+
+function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
+    let newJavaExecutablePath = findJava();
+    if (newJavaExecutablePath !== javaExecutablePath) {
+        console.log(newJavaExecutablePath);
+    }
 }
 
 function startClient() {

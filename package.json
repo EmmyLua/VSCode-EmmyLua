@@ -46,7 +46,13 @@
         ],
         "configuration": {
             "title": "EmmyLua",
-            "properties": {}
+            "properties": {
+                "emmylua.java.home": {
+                    "type":["string", "null"],
+                    "default": null,
+                    "description": "Specifies the path to the java home"
+                }
+            }
         },
         "configurationDefaults": {
             "[EmmyLua]": {
