@@ -4,9 +4,7 @@
 import * as vscode from 'vscode';
 import * as path from "path";
 import * as net from "net";
-import {LanguageClient, LanguageClientOptions, SettingMonitor,
-	ServerOptions, StreamInfo, ErrorHandler, ErrorAction,
-    CloseAction, Executable, ExecutableOptions, NotificationType} from "vscode-languageclient";
+import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
 import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
 

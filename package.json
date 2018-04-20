@@ -13,6 +13,10 @@
     "activationEvents": [
         "onLanguage:EmmyLua"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/EmmyLua/VSCode-EmmyLua"
+    },
     "main": "./out/extension",
     "contributes": {
         "commands": [
