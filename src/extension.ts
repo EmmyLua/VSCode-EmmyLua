@@ -72,6 +72,7 @@ function startClient() {
     //     command: "java",
     //     args: ["-cp", cp, "org.emmylua.vscode.MainKt"]
     // };
+    let progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 
     client = new LanguageClient("EmmyLua", "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     client.onReady().then(() => {
@@ -82,7 +83,13 @@ function startClient() {
             }
         });
         client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
-            console.log("---->>>" + d.text);
+            progressBar.show();
+            progressBar.text = d.text;
+            if (d.percent >= 1) {
+                setTimeout(() => {
+                    progressBar.hide();
+                }, 3000);
+            }
         });
     });
     let disposable = client.start();

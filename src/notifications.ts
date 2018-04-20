@@ -10,5 +10,6 @@ export interface IAnnotator {
 }
 
 export interface IProgressReport {
-    text: String;
+    text: string;
+    percent: number;
 }
