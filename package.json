@@ -1,6 +1,6 @@
 {
     "name": "emmylua",
-    "displayName": "emmylua",
+    "displayName": "EmmyLua",
     "description": "EmmyLua plugin for vscode",
     "version": "0.0.1",
     "publisher": "tangzx",
@@ -8,7 +8,8 @@
         "vscode": "^1.21.0"
     },
     "categories": [
-        "Other"
+        "Languages",
+        "Debuggers"
     ],
     "activationEvents": [
         "onLanguage:EmmyLua"
@@ -16,6 +17,9 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/EmmyLua/VSCode-EmmyLua"
+    },
+    "bugs": {
+        "url": "https://github.com/EmmyLua/VSCode-EmmyLua/issues"
     },
     "main": "./out/extension",
     "contributes": {
