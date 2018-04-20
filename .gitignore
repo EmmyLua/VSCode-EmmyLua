@@ -7,3 +7,5 @@ node_modules
 .gradle
 .idea
 build
+server
+/package-lock.json
