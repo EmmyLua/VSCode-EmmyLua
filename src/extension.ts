@@ -34,6 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+    stopServer();
 }
 
 function startClient() {
@@ -71,7 +72,7 @@ function startClient() {
             return Promise.resolve(result);
         };
     } else {
-        let cp = path.resolve(savedContext.extensionPath, "../EmmyLua-LanguageServer/EmmyLua-PSI/build/libs", "*");
+        let cp = path.resolve(savedContext.extensionPath, "res/jar", "*");
         serverOptions = {
             command: "java",
             args: ["-cp", cp, "com.tang.vscode.vscode.MainKt"]
@@ -114,5 +115,11 @@ function restartServer() {
         client.stop().then(() => {
             startClient();
         });
+    }
+}
+
+function stopServer() {
+    if (client) {
+        client.stop();
     }
 }
