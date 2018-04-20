@@ -76,10 +76,13 @@ function startClient() {
     client = new LanguageClient("EmmyLua", "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     client.onReady().then(() => {
         console.log("client ready");
-        client.onNotification(new NotificationType<notifications.IAnnotator, void>("annotator"), (data) => {
+        client.onNotification("emmy/annotator", (data: notifications.IAnnotator) => {
             if (activeEditor) {
                 Annotator.updateAnnotators(activeEditor, [data]);
             }
+        });
+        client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
+            console.log("---->>>" + d.text);
         });
     });
     let disposable = client.start();

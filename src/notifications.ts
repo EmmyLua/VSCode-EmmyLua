@@ -8,3 +8,7 @@ export interface IAnnotator {
     ranges: vscode.Range[];
     type: AnnotatorType;
 }
+
+export interface IProgressReport {
+    text: String;
+}
