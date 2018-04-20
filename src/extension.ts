@@ -13,10 +13,12 @@ import * as notifications from "./notifications";
 var savedContext: vscode.ExtensionContext;
 var client: LanguageClient;
 var activeEditor: vscode.TextEditor;
+var progressBar: vscode.StatusBarItem;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
     savedContext = context;
+    progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     startClient();
 
     vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -28,6 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
     //         Annotator.updateDecorations(activeEditor);
     //     }
     // }, null, savedContext.subscriptions);
+
+    vscode.commands.registerCommand("emmy.restartServer", restartServer);
 }
 
 // this method is called when your extension is deactivated
@@ -49,31 +53,33 @@ function startClient() {
         }
     };
 
-    // The server is a started as a separate app and listens on port 5007
-    let connectionInfo = {
-        port: 5007
-    };
-    let serverOptions: ServerOptions = () => {
-        // Connect to language server via socket
-        let socket = net.connect(connectionInfo);
-        let result: StreamInfo = {
-            writer: socket,
-            reader: socket as NodeJS.ReadableStream
+    let socketMode = false;
+    var serverOptions: ServerOptions;
+    if (socketMode) {
+        // The server is a started as a separate app and listens on port 5007
+        let connectionInfo = {
+            port: 5007
         };
-        socket.on("close", () => {
-            console.log("client connect error!");
-        });
-        return Promise.resolve(result);
-    };
-
-    // let cp = path.resolve(savedContext.extensionPath, "../language-server/build/libs", "language-server.jar");
-
-    // let exec: Executable = {
-    //     command: "java",
-    //     args: ["-cp", cp, "org.emmylua.vscode.MainKt"]
-    // };
-    let progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-
+        serverOptions = () => {
+            // Connect to language server via socket
+            let socket = net.connect(connectionInfo);
+            let result: StreamInfo = {
+                writer: socket,
+                reader: socket as NodeJS.ReadableStream
+            };
+            socket.on("close", () => {
+                console.log("client connect error!");
+            });
+            return Promise.resolve(result);
+        };
+    } else {
+        let cp = path.resolve(savedContext.extensionPath, "../EmmyLua-LanguageServer/EmmyLua-PSI/build/libs", "*");
+        serverOptions = {
+            command: "java",
+            args: ["-cp", cp, "com.tang.vscode.vscode.MainKt"]
+        };
+    }
+    
     client = new LanguageClient("EmmyLua", "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     client.onReady().then(() => {
         console.log("client ready");
@@ -101,4 +107,14 @@ function startClient() {
             decreaseIndentPattern: /end|else|elseif|until/,
         }
     });
+}
+
+function restartServer() {
+    if (!client) {
+        startClient();
+    } else {
+        client.stop().then(() => {
+            startClient();
+        });
+    }
 }

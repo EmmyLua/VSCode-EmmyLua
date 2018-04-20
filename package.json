@@ -15,7 +15,12 @@
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [],
+        "commands": [
+            {
+                "command": "emmy.restartServer",
+                "title": "EmmyLua: Restart Lua Server"
+            }
+        ],
         "languages": [
             {
                 "id": "EmmyLua",
