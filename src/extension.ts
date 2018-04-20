@@ -72,7 +72,7 @@ function startClient() {
             return Promise.resolve(result);
         };
     } else {
-        let cp = path.resolve(savedContext.extensionPath, "res/jar", "*");
+        let cp = path.resolve(savedContext.extensionPath, "server", "*");
         serverOptions = {
             command: "java",
             args: ["-cp", cp, "com.tang.vscode.vscode.MainKt"]
