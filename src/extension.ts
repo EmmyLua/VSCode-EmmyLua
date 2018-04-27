@@ -86,7 +86,7 @@ function startClient() {
         let cp = path.resolve(savedContext.extensionPath, "server", "*");
         serverOptions = {
             command: "java",
-            args: ["-cp", cp, "com.tang.vscode.vscode.MainKt"]
+            args: ["-cp", cp, "com.tang.vscode.MainKt"]
         };
     }
     
