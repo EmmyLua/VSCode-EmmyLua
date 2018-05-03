@@ -114,7 +114,7 @@ function startClient() {
     
     vscode.languages.setLanguageConfiguration("EmmyLua", {
         indentationRules: {
-            increaseIndentPattern: /do|else|then|repeat/,
+            increaseIndentPattern: /do|else|then|repeat|function[^\)]+\)/,
             decreaseIndentPattern: /end|else|elseif|until/,
         }
     });
