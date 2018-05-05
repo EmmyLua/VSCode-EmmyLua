@@ -34,6 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
     // }, null, savedContext.subscriptions);
 
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
+    vscode.commands.registerCommand("emmy.showReferences", showReferences);
 }
 
 // this method is called when your extension is deactivated
@@ -113,7 +114,7 @@ function startClient() {
     
     vscode.languages.setLanguageConfiguration("EmmyLua", {
         indentationRules: {
-            increaseIndentPattern: /do|else|then|repeat/,
+            increaseIndentPattern: /do|else|then|repeat|function[^\)]+\)/,
             decreaseIndentPattern: /end|else|elseif|until/,
         }
     });
@@ -127,6 +128,14 @@ function restartServer() {
             startClient();
         });
     }
+}
+
+function showReferences(uri: string, pos: vscode.Position) {
+    let u = vscode.Uri.parse(uri);
+    let p = new vscode.Position(pos.line, pos.character);
+    vscode.commands.executeCommand("vscode.executeReferenceProvider", u, p).then(locations => {
+        vscode.commands.executeCommand("editor.action.showReferences", u, p, locations);
+    });
 }
 
 function stopServer() {
