@@ -182,7 +182,7 @@
 					"name": "comment.line.double-dash.lua",
 					"patterns": [
 						{
-							"match": "(@\\w+)",
+							"match": "-+(@\\w+)",
 							"captures": {
 								"1": {
 									"name": "keyword.other.documentation.lua"
