@@ -37,7 +37,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
     if (activeEditor) {
-        Annotator.requestAnnotators(activeEditor, client);
+        setTimeout(() => {
+            Annotator.requestAnnotators(activeEditor, client);
+        }, 0.1);
     }
 }
 

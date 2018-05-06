@@ -6,6 +6,7 @@ import * as notifications from "./notifications";
 
 let D_PARAM:vscode.TextEditorDecorationType;
 let D_GLOBAL:vscode.TextEditorDecorationType;
+let D_DOC_TYPE:vscode.TextEditorDecorationType;
 
 function createDecoration(key: string): vscode.TextEditorDecorationType {
     let color = vscode.workspace.getConfiguration("emmylua").get(key);
@@ -22,6 +23,7 @@ function createDecoration(key: string): vscode.TextEditorDecorationType {
 function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
+    D_DOC_TYPE = createDecoration("colors.doc_type");
 }
 
 export function onDidChangeConfiguration(client: LanguageClient) {
@@ -39,7 +41,7 @@ export function requestAnnotators(editor: vscode.TextEditor, client: LanguageCli
             let uri = vscode.Uri.parse(data.uri);
             vscode.window.visibleTextEditors.forEach((editor) => {
                 let docUri = editor.document.uri;
-                if (uri.path === docUri.path) {
+                if (uri.path.toLowerCase() === docUri.path.toLowerCase()) {
                     updateAnnotators(editor, data);
                 }
             });
@@ -54,6 +56,9 @@ function updateAnnotators(editor: vscode.TextEditor, annotator: IAnnotator) {
         break;
         case AnnotatorType.Global:
         editor.setDecorations(D_GLOBAL, annotator.ranges);
+        break;
+        case AnnotatorType.DocType:
+        editor.setDecorations(D_DOC_TYPE, annotator.ranges);
         break;
     }
 }

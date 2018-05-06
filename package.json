@@ -73,11 +73,15 @@
                 },
                 "emmylua.colors.parameter": {
                     "type": "string",
-                    "default": "#CC99CC"
+                    "default": "#99FFCC"
                 },
                 "emmylua.colors.global": {
                     "type": "string",
-                    "default": "#CCFFFF"
+                    "default": "#FF6699"
+                },
+                "emmylua.colors.doc_type": {
+                    "type": "string",
+                    "default": "#66CCFF"
                 }
             }
         },
