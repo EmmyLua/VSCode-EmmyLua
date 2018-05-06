@@ -22,18 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
     javaExecutablePath = findJava();
     startClient();
 
-    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
-
-    vscode.window.onDidChangeActiveTextEditor(editor => {
-        activeEditor = editor as vscode.TextEditor;
-    }, null, savedContext.subscriptions);
-    
-    // vscode.workspace.onDidChangeTextDocument(event => {
-    //     if (activeEditor) {
-    //         Annotator.updateDecorations(activeEditor);
-    //     }
-    // }, null, savedContext.subscriptions);
-
+    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, savedContext.subscriptions);
+    vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, savedContext.subscriptions);
+    vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions);
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
     vscode.languages.setLanguageConfiguration("EmmyLua", {
@@ -42,6 +33,20 @@ export function activate(context: vscode.ExtensionContext) {
             decreaseIndentPattern: /end|else|elseif|until/,
         }
     });
+}
+
+function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
+    if (activeEditor) {
+        Annotator.requestAnnotators(activeEditor, client);
+    }
+}
+
+function onDidChangeActiveTextEditor(editor: vscode.TextEditor|undefined) {
+    if (editor === undefined) {
+        return;
+    }
+    activeEditor = editor as vscode.TextEditor;
+    Annotator.requestAnnotators(activeEditor, client);
 }
 
 // this method is called when your extension is deactivated
@@ -109,11 +114,6 @@ function startClient() {
     client = new LanguageClient("EmmyLua", "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     client.onReady().then(() => {
         console.log("client ready");
-        client.onNotification("emmy/annotator", (data: notifications.IAnnotator) => {
-            if (activeEditor) {
-                Annotator.updateAnnotators(activeEditor, [data]);
-            }
-        });
         client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
             progressBar.show();
             progressBar.text = d.text;

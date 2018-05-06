@@ -1,10 +1,16 @@
 import * as vscode from 'vscode';
 
-export enum AnnotatorType {
+export interface AnnotatorParams {
+    uri: string;
+}
 
+export enum AnnotatorType {
+    Param,
+    Global
 }
 
 export interface IAnnotator {
+    uri: string;
     ranges: vscode.Range[];
     type: AnnotatorType;
 }
