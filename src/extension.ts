@@ -13,12 +13,13 @@ var savedContext: vscode.ExtensionContext;
 var client: LanguageClient;
 var activeEditor: vscode.TextEditor;
 var progressBar: vscode.StatusBarItem;
-var javaExecutablePath: string;
+var javaExecutablePath: string|null;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
     savedContext = context;
     progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    javaExecutablePath = findJava();
     startClient();
 
     vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
@@ -35,6 +36,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
+    vscode.languages.setLanguageConfiguration("EmmyLua", {
+        indentationRules: {
+            increaseIndentPattern: /do|else|then|repeat|function[^\)]+\)/,
+            decreaseIndentPattern: /end|else|elseif|until/,
+        }
+    });
 }
 
 // this method is called when your extension is deactivated
@@ -43,9 +50,15 @@ export function deactivate() {
 }
 
 function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
+    let shouldRestart = false;
     let newJavaExecutablePath = findJava();
     if (newJavaExecutablePath !== javaExecutablePath) {
-        console.log(newJavaExecutablePath);
+        javaExecutablePath = newJavaExecutablePath;
+        shouldRestart = true;
+    }
+
+    if (shouldRestart) {
+        restartServer();
     }
 }
 
@@ -85,8 +98,10 @@ function startClient() {
         };
     } else {
         let cp = path.resolve(savedContext.extensionPath, "server", "*");
+        let exePath = javaExecutablePath || "java";
+        console.log('exe path : ' + exePath);
         serverOptions = {
-            command: "java",
+            command: exePath,
             args: ["-cp", cp, "com.tang.vscode.MainKt"]
         };
     }
@@ -108,16 +123,13 @@ function startClient() {
                 }, 3000);
             }
         });
+    }).catch(reson => {
+        vscode.window.showErrorMessage("Failed to start `EmmyLua` language server!", "Try again").then(item => {
+            startClient();
+        });
     });
     let disposable = client.start();
     savedContext.subscriptions.push(disposable);
-    
-    vscode.languages.setLanguageConfiguration("EmmyLua", {
-        indentationRules: {
-            increaseIndentPattern: /do|else|then|repeat|function[^\)]+\)/,
-            decreaseIndentPattern: /end|else|elseif|until/,
-        }
-    });
 }
 
 function restartServer() {
