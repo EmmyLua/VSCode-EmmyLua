@@ -62,6 +62,8 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
         shouldRestart = true;
     }
 
+    Annotator.onDidChangeConfiguration(client);
+
     if (shouldRestart) {
         restartServer();
     }
@@ -123,6 +125,8 @@ function startClient() {
                 }, 3000);
             }
         });
+
+        onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     }).catch(reson => {
         vscode.window.showErrorMessage("Failed to start `EmmyLua` language server!", "Try again").then(item => {
             startClient();

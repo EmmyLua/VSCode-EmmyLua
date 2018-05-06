@@ -70,6 +70,14 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Case sensitive completion"
+                },
+                "emmylua.colors.parameter": {
+                    "type": "string",
+                    "default": "#CC99CC"
+                },
+                "emmylua.colors.global": {
+                    "type": "string",
+                    "default": "#CCFFFF"
                 }
             }
         },

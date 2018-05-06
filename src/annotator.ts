@@ -4,33 +4,45 @@ import { IAnnotator, AnnotatorType } from './notifications';
 import { LanguageClient } from 'vscode-languageclient';
 import * as notifications from "./notifications";
 
-let D_PARAM = vscode.window.createTextEditorDecorationType({
-    light: {
-        color: "rgba(255, 0, 0, 1)"
-    },
-    dark: {
-        color: "rgba(255, 0, 0, 1)"
-    }
-});
+let D_PARAM:vscode.TextEditorDecorationType;
+let D_GLOBAL:vscode.TextEditorDecorationType;
 
-let D_GLOBAL = vscode.window.createTextEditorDecorationType({
-    light: {
-        color: "rgba(102, 0, 153, 1)"
-    },
-    dark: {
-        color: "rgba(102, 0, 153, 1)"
-    }
-});
+function createDecoration(key: string): vscode.TextEditorDecorationType {
+    let color = vscode.workspace.getConfiguration("emmylua").get(key);
+    return vscode.window.createTextEditorDecorationType({
+        light: {
+            color: color
+        },
+        dark: {
+            color: color
+        }
+    });
+}
+
+function updateDecorations() {
+    D_PARAM = createDecoration("colors.parameter");
+    D_GLOBAL = createDecoration("colors.global");
+}
+
+export function onDidChangeConfiguration(client: LanguageClient) {
+    updateDecorations();
+}
 
 export function requestAnnotators(editor: vscode.TextEditor, client: LanguageClient) {
+    if (!D_PARAM) {
+        updateDecorations();
+    }
+
     let params:notifications.AnnotatorParams = { uri: editor.document.uri.toString() };
-    client.sendRequest<notifications.IAnnotator>("emmy/annotator", params).then(data => {
-        let uri = vscode.Uri.parse(data.uri);
-        vscode.window.visibleTextEditors.forEach((editor) => {
-            let docUri = editor.document.uri;
-            if (uri.path === docUri.path) {
-                updateAnnotators(editor, data);
-            }
+    client.sendRequest<notifications.IAnnotator[]>("emmy/annotator", params).then(list => {
+        list.forEach(data => {
+            let uri = vscode.Uri.parse(data.uri);
+            vscode.window.visibleTextEditors.forEach((editor) => {
+                let docUri = editor.document.uri;
+                if (uri.path === docUri.path) {
+                    updateAnnotators(editor, data);
+                }
+            });
         });
     });
 }
