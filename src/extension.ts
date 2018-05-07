@@ -10,6 +10,7 @@ import * as notifications from "./notifications";
 import findJava from "./findJava";
 import { Proposed } from 'vscode-languageserver-protocol';
 
+const LANGUAGE_ID = 'lua'; //EmmyLua
 var savedContext: vscode.ExtensionContext;
 var client: LanguageClient;
 var activeEditor: vscode.TextEditor;
@@ -83,9 +84,9 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
 
 function startClient() {
     let clientOptions: LanguageClientOptions = {
-        documentSelector: [ { scheme: 'file', language: 'EmmyLua' } ],
+        documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
         synchronize: {
-            configurationSection: 'EmmyLua',
+            configurationSection: LANGUAGE_ID,
             fileEvents: [
                 vscode.workspace.createFileSystemWatcher("**/*.lua")
             ]
@@ -125,7 +126,7 @@ function startClient() {
         };
     }
     
-    client = new LanguageClient("EmmyLua", "EmmyLua plugin for vscode.", serverOptions, clientOptions);
+    client = new LanguageClient(LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     client.onReady().then(() => {
         console.log("client ready");
         client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
