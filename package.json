@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua plugin for vscode",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "tangzx",
     "engines": {
         "vscode": "^1.21.0"
@@ -31,19 +31,19 @@
         ],
         "languages": [
             {
-                "id": "EmmyLua",
+                "id": "lua",
                 "extensions": [
                     ".lua"
                 ],
                 "aliases": [
-                    "Lua"
+                    "EmmyLua"
                 ],
                 "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "EmmyLua",
+                "language": "lua",
                 "scopeName": "source.lua",
                 "path": "./syntaxes/lua.tmLanguage.json"
             }

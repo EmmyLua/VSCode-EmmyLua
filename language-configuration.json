@@ -23,5 +23,9 @@
 			"start": "^\\s*--region\\b",
 			"end": "^\\s*--endregion\\b"
 		}
+	},
+	"indentationRules": {
+		"increaseIndentPattern": "\\b(do|else|then|repeat)\\b|\\bfunction[^\\)]+\\)",
+		"decreaseIndentPattern": "\\b(end|else|elseif|until)\\b"
 	}
 }

@@ -29,12 +29,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions);
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
-    vscode.languages.setLanguageConfiguration("EmmyLua", {
-        indentationRules: {
-            increaseIndentPattern: /\b(do|else|then|repeat)\b|\bfunction[^\)]+\)/,
-            decreaseIndentPattern: /\b(end|else|elseif|until)\b/,
-        }
-    });
 }
 
 function asProtocol(workspaceFolder: vscode.WorkspaceFolder): Proposed.WorkspaceFolder {
@@ -102,7 +96,7 @@ function startClient() {
         }
     };
 
-    let socketMode = true;
+    let socketMode = false;
     var serverOptions: ServerOptions;
     if (socketMode) {
         // The server is a started as a separate app and listens on port 5007
