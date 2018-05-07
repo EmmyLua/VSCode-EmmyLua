@@ -31,8 +31,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
     vscode.languages.setLanguageConfiguration("EmmyLua", {
         indentationRules: {
-            increaseIndentPattern: /do|else|then|repeat|function[^\)]+\)/,
-            decreaseIndentPattern: /end|else|elseif|until/,
+            increaseIndentPattern: /\b(do|else|then|repeat)\b|\bfunction[^\)]+\)/,
+            decreaseIndentPattern: /\b(end|else|elseif|until)\b/,
         }
     });
 }
@@ -102,7 +102,7 @@ function startClient() {
         }
     };
 
-    let socketMode = false;
+    let socketMode = true;
     var serverOptions: ServerOptions;
     if (socketMode) {
         // The server is a started as a separate app and listens on port 5007
