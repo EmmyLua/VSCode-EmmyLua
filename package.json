@@ -12,7 +12,7 @@
         "Debuggers"
     ],
     "activationEvents": [
-        "onLanguage:EmmyLua"
+        "onLanguage:lua"
     ],
     "repository": {
         "type": "git",
