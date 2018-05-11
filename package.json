@@ -86,7 +86,7 @@
             }
         },
         "configurationDefaults": {
-            "[EmmyLua]": {
+            "[lua]": {
                 "editor.quickSuggestions": {
                     "other": true,
                     "comments": true,
