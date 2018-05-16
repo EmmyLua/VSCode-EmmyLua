@@ -9,6 +9,7 @@ import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
 import findJava from "./findJava";
 import { Proposed } from 'vscode-languageserver-protocol';
+import { AttachDebuggerProvider } from './debugger/AttachDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
 var savedContext: vscode.ExtensionContext;
@@ -30,6 +31,16 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions);
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
+    vscode.commands.registerCommand("emmy.debugger.ask_pid", cfg => {
+        return vscode.window.showInputBox({
+			placeHolder: "Please enter the number of target pid.",
+			value: "123"
+		});
+    });
+
+    let provder = new AttachDebuggerProvider();
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmyLuaAttach", provder));
+    savedContext.subscriptions.push(provder);
 }
 
 function asProtocol(workspaceFolder: vscode.WorkspaceFolder): Proposed.WorkspaceFolder {
