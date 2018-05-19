@@ -51,44 +51,46 @@
         "debuggers": [
             {
                 "type": "emmyLuaAttach",
-				"label": "EmmyLua Attach Debug",
-				"program": "./out/debugAdapter.js",
-				"runtime": "node",
-				"configurationAttributes": {
-					"attach": {
-						"required": ["pid"],
-						"properties": {
+                "label": "EmmyLua Attach Debug",
+                "program": "./out/debugger/debugAdapter.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "attach": {
+                        "required": [
+                            "pid"
+                        ],
+                        "properties": {
                             "pid": {
                                 "type": "number",
                                 "description": "target pid",
                                 "default": 55555
                             }
-						}
-					}
-				},
-				"initialConfigurations": [
-					{
-						"type": "emmyLuaAttach",
-						"request": "attach",
-						"name": "Attach to app",
-						"pid": "${workspaceFolder}/${command:emmy.debugger.ask_pid}"
-					}
-				],
-				"configurationSnippets": [
-					{
-						"label": "EmmyLua Debug: Attach",
-						"description": "A new configuration for 'debugging' a user selected markdown file.",
-						"body": {
-							"type": "emmyLuaAttach",
-							"request": "attach",
-							"name": "Attach to app",
-							"pid": "^\"\\${workspaceFolder}/\\${command:emmy.debugger.ask_pid}\""
-						}
-					}
-				],
-				"variables": {
-					"AskForProgramName": "emmy.debugger.ask_pid"
-				}
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "emmyLuaAttach",
+                        "request": "attach",
+                        "name": "Attach to app",
+                        "pid": "${workspaceFolder}/${command:emmy.debugger.ask_pid}"
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "EmmyLua Debug: Attach",
+                        "description": "A new configuration for 'debugging' a user selected markdown file.",
+                        "body": {
+                            "type": "emmyLuaAttach",
+                            "request": "attach",
+                            "name": "Attach to app",
+                            "pid": "^\"\\${workspaceFolder}/\\${command:emmy.debugger.ask_pid}\""
+                        }
+                    }
+                ],
+                "variables": {
+                    "AskForProgramName": "emmy.debugger.ask_pid"
+                }
             }
         ],
         "configuration": {
@@ -153,8 +155,9 @@
     },
     "dependencies": {
         "vscode-languageclient": "^3.3.0",
+        "vscode-debugadapter": "1.27.0",
+        "vscode-debugprotocol": "1.27.0",
         "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42",
-        "find-java-home": "0.1.4"
+        "@types/mocha": "^2.2.42"
     }
 }
