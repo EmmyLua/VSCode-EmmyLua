@@ -5,12 +5,15 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as fs from "fs";
+import { LuaAttachMessage, DMReqInitialize } from './AttachProtol';
 
 interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
 	pid: number;
 }
 
 export class AttachDebugSession extends LoggingDebugSession {
+
+	socket?: net.Socket;
 	
 	public constructor() {
 		super("emmy_attach.txt");
@@ -39,9 +42,17 @@ export class AttachDebugSession extends LoggingDebugSession {
 		socket.connect(port);
 		socket.on("connect", () => {
 			this.sendResponse(response);
+			this.send(new DMReqInitialize("", "", true, true));
 		});
 		socket.on("data", buf => {
 			ws.write(buf);
 		});
+		this.socket = socket;
+	}
+
+	private send(msg: LuaAttachMessage) {
+		if (this.socket) {
+			this.socket.write(1);
+		}
 	}
 }
