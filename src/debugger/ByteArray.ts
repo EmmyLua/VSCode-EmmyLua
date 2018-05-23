@@ -33,6 +33,10 @@ export class ByteArray {
         return l + r;
     }
 
+    readSize() {
+        return this.readUint64();
+    }
+
     readUint32(): number {
         return this.buffer.readUInt32BE();
     }
@@ -43,6 +47,10 @@ export class ByteArray {
 
     writeBoolean(value: boolean) {
         this.buffer.writeInt8(value ? 1 : 0);
+    }
+
+    readBoolean() {
+        return this.buffer.readInt8() === 1;
     }
 
     readByte(): number {

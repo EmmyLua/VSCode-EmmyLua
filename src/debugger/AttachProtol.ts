@@ -95,8 +95,22 @@ export class DMReqInitialize extends LuaAttachMessage {
 }
 
 export class DMAddBreakpoint extends LuaAttachMessage {
-    constructor() {
+    scriptIndex: number;
+    line: number;
+    expr: string;
+
+    constructor(index:number, line: number, expr?: string) {
         super(DebugMessageId.AddBreakpoint);
+        this.scriptIndex = index;
+        this.line = line;
+        this.expr = expr || "";
+    }
+
+    write(buf: ByteArray) {
+        super.write(buf);
+        buf.writeUint32(this.scriptIndex);
+        buf.writeUint32(this.line);
+        buf.writeString(this.expr);
     }
 }
 
@@ -133,4 +147,157 @@ export class DMMessage extends LuaAttachMessage {
         this.type = buf.readUint32();
         this.text = buf.readString();
     }
+}
+
+export class DMBreak extends LuaAttachMessage {
+
+    public stacks?: StackNodeContainer;
+
+    constructor() {
+        super(DebugMessageId.Break);
+    }
+
+    read(buf: ByteArray) {
+        super.read(buf);
+        this.stacks = <StackNodeContainer> readNode({}, buf);
+    }
+}
+
+export enum StackNodeId {
+    List,
+    Eval,
+    StackRoot,
+
+    Table,
+    Function,
+    UserData,
+    String,
+    Binary,
+    Primitive,
+
+    Error,
+}
+
+interface Context {
+
+}
+
+interface IStackNode {
+    read(ctx: Context, buf: ByteArray): void;
+}
+
+class StackNode implements IStackNode {
+    read(ctx: Context, buf: ByteArray) {
+
+    }
+}
+
+export class StackNodeContainer extends StackNode {
+
+    public children = new Array<IStackNode>();
+
+    read(ctx: Context, buf: ByteArray) {
+        const size = buf.readSize();
+        for (var i = 0; i < size; i++) {
+            const child = readNode(ctx, buf);
+            this.children.push(child);
+        }
+    }
+}
+
+export class StackRootNode extends StackNodeContainer {
+
+    public scriptIndex = 0;
+    public line = 0;
+    public functionName = "";
+
+    read(ctx: Context, buf: ByteArray) {
+        super.read(ctx, buf);
+        this.scriptIndex = buf.readUint32();
+        this.line = buf.readUint32();
+        this.functionName = buf.readString();
+    }
+}
+
+class LuaXObjectValue extends StackNode {
+
+    public name = "";
+    public type = "";
+    public data = "";
+
+    read(ctx: Context, buf: ByteArray) {
+        this.name = buf.readString();
+        this.type = buf.readString();
+        this.data = buf.readString();
+    }
+
+    toKeyString() {
+        return this.name;
+    }
+}
+
+class LuaXTable extends LuaXObjectValue {
+
+    public children = new Array<IStackNode>();
+
+    read(ctx: Context, buf: ByteArray) {
+        super.read(ctx, buf);
+        const deep = buf.readBoolean();
+        if (deep) {
+            const size = buf.readSize();
+            for (var i = 0; i < size; i++) {
+                const key = <LuaXObjectValue> readNode(ctx, buf);
+                const value = <LuaXObjectValue> readNode(ctx, buf);
+                value.name = key.toKeyString();
+                this.children.push(value);
+            }
+        }
+    }
+}
+
+class LuaXString extends LuaXObjectValue {
+    toKeyString() {
+        return this.data;
+    }
+}
+
+class LuaXPrimitive extends LuaXObjectValue {
+    toKeyString() {
+        return this.data;
+    }
+}
+
+class LuaXFunction extends LuaXObjectValue {
+
+    public script = 0;
+    public line = 0;
+
+    read(ctx: Context, buf:ByteArray) {
+        super.read(ctx, buf);
+        this.script = buf.readUint32();
+        this.line = buf.readUint32();
+    }
+}
+
+class LuaXUserdata extends LuaXObjectValue {
+
+}
+
+export function readNode(ctx: Context, buf: ByteArray): IStackNode {
+    const id = <StackNodeId> buf.readByte();
+    var node: IStackNode | undefined;
+    switch (id) {
+        case StackNodeId.List: node = new StackNodeContainer(); break;
+        case StackNodeId.StackRoot: node = new StackRootNode(); break;
+        case StackNodeId.Table: node = new LuaXTable(); break;
+
+        case StackNodeId.Function: node = new LuaXFunction(); break;
+        case StackNodeId.UserData: node = new LuaXUserdata(); break;
+        
+        case StackNodeId.String: node = new LuaXString(); break;
+        case StackNodeId.Primitive: node = new LuaXPrimitive(); break;
+    }
+    const n = <IStackNode> node;
+    n.read(ctx, buf);
+    return n;
 }

@@ -1,12 +1,13 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, BreakpointEvent, StoppedEvent, StackFrame, Source, Thread
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as sb from "smart-buffer";
-import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript } from './AttachProtol';
+import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode } from './AttachProtol';
 import { ByteArray } from './ByteArray';
+import { basename } from 'path';
 
 var emmyToolExe:string, emmyLua: string;
 var breakpointId:number = 0;
@@ -16,12 +17,25 @@ interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
 	extensionPath: string;
 }
 
+interface EmmyBreakpoint {
+	id: number;
+	line: number;
+}
+
+interface LoadedScript {
+	path: string;
+	index: number;
+	source?: string;
+}
+
 export class AttachDebugSession extends LoggingDebugSession {
 
-	socket?: net.Socket;
-	receiveBuf: sb.SmartBuffer = new sb.SmartBuffer();
-	expectedLen: number = 0;
-	breakpoints: Array<DebugProtocol.SourceBreakpoint> = [];
+	private socket?: net.Socket;
+	private receiveBuf = new sb.SmartBuffer();
+	private expectedLen = 0;
+	private breakpoints = new Map<string, EmmyBreakpoint[]>();
+	private loadedScripts = new Map<string, LoadedScript>();
+	private break?: DMBreak;
 	
 	public constructor() {
 		super("emmy_attach.txt");
@@ -60,7 +74,6 @@ export class AttachDebugSession extends LoggingDebugSession {
 		socket.connect(port);
 		socket.on("connect", () => {
 			this.sendResponse(response);
-			this.sendEvent(new InitializedEvent());
 			this.send(new DMReqInitialize("", emmyLua, true, true));
 		}).on("data", buf => {
 			this.receive(buf);
@@ -110,6 +123,8 @@ export class AttachDebugSession extends LoggingDebugSession {
 		switch (id) {
 			case DebugMessageId.Message: msg = new DMMessage(); break;
 			case DebugMessageId.LoadScript: msg = new DMLoadScript(); break;
+			case DebugMessageId.Break: msg = new DMBreak(); break;
+			default: msg = new LuaAttachMessage(id); break;
 		}
 		if (msg) {
 			msg.read(ba);
@@ -121,22 +136,41 @@ export class AttachDebugSession extends LoggingDebugSession {
 
 	private handleMessage(msg: LuaAttachMessage) {
 		switch (msg.id) {
+			case DebugMessageId.RespInitialize: {
+				this.sendEvent(new InitializedEvent());
+				break;
+			}
 			case DebugMessageId.Message: {	
 				let mm = msg as DMMessage;
 				let text = mm.text;
 				if (text) {
 					this.sendEvent(new OutputEvent(`${text}\n`, "Attach"));
 				}
+				break;
 			}
-			break;
 			case DebugMessageId.LoadScript: {
 				let mm = msg as DMLoadScript;
 				if (mm.fileName) {
-					this.sendEvent(new OutputEvent(`${mm.fileName}\n`));
+					const path = this.normalizePath(mm.fileName);
+					this.sendEvent(new OutputEvent(`${path}\n`));
+					const script: LoadedScript = {
+						path: path,
+						index: mm.index
+					};
+					this.loadedScripts.set(path, script);
 					this.send(new LuaAttachMessage(DebugMessageId.LoadDone));
 				}
+				break;
 			}
-			break;
+			case DebugMessageId.Break: {
+				this.break = msg;
+				this.log(msg);
+				this.sendEvent(new StoppedEvent("breakpoint", 1));
+				break;
+			}
+			case DebugMessageId.SetBreakpoint: {
+				break;
+			}
 			default:
 			this.log(msg);
 		}
@@ -150,14 +184,39 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+	protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
+		response.body = {
+			threads: [
+				new Thread(1, "thread 1")
+			]
+		};
+		this.sendResponse(response);
+	}
+
 	protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
 		let lines = args.breakpoints || [];
+		const path = <string> args.source.path;
+
+		let bpList = this.breakpoints.get(path);
+		if (!bpList) {
+			bpList = new Array<EmmyBreakpoint>();
+			this.breakpoints.set(path, bpList);
+		}
+		const bps = bpList;
+
 		const breakpoints = new Array<DebugProtocol.Breakpoint>();
 		lines.forEach(bp => {
 			var bpk = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
 			bpk.id = ++breakpointId;
-			this.breakpoints.push(bp);
 			breakpoints.push(bpk);
+			
+			bps.push({ id: breakpointId, line: bp.line });
+
+			//send
+			const script = this.findScript(path);
+			if (script) {
+				this.send(new DMAddBreakpoint(script.index, bp.line));
+			}
 		});
 		response.body = {
 			breakpoints: breakpoints
@@ -165,7 +224,50 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+	private findScript(path: string): LoadedScript | undefined {
+		path = this.normalizePath(path.substr("F:/ZeroBrane/".length));
+		return this.loadedScripts.get(path);
+	}
+
+	private normalizePath(path: string) {
+		return path.replace(/\\/g, "/");
+	}
+
 	private log(obj: any) {
 		this.sendEvent(new Event("log", obj));
+	}
+
+	private fundScriptByIndex(index: number): LoadedScript|undefined {
+		for (const iterator of this.loadedScripts) {
+			if (iterator["1"].index === index) {
+				return iterator["1"];
+			}
+		}
+	}
+
+	protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
+		if (this.break) {
+			const stacks = <StackNodeContainer> this.break.stacks;
+			response.body = {
+				stackFrames: stacks.children.map(child => {
+					const root = <StackRootNode> child;
+					const script = this.fundScriptByIndex(root.scriptIndex);
+					var source = new Source("");
+					if (script) {
+						source.name = basename(script.path);
+						source.path = "F:/ZeroBrane/" + script.path;
+					}
+
+					return <StackFrame> {
+						id: 1,
+						source: source,
+						name: root.functionName,
+						line: root.line,
+					};
+				}),
+				totalFrames: stacks.children.length
+			}
+		}
+		this.sendResponse(response);
 	}
 }
