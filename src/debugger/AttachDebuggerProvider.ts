@@ -5,7 +5,7 @@ import { WorkspaceFolder, DebugConfiguration, CancellationToken, ProviderResult 
 
 export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
 
-    resolveDebugConfiguration?(folder: WorkspaceFolder | undefined, debugConfiguration: DebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
+    resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: DebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         return debugConfiguration;
     }
 

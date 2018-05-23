@@ -41,6 +41,9 @@ export function activate(context: vscode.ExtensionContext) {
     let provder = new AttachDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmyLuaAttach", provder));
     savedContext.subscriptions.push(provder);
+    vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
+        console.log(e.body);
+    });
 }
 
 function asProtocol(workspaceFolder: vscode.WorkspaceFolder): Proposed.WorkspaceFolder {
