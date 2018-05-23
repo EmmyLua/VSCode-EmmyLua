@@ -1,5 +1,5 @@
 import {
-	LoggingDebugSession, Event
+	LoggingDebugSession, Event, OutputEvent, StoppedEvent, TerminatedEvent
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
@@ -47,9 +47,11 @@ export class AttachDebugSession extends LoggingDebugSession {
 		socket.on("connect", () => {
 			this.sendResponse(response);
 			this.send(new DMReqInitialize("", emmyLua, true, true));
-		});
-		socket.on("data", buf => {
+		}).on("data", buf => {
 			this.receive(buf);
+		}).on("error", (e) => {
+			this.sendEvent(new OutputEvent(e.message));
+			this.sendEvent(new TerminatedEvent());
 		});
 		this.socket = socket;
 	}
@@ -97,9 +99,23 @@ export class AttachDebugSession extends LoggingDebugSession {
 		}
 		if (msg) {
 			msg.read(ba);
-			this.log(msg);
+			this.handleMessage(msg);
 		} else {
 			this.log(idValue);
+		}
+	}
+
+	private handleMessage(msg: LuaAttachMessage) {
+		switch (msg.id) {
+			case DebugMessageId.Message:
+			let mm = msg as DMMessage;
+			let text = mm.text;
+			if (text) {
+				this.sendEvent(new OutputEvent(`${text}\n`, "Attach"));
+			}
+			break;
+			default:
+			this.log(msg);
 		}
 	}
 
