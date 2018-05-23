@@ -1,18 +1,18 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, StoppedEvent, TerminatedEvent
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as sb from "smart-buffer";
-import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage } from './AttachProtol';
+import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 
-let exe = "D:/Git/OpenSource/EmmyLua/IntelliJ-EmmyLua/debugger/attach/windows/Build/Debug/x86/emmy.tool.exe";
-let emmyLua = "D:/Git/OpenSource/EmmyLua/IntelliJ-EmmyLua/src/main/resources/debugger/Emmy.lua";
+var emmyToolExe:string, emmyLua: string;
 
 interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
 	pid: number;
+	extensionPath: string;
 }
 
 export class AttachDebugSession extends LoggingDebugSession {
@@ -28,16 +28,28 @@ export class AttachDebugSession extends LoggingDebugSession {
 	}
 
 	protected attachRequest(response: DebugProtocol.AttachResponse, args: AttachRequestArguments): void {
-		let argList = [exe, " ", "-m", "attach", "-p", args.pid, "-e", emmyLua];
+		emmyToolExe = `${args.extensionPath}/server/windows/x86/emmy.tool.exe`;
+		emmyLua = `${args.extensionPath}/server/Emmy.lua`;
+
+		let argList = [emmyToolExe, " ", "-m", "attach", "-p", args.pid, "-e", emmyLua];
 		
 		cp.exec(argList.join(" "), (err, stdout) => {
-			var lines = stdout.split("\n");
-			lines.forEach(line => {
-				if (line.startsWith("port:")) {
-					var port = parseInt(line.substr(5));
-					this.connect(port, response);
-				}
-			});
+			if (err) {
+				this.sendEvent(new OutputEvent(err.message));
+			}
+			if (stdout) {
+				this.sendEvent(new OutputEvent(stdout));
+				var lines = stdout.split("\n");
+				lines.forEach(line => {
+					if (line.startsWith("port:")) {
+						var port = parseInt(line.substr(5));
+						this.connect(port, response);
+					}
+				});
+			}
+		}).on("error", e => {
+			this.sendEvent(new OutputEvent(e.message));
+			this.sendEvent(new TerminatedEvent());
 		});
 	}
 
@@ -93,9 +105,8 @@ export class AttachDebugSession extends LoggingDebugSession {
 		var id = idValue as DebugMessageId;
 		var msg:LuaAttachMessage | undefined;
 		switch (id) {
-			case DebugMessageId.Message:
-			msg = new DMMessage();
-			break;
+			case DebugMessageId.Message: msg = new DMMessage(); break;
+			case DebugMessageId.LoadScript: msg = new DMLoadScript(); break;
 		}
 		if (msg) {
 			msg.read(ba);
@@ -107,11 +118,20 @@ export class AttachDebugSession extends LoggingDebugSession {
 
 	private handleMessage(msg: LuaAttachMessage) {
 		switch (msg.id) {
-			case DebugMessageId.Message:
-			let mm = msg as DMMessage;
-			let text = mm.text;
-			if (text) {
-				this.sendEvent(new OutputEvent(`${text}\n`, "Attach"));
+			case DebugMessageId.Message: {	
+				let mm = msg as DMMessage;
+				let text = mm.text;
+				if (text) {
+					this.sendEvent(new OutputEvent(`${text}\n`, "Attach"));
+				}
+			}
+			break;
+			case DebugMessageId.LoadScript: {
+				let mm = msg as DMLoadScript;
+				if (mm.fileName) {
+					this.sendEvent(new OutputEvent(`${mm.fileName}\n`));
+					this.send(new LuaAttachMessage(DebugMessageId.LoadDone));
+				}
 			}
 			break;
 			default:

@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 import { WorkspaceFolder, DebugConfiguration, CancellationToken, ProviderResult } from 'vscode';
+import { savedContext } from '../extension';
 
 export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
 
@@ -16,6 +17,7 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
     }
 
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: DebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
+        debugConfiguration.extensionPath = savedContext.extensionPath;
         return debugConfiguration;
     }
 

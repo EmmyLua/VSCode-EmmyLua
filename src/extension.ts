@@ -12,7 +12,7 @@ import { Proposed } from 'vscode-languageserver-protocol';
 import { AttachDebuggerProvider } from './debugger/AttachDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
-var savedContext: vscode.ExtensionContext;
+export var savedContext: vscode.ExtensionContext;
 var client: LanguageClient;
 var activeEditor: vscode.TextEditor;
 var progressBar: vscode.StatusBarItem;

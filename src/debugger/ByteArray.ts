@@ -45,6 +45,10 @@ export class ByteArray {
         this.buffer.writeInt8(value ? 1 : 0);
     }
 
+    readByte(): number {
+        return this.buffer.readInt8();
+    }
+
     toBuffer(): Buffer {
         return this.buffer.toBuffer();
     }

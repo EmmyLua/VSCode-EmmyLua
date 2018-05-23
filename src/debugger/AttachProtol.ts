@@ -109,6 +109,14 @@ export class DMLoadScript extends LuaAttachMessage {
     constructor() {
         super(DebugMessageId.LoadScript);
     }
+
+    read(buf: ByteArray) {
+        super.read(buf);
+        this.fileName = buf.readString();
+        this.source = buf.readString();
+        this.index = buf.readUint32();
+        this.state = buf.readByte() as CodeState;
+    }
 }
 
 export class DMMessage extends LuaAttachMessage {

@@ -48,6 +48,11 @@
                 "path": "./syntaxes/lua.tmLanguage.json"
             }
         ],
+        "breakpoints": [
+            {
+                "language": "lua"
+            }
+        ],
         "debuggers": [
             {
                 "type": "emmyLuaAttach",
