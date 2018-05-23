@@ -9,6 +9,7 @@ import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScr
 import { ByteArray } from './ByteArray';
 
 var emmyToolExe:string, emmyLua: string;
+var breakpointId:number = 0;
 
 interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
 	pid: number;
@@ -150,14 +151,17 @@ export class AttachDebugSession extends LoggingDebugSession {
 	}
 
 	protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
-		let lines = args.breakpoints;
-		if (lines) {
-			lines.forEach(bp => {
-				response.body.breakpoints.push(new Breakpoint(true, bp.line));
-				this.breakpoints.push(bp);
-			});
-		}
-		
+		let lines = args.breakpoints || [];
+		const breakpoints = new Array<DebugProtocol.Breakpoint>();
+		lines.forEach(bp => {
+			var bpk = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
+			bpk.id = ++breakpointId;
+			this.breakpoints.push(bp);
+			breakpoints.push(bpk);
+		});
+		response.body = {
+			breakpoints: breakpoints
+		};
 		this.sendResponse(response);
 	}
 
