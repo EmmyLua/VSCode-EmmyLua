@@ -1,5 +1,5 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
@@ -20,6 +20,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	socket?: net.Socket;
 	receiveBuf: sb.SmartBuffer = new sb.SmartBuffer();
 	expectedLen: number = 0;
+	breakpoints: Array<DebugProtocol.SourceBreakpoint> = [];
 	
 	public constructor() {
 		super("emmy_attach.txt");
@@ -58,6 +59,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 		socket.connect(port);
 		socket.on("connect", () => {
 			this.sendResponse(response);
+			this.sendEvent(new InitializedEvent());
 			this.send(new DMReqInitialize("", emmyLua, true, true));
 		}).on("data", buf => {
 			this.receive(buf);
@@ -151,9 +153,11 @@ export class AttachDebugSession extends LoggingDebugSession {
 		let lines = args.breakpoints;
 		if (lines) {
 			lines.forEach(bp => {
-				
+				response.body.breakpoints.push(new Breakpoint(true, bp.line));
+				this.breakpoints.push(bp);
 			});
 		}
+		
 		this.sendResponse(response);
 	}
 
