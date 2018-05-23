@@ -1,0 +1,4 @@
+{
+    "debug.attach.target_pid": "Target pid",
+    "debug.attach.desc": "Attach process debugger"
+}

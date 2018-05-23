@@ -68,7 +68,7 @@
                         "properties": {
                             "pid": {
                                 "type": "number",
-                                "description": "target pid",
+                                "description": "%debug.attach.target_pid%",
                                 "default": 55555
                             }
                         }
@@ -84,8 +84,8 @@
                 ],
                 "configurationSnippets": [
                     {
-                        "label": "EmmyLua Debug: Attach",
-                        "description": "A new configuration for 'debugging' a user selected markdown file.",
+                        "label": "EmmyLua: Attach",
+                        "description": "%debug.attach.desc%",
                         "body": {
                             "type": "emmyLuaAttach",
                             "request": "attach",
@@ -96,7 +96,10 @@
                 ],
                 "variables": {
                     "AskForProgramName": "emmy.debugger.ask_pid"
-                }
+                },
+                "languages": [
+                    "lua"
+                ]
             }
         ],
         "configuration": {

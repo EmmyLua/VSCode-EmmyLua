@@ -1,0 +1,4 @@
+{
+    "debug.attach.target_pid": "目标进程PID",
+    "debug.attach.desc": "附加进程调试"
+}
