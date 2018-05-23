@@ -8,11 +8,12 @@
         "vscode": "^1.21.0"
     },
     "categories": [
-        "Languages",
+        "Programming Languages",
         "Debuggers"
     ],
     "activationEvents": [
-        "onLanguage:lua"
+        "onLanguage:lua",
+        "onDebug"
     ],
     "repository": {
         "type": "git",
