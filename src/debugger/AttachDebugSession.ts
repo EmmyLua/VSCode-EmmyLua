@@ -253,18 +253,11 @@ export class AttachDebugSession extends LoggingDebugSession {
 				stackFrames: stacks.children.map(child => {
 					const root = <StackRootNode> child;
 					const script = this.fundScriptByIndex(root.scriptIndex);
-					var source = new Source("");
+					var source: Source | undefined;
 					if (script) {
-						source.name = basename(script.path);
-						source.path = APP_PATH + script.path;
+						source = new Source(basename(script.path), APP_PATH + script.path);
 					}
-
-					return <StackFrame> {
-						id: index,
-						source: source,
-						name: root.functionName,
-						line: root.line,
-					};
+					return new StackFrame(index, root.functionName, source, root.line);
 				}),
 				totalFrames: stacks.children.length
 			};
