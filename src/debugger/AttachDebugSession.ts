@@ -1,16 +1,17 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, BreakpointEvent, StoppedEvent, StackFrame, Source, Thread
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, StoppedEvent, StackFrame, Source, Thread, Variable
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as sb from "smart-buffer";
-import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode } from './AttachProtol';
+import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import { basename } from 'path';
 
 var emmyToolExe:string, emmyLua: string;
 var breakpointId:number = 0;
+var APP_PATH = "E:/DevelopTools/ZeroBraneStudio/";
 
 interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
 	pid: number;
@@ -164,7 +165,6 @@ export class AttachDebugSession extends LoggingDebugSession {
 			}
 			case DebugMessageId.Break: {
 				this.break = msg;
-				this.log(msg);
 				this.sendEvent(new StoppedEvent("breakpoint", 1));
 				break;
 			}
@@ -225,7 +225,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	}
 
 	private findScript(path: string): LoadedScript | undefined {
-		path = this.normalizePath(path.substr("F:/ZeroBrane/".length));
+		path = this.normalizePath(path.substr(APP_PATH.length));
 		return this.loadedScripts.get(path);
 	}
 
@@ -248,6 +248,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
 		if (this.break) {
 			const stacks = <StackNodeContainer> this.break.stacks;
+			var index = 0;
 			response.body = {
 				stackFrames: stacks.children.map(child => {
 					const root = <StackRootNode> child;
@@ -255,19 +256,77 @@ export class AttachDebugSession extends LoggingDebugSession {
 					var source = new Source("");
 					if (script) {
 						source.name = basename(script.path);
-						source.path = "F:/ZeroBrane/" + script.path;
+						source.path = APP_PATH + script.path;
 					}
 
 					return <StackFrame> {
-						id: 1,
+						id: index,
 						source: source,
 						name: root.functionName,
 						line: root.line,
 					};
 				}),
 				totalFrames: stacks.children.length
+			};
+		}
+		this.sendResponse(response);
+	}
+
+	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void
+	{
+		response.body = {
+			scopes: [
+				{
+					name: "Local",
+					variablesReference: args.frameId + 1,
+					expensive: false
+				}
+			]
+		};
+		this.sendResponse(response);
+	}
+
+	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void
+	{
+		if (this.break) {
+			const stacks = this.break.stacks;
+			if (stacks) {
+				const stack = <StackNodeContainer> stacks.children[args.variablesReference - 1];
+				if (stack) {
+					response.body = {
+						variables: stack.children.map(node => {
+							if (node instanceof LuaXObjectValue) {
+								const vn = <LuaXObjectValue> node;
+								return new Variable(vn.name, vn.data);
+							}
+							this.log(node);
+							return new Variable("", "");
+						})
+					};
+				}
 			}
 		}
+		this.sendResponse(response);
+	}
+
+	protected continueRequest(response: DebugProtocol.ContinueResponse, args: DebugProtocol.ContinueArguments): void
+	{
+		this.send(new LuaAttachMessage(DebugMessageId.Continue));
+		this.sendResponse(response);
+	}
+	protected nextRequest(response: DebugProtocol.NextResponse, args: DebugProtocol.NextArguments): void
+	{
+		this.send(new LuaAttachMessage(DebugMessageId.StepOver));
+		this.sendResponse(response);
+	}
+	protected stepInRequest(response: DebugProtocol.StepInResponse, args: DebugProtocol.StepInArguments): void
+	{
+		this.send(new LuaAttachMessage(DebugMessageId.StepInto));
+		this.sendResponse(response);
+	}
+	protected stepOutRequest(response: DebugProtocol.StepOutResponse, args: DebugProtocol.StepOutArguments): void
+	{
+		this.send(new LuaAttachMessage(DebugMessageId.StepOut));
 		this.sendResponse(response);
 	}
 }

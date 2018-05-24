@@ -45,6 +45,14 @@ export class ByteArray {
         this.buffer.writeUInt32BE(value);
     }
 
+    readInt32() {
+        return this.buffer.readInt32BE();
+    }
+
+    writeInt32(value: number) {
+        this.buffer.writeInt32BE(value);
+    }
+
     writeBoolean(value: boolean) {
         this.buffer.writeInt8(value ? 1 : 0);
     }

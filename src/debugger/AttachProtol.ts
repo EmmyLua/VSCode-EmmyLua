@@ -213,13 +213,13 @@ export class StackRootNode extends StackNodeContainer {
 
     read(ctx: Context, buf: ByteArray) {
         super.read(ctx, buf);
-        this.scriptIndex = buf.readUint32();
-        this.line = buf.readUint32();
+        this.scriptIndex = buf.readInt32();
+        this.line = buf.readInt32();
         this.functionName = buf.readString();
     }
 }
 
-class LuaXObjectValue extends StackNode {
+export class LuaXObjectValue extends StackNode {
 
     public name = "";
     public type = "";
