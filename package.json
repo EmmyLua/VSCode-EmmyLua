@@ -168,6 +168,7 @@
         "vscode-debugprotocol": "1.27.0",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42",
-        "smart-buffer": "^4.0.1"
+        "smart-buffer": "^4.0.1",
+        "xml2js": "^0.4.19"
     }
 }
