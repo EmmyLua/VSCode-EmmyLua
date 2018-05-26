@@ -163,6 +163,48 @@ export class DMBreak extends LuaAttachMessage {
     }
 }
 
+export class DMReqEvaluate extends LuaAttachMessage {
+    public evalId: number = 0;
+    public stackLevel: number = 0;
+    public depth: number = 0;
+    public expr: string = "";
+
+    constructor(L: number, id: number, stack: number, expr: string, depth: number = 1) {
+        super(DebugMessageId.ReqEvaluate);
+        this.L = L;
+        this.evalId = id;
+        this.stackLevel = stack;
+        this.expr = expr;
+        this.depth = depth;
+    }
+
+    write(buf: ByteArray) {
+        super.write(buf);
+        buf.writeUint32(this.evalId);
+        buf.writeUint32(this.stackLevel);
+        buf.writeUint32(this.depth);
+        buf.writeString(this.expr);
+    }
+}
+
+export class DMRespEvaluate extends LuaAttachMessage {
+    constructor() {
+        super(DebugMessageId.RespEvaluate);
+    }
+
+    public evalId = 0;
+    public success = true;
+    public resultNode = new EvalResultNode();
+
+    read(buf: ByteArray) {
+        super.read(buf);
+        this.evalId = buf.readInt32();
+        this.success = buf.readBoolean();
+        buf.readByte();//skip id
+        this.resultNode.read({}, buf);
+    }
+}
+
 export enum StackNodeId {
     List,
     Eval,
@@ -283,12 +325,26 @@ class LuaXUserdata extends LuaXObjectValue {
 
 }
 
+export class EvalResultNode extends StackNodeContainer {
+    public success = false;
+    public error = "";
+
+    read(ctx: Context, buf: ByteArray) {
+        super.read(ctx, buf);
+        this.success = buf.readBoolean();
+        if (!this.success) {
+            this.error = buf.readString();
+        }
+    }
+}
+
 export function readNode(ctx: Context, buf: ByteArray): IStackNode {
     const id = <StackNodeId> buf.readByte();
     var node: IStackNode | undefined;
     switch (id) {
         case StackNodeId.List: node = new StackNodeContainer(); break;
         case StackNodeId.StackRoot: node = new StackRootNode(); break;
+        case StackNodeId.Eval: node = new EvalResultNode(); break;
         case StackNodeId.Table: node = new LuaXTable(); break;
 
         case StackNodeId.Function: node = new LuaXFunction(); break;

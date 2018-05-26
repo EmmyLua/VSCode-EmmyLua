@@ -5,7 +5,9 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as sb from "smart-buffer";
-import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue, IStackNode } from './AttachProtol';
+import {
+	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue, IStackNode, DMReqEvaluate, EvalResultNode, DMRespEvaluate
+} from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import { basename } from 'path';
 
@@ -38,6 +40,8 @@ export class AttachDebugSession extends LoggingDebugSession {
 	private loadedScripts = new Map<string, LoadedScript>();
 	private break?: DMBreak;
 	private handles: Handles<IStackNode> = new Handles<IStackNode>();
+	private evalIdCounter = 0;
+	private evalMap = new Map<number, DebugProtocol.EvaluateResponse>();
 	
 	public constructor() {
 		super("emmy_attach.txt");
@@ -126,6 +130,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 			case DebugMessageId.Message: msg = new DMMessage(); break;
 			case DebugMessageId.LoadScript: msg = new DMLoadScript(); break;
 			case DebugMessageId.Break: msg = new DMBreak(); break;
+			case DebugMessageId.RespEvaluate: msg = new DMRespEvaluate(); break;
 			default: msg = new LuaAttachMessage(id); break;
 		}
 		if (msg) {
@@ -169,11 +174,23 @@ export class AttachDebugSession extends LoggingDebugSession {
 				this.sendEvent(new StoppedEvent("breakpoint", 1));
 				break;
 			}
+			case DebugMessageId.RespEvaluate: {
+				const evalResp = <DMRespEvaluate> msg;
+				const response = this.evalMap.get(evalResp.evalId);
+				if (response) {
+					this.evalMap.delete(evalResp.evalId);
+					response.body = {
+						result: "TODO",
+						variablesReference: 0
+					};
+					this.sendResponse(response);
+				}
+				break;
+			}
 			case DebugMessageId.SetBreakpoint: {
 				break;
 			}
-			default:
-			this.log(msg);
+			default: this.log(msg);
 		}
 	}
 
@@ -318,5 +335,15 @@ export class AttachDebugSession extends LoggingDebugSession {
 	{
 		this.send(new LuaAttachMessage(DebugMessageId.StepOut));
 		this.sendResponse(response);
+	}
+
+	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void
+	{
+		const id = this.evalIdCounter++;
+		const stackId = args.frameId || 0;
+		const req = new DMReqEvaluate(this.break!.L, id, stackId, args.expression);
+		this.send(req);
+
+		this.evalMap.set(id, response);
 	}
 }

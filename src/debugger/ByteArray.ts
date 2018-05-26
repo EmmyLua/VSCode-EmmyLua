@@ -24,7 +24,7 @@ export class ByteArray {
 
     writeUint64(value: number) {
         this.buffer.writeUInt32BE(value >> 8);
-        this.buffer.writeUInt32BE(value & 0x00ff);
+        this.buffer.writeUInt32BE(value & 0xfffffff);
     }
 
     readUint64():  number {
