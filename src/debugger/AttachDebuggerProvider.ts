@@ -31,7 +31,10 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
 
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
-        
+        if (debugConfiguration.pid > 0) {
+            return debugConfiguration;
+        }
+        // list processes
         return new Promise((resolve, reject) => {
             const args = [`${savedContext.extensionPath}/server/windows/x86/emmy.arch.exe`, " ", "list_processes"];
             cp.exec(args.join(" "), (err, stdout, stderr) => {

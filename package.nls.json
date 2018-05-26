@@ -1,4 +1,6 @@
 {
+    "debug.attach.label": "EmmyLua: Attach by process id",
+    "debug.attach.name": "Attach by process id",
     "debug.attach.target_pid": "Target pid",
     "debug.attach.desc": "Attach process debugger"
 }

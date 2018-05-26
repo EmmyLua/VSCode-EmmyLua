@@ -1,4 +1,6 @@
 {
-    "debug.attach.target_pid": "目标进程PID",
+    "debug.attach.label": "EmmyLua: 通过进程ID附加",
+    "debug.attach.name": "通过进程ID附加",
+    "debug.attach.target_pid": "目标进程ID",
     "debug.attach.desc": "附加进程调试"
 }

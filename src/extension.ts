@@ -31,15 +31,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions);
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
-    vscode.commands.registerCommand("emmy.debugger.ask_pid", cfg => {
-        return vscode.window.showInputBox({
-			placeHolder: "Please enter the number of target pid.",
-			value: "123"
-		});
-    });
 
     let provder = new AttachDebuggerProvider();
-    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmyLuaAttach", provder));
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", provder));
     savedContext.subscriptions.push(provder);
     vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
         console.log(e.body);

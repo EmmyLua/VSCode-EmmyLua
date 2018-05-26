@@ -56,7 +56,7 @@
         ],
         "debuggers": [
             {
-                "type": "emmyLuaAttach",
+                "type": "emmylua_attach",
                 "label": "EmmyLua Attach Debug",
                 "program": "./out/debugger/debugAdapter.js",
                 "runtime": "node",
@@ -69,34 +69,31 @@
                             "pid": {
                                 "type": "number",
                                 "description": "%debug.attach.target_pid%",
-                                "default": 55555
+                                "default": 0
                             }
                         }
                     }
                 },
                 "initialConfigurations": [
                     {
-                        "type": "emmyLuaAttach",
+                        "type": "emmylua_attach",
                         "request": "attach",
-                        "name": "Attach to app",
-                        "pid": "${workspaceFolder}/${command:emmy.debugger.ask_pid}"
+                        "name": "%debug.attach.name%",
+                        "pid": 0
                     }
                 ],
                 "configurationSnippets": [
                     {
-                        "label": "EmmyLua: Attach",
+                        "label": "%debug.attach.label%",
                         "description": "%debug.attach.desc%",
                         "body": {
-                            "type": "emmyLuaAttach",
+                            "type": "emmylua_attach",
                             "request": "attach",
-                            "name": "Attach to app",
-                            "pid": "^\"\\${workspaceFolder}/\\${command:emmy.debugger.ask_pid}\""
+                            "name": "%debug.attach.name%",
+                            "pid": 0
                         }
                     }
                 ],
-                "variables": {
-                    "AskForProgramName": "emmy.debugger.ask_pid"
-                },
                 "languages": [
                     "lua"
                 ]
