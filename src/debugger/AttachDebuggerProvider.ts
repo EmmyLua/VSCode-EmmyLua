@@ -48,7 +48,7 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
                             detail: path
                         };
                     });
-                    vscode.window.showQuickPick(items).then((item: ProcessInfoItem | undefined) => {
+                    vscode.window.showQuickPick(items, { placeHolder: "Select the process to attach" }).then((item: ProcessInfoItem | undefined) => {
                         if (item) {
                             debugConfiguration.pid = item.pid;
                             resolve(debugConfiguration);
