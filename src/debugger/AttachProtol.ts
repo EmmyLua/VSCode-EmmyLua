@@ -182,7 +182,7 @@ interface Context {
 
 }
 
-interface IStackNode {
+export interface IStackNode {
     read(ctx: Context, buf: ByteArray): void;
 }
 

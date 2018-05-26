@@ -1,11 +1,11 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, StoppedEvent, StackFrame, Source, Thread, Variable
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, StoppedEvent, StackFrame, Source, Thread, Variable, Handles
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as sb from "smart-buffer";
-import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue } from './AttachProtol';
+import { LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue, IStackNode } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import { basename } from 'path';
 
@@ -37,6 +37,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	private breakpoints = new Map<string, EmmyBreakpoint[]>();
 	private loadedScripts = new Map<string, LoadedScript>();
 	private break?: DMBreak;
+	private handles: Handles<IStackNode> = new Handles<IStackNode>();
 	
 	public constructor() {
 		super("emmy_attach.txt");
@@ -206,7 +207,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 
 		const breakpoints = new Array<DebugProtocol.Breakpoint>();
 		lines.forEach(bp => {
-			var bpk = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
+			const bpk = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
 			bpk.id = ++breakpointId;
 			breakpoints.push(bpk);
 			
@@ -215,7 +216,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 			//send
 			const script = this.findScript(path);
 			if (script) {
-				this.send(new DMAddBreakpoint(script.index, bp.line));
+				this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(bp.line)));
 			}
 		});
 		response.body = {
@@ -257,7 +258,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 					if (script) {
 						source = new Source(basename(script.path), APP_PATH + script.path);
 					}
-					return new StackFrame(index, root.functionName, source, root.line);
+					return new StackFrame(index, root.functionName, source, this.convertDebuggerLineToClient(root.line));
 				}),
 				totalFrames: stacks.children.length
 			};
@@ -267,11 +268,12 @@ export class AttachDebugSession extends LoggingDebugSession {
 
 	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void
 	{
+		const stack = this.break!.stacks!.children[args.frameId];
 		response.body = {
 			scopes: [
 				{
 					name: "Local",
-					variablesReference: args.frameId + 1,
+					variablesReference: this.handles.create(stack),
 					expensive: false
 				}
 			]
@@ -282,22 +284,17 @@ export class AttachDebugSession extends LoggingDebugSession {
 	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void
 	{
 		if (this.break) {
-			const stacks = this.break.stacks;
-			if (stacks) {
-				const stack = <StackNodeContainer> stacks.children[args.variablesReference - 1];
-				if (stack) {
-					response.body = {
-						variables: stack.children.map(node => {
-							if (node instanceof LuaXObjectValue) {
-								const vn = <LuaXObjectValue> node;
-								return new Variable(vn.name, vn.data);
-							}
-							this.log(node);
-							return new Variable("", "");
-						})
-					};
-				}
-			}
+			const node = <StackNodeContainer> this.handles.get(args.variablesReference);
+			response.body = {
+				variables: node.children.map(node => {
+					if (node instanceof LuaXObjectValue) {
+						const vn = <LuaXObjectValue> node;
+						return new Variable(vn.name, vn.data);
+					}
+					this.log(node);
+					return new Variable("", "");
+				})
+			};
 		}
 		this.sendResponse(response);
 	}
