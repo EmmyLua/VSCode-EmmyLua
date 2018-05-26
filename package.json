@@ -58,7 +58,7 @@
             {
                 "type": "emmylua_attach",
                 "label": "EmmyLua Attach Debug",
-                "program": "./out/debugger/debugAdapter.js",
+                "program": "./out/debugger/AttachDebugAdapter.js",
                 "runtime": "node",
                 "configurationAttributes": {
                     "attach": {
