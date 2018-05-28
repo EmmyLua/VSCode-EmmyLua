@@ -9,15 +9,16 @@ import {
 	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue, IStackNode, DMReqEvaluate, EvalResultNode, DMRespEvaluate
 } from './AttachProtol';
 import { ByteArray } from './ByteArray';
-import { basename } from 'path';
+import * as path from 'path';
+import * as fs from 'fs';
 
 var emmyToolExe:string, emmyLua: string;
 var breakpointId:number = 0;
-var APP_PATH = "E:/DevelopTools/ZeroBraneStudio/";
 
 interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
 	pid: number;
 	extensionPath: string;
+    sourcePaths: string[];
 }
 
 interface EmmyBreakpoint {
@@ -42,6 +43,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	private handles: Handles<IStackNode> = new Handles<IStackNode>();
 	private evalIdCounter = 0;
 	private evalMap = new Map<number, DebugProtocol.EvaluateResponse>();
+    private sourcePaths: string[] = [];
 	
 	public constructor() {
 		super("emmy_attach.txt");
@@ -52,6 +54,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	protected attachRequest(response: DebugProtocol.AttachResponse, args: AttachRequestArguments): void {
 		emmyToolExe = `${args.extensionPath}/server/windows/x86/emmy.tool.exe`;
 		emmyLua = `${args.extensionPath}/server/Emmy.lua`;
+		this.sourcePaths = args.sourcePaths;
 
 		let argList = [emmyToolExe, " ", "-m", "attach", "-p", args.pid, "-e", emmyLua];
 		
@@ -158,13 +161,18 @@ export class AttachDebugSession extends LoggingDebugSession {
 			case DebugMessageId.LoadScript: {
 				let mm = msg as DMLoadScript;
 				if (mm.fileName) {
-					const path = this.normalizePath(mm.fileName);
-					this.sendEvent(new OutputEvent(`${path}\n`));
-					const script: LoadedScript = {
-						path: path,
-						index: mm.index
-					};
-					this.loadedScripts.set(path, script);
+					const filePath = this.resolvePath(mm.fileName);
+					if (filePath) {
+						this.sendEvent(new OutputEvent(`load:${mm.fileName}\n`));
+						const script: LoadedScript = {
+							path: filePath,
+							index: mm.index
+						};
+						this.loadedScripts.set(filePath.toLowerCase(), script);
+					} else {
+						this.sendEvent(new OutputEvent(`file not found:${mm.fileName}\n`));
+					}
+					
 					this.send(new LuaAttachMessage(DebugMessageId.LoadDone));
 				}
 				break;
@@ -242,13 +250,28 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
-	private findScript(path: string): LoadedScript | undefined {
-		path = this.normalizePath(path.substr(APP_PATH.length));
-		return this.loadedScripts.get(path);
+	private resolvePath(filePath: string): string | undefined {
+		if (path.isAbsolute(filePath)) {
+			if (fs.existsSync(filePath)) {
+				return filePath;
+			} else {
+				return undefined;
+			}
+		}
+		for (let index = 0; index < this.sourcePaths.length; index++) {
+			const p = this.sourcePaths[index];
+			const absPath = path.join(p, filePath);
+			if (fs.existsSync(absPath)) {
+				return absPath;
+			}
+		}
 	}
 
-	private normalizePath(path: string) {
-		return path.replace(/\\/g, "/");
+	private findScript(path: string): LoadedScript | undefined {
+		const filePath = this.resolvePath(path);
+		if (filePath) {
+			return this.loadedScripts.get(filePath.toLowerCase());
+		}
 	}
 
 	private log(obj: any) {
@@ -273,7 +296,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 					const script = this.fundScriptByIndex(root.scriptIndex);
 					var source: Source | undefined;
 					if (script) {
-						source = new Source(basename(script.path), APP_PATH + script.path);
+						source = new Source(path.basename(script.path), this.resolvePath(script.path));
 					}
 					return new StackFrame(index, root.functionName, source, this.convertDebuggerLineToClient(root.line));
 				}),

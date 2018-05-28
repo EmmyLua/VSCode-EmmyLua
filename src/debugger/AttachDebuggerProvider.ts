@@ -15,6 +15,7 @@ interface ProcessInfoItem extends vscode.QuickPickItem {
 interface AttachDebugConfiguration extends DebugConfiguration {
     pid: number;
     extensionPath: string;
+    sourcePaths: string[];
 }
 
 export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
@@ -31,6 +32,7 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
 
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
+        debugConfiguration.sourcePaths = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
         if (debugConfiguration.pid > 0) {
             return debugConfiguration;
         }
