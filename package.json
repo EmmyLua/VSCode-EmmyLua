@@ -125,7 +125,17 @@
                             "arguments": {
                                 "type": "array",
                                 "description": "运行参数",
-                                "default": "[]"
+                                "default": []
+                            },
+                            "captureStd": {
+                                "type": "boolean",
+                                "description": "capture stdout/stderr output",
+                                "default": true
+                            },
+                            "captureOutputDebugString": {
+                                "type": "boolean",
+                                "description": "capture output debug string",
+                                "default": false
                             }
                         }
                     }
@@ -137,7 +147,7 @@
                         "name": "%debug.launch.name%",
                         "program": "lua.exe",
                         "workingDir": "${workspaceRoot}",
-                        "arguments": "[]"
+                        "arguments": []
                     }
                 ],
                 "configurationSnippets": [
@@ -149,8 +159,10 @@
                             "request": "launch",
                             "name": "%debug.launch.name%",
                             "program": "lua.exe",
+                            "captureStd": true,
+                            "captureOutputDebugString": false,
                             "workingDir": "${workspaceRoot}",
-                            "arguments": "[]"
+                            "arguments": []
                         }
                     }
                 ],

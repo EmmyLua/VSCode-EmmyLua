@@ -20,7 +20,9 @@ var breakpointId:number = 0;
 
 interface EmmyDebugArguments {
 	extensionPath: string;
-    sourcePaths: string[];
+	sourcePaths: string[];
+	captureStd: boolean;
+	captureOutputDebugString: boolean;
 }
 
 interface EmmyAttachRequestArguments extends DebugProtocol.AttachRequestArguments, EmmyDebugArguments {
@@ -76,7 +78,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 			const arch = isX86 ? "x86" : "x64";
 			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
 			const cmd = `${toolExe} -m run --cmd ${args.program} -e ${emmyLua} -w ${args.workingDir} --console true -a ${args.arguments.join(" ")}`;
-			const ls = this.runDebugger(cmd, response);
+			const ls = this.runDebugger(cmd, args, response);
 			this.once("initialized", () => {
 				ls.stdin.write("resume\n");
 			});
@@ -90,11 +92,11 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 			const arch = isX86 ? "x86" : "x64";
 			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
 			let argList = [toolExe, "-m", "attach", "-p", args.pid, "-e", emmyLua];
-			this.runDebugger(argList.join(" "), response);
+			this.runDebugger(argList.join(" "), args, response);
 		});
 	}
 
-	private runDebugger(cmd: string, response: DebugProtocol.AttachResponse): cp.ChildProcess {
+	private runDebugger(cmd: string, args: EmmyDebugArguments, response: DebugProtocol.AttachResponse): cp.ChildProcess {
 		const ls = cp.exec(cmd).on("error", e => {
 			this.sendEvent(new OutputEvent(e.message));
 			this.sendEvent(new TerminatedEvent());
@@ -105,19 +107,19 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 			lines.forEach(line => {
 				if (line.startsWith("port:")) {
 					var port = parseInt(line.substr(5));
-					this.connect(port, response);
+					this.connect(port, args, response);
 				}
 			});
 		});
 		return ls;
 	}
 
-	connect(port: number, response: DebugProtocol.AttachResponse) {
+	connect(port: number, args: EmmyDebugArguments, response: DebugProtocol.AttachResponse) {
 		var socket = new net.Socket();
 		socket.connect(port);
 		socket.on("connect", () => {
 			this.sendResponse(response);
-			this.send(new DMReqInitialize("", emmyLua, true, true));
+			this.send(new DMReqInitialize("", emmyLua, args.captureStd, args.captureOutputDebugString));
 		}).on("data", buf => {
 			this.receive(buf);
 		}).on("error", (e) => {
