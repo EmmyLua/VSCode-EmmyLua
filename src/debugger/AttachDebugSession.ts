@@ -73,7 +73,10 @@ export class AttachDebugSession extends LoggingDebugSession {
 			const arch = isX86 ? "x86" : "x64";
 			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
 			const cmd = `${toolExe} -m run --cmd ${args.program} -e ${emmyLua} -w ${args.workingDir} --console true -a ${args.arguments.join(" ")}`;
-			this.runDebugger(cmd, response);
+			const ls = this.runDebugger(cmd, response);
+			this.once("initialized", () => {
+				ls.stdin.write("resume\n");
+			});
 		});
 	}
 
@@ -88,7 +91,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 		});
 	}
 
-	private runDebugger(cmd: string, response: DebugProtocol.AttachResponse) {
+	private runDebugger(cmd: string, response: DebugProtocol.AttachResponse): cp.ChildProcess {
 		const ls = cp.exec(cmd).on("error", e => {
 			this.sendEvent(new OutputEvent(e.message));
 			this.sendEvent(new TerminatedEvent());
@@ -100,12 +103,10 @@ export class AttachDebugSession extends LoggingDebugSession {
 				if (line.startsWith("port:")) {
 					var port = parseInt(line.substr(5));
 					this.connect(port, response);
-					this.once("initialized", () => {
-						ls.stdin.write("resume\n");
-					});
 				}
 			});
 		});
+		return ls;
 	}
 
 	connect(port: number, response: DebugProtocol.AttachResponse) {
