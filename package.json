@@ -107,7 +107,9 @@
                 "configurationAttributes": {
                     "launch": {
                         "required": [
-                            "program"
+                            "program",
+                            "workingDir",
+                            "arguments"
                         ],
                         "properties": {
                             "program": {
@@ -118,7 +120,7 @@
                             "workingDir": {
                                 "type": "string",
                                 "description": "工作目录",
-                                "default": ""
+                                "default": "${workspaceRoot}"
                             },
                             "arguments": {
                                 "type": "array",
@@ -134,7 +136,8 @@
                         "request": "launch",
                         "name": "%debug.launch.name%",
                         "program": "lua.exe",
-                        "workingDir": "workingDir"
+                        "workingDir": "${workspaceRoot}",
+                        "arguments": "[]"
                     }
                 ],
                 "configurationSnippets": [
@@ -146,7 +149,8 @@
                             "request": "launch",
                             "name": "%debug.launch.name%",
                             "program": "lua.exe",
-                            "workingDir": "workingDir"
+                            "workingDir": "${workspaceRoot}",
+                            "arguments": "[]"
                         }
                     }
                 ],
