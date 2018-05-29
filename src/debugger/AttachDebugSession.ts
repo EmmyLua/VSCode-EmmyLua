@@ -297,8 +297,10 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
-	private normalize(path: string) {
-		return path.toLowerCase();
+	private normalize(filePath: string) {
+		filePath = path.normalize(filePath);
+		filePath = filePath.substr(0, 1).toLowerCase() + filePath.substr(1);
+		return filePath;
 	}
 
 	private resolvePath(filePath: string): string | undefined {
