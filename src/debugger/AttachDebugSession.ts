@@ -1,12 +1,15 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, StoppedEvent, StackFrame, Source, Thread, Variable, Handles, Response
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent,
+	Breakpoint, StoppedEvent, StackFrame, Source, Thread, Handles
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
 import * as net from "net";
 import * as sb from "smart-buffer";
 import {
-	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript, DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, LuaXObjectValue, IStackNode, DMReqEvaluate, EvalResultNode, DMRespEvaluate
+	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript,
+	DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, IStackNode,
+	DMReqEvaluate, DMRespEvaluate, ExprEvaluator
 } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
@@ -41,7 +44,7 @@ interface LoadedScript {
 	source?: string;
 }
 
-export class AttachDebugSession extends LoggingDebugSession {
+export class AttachDebugSession extends LoggingDebugSession implements ExprEvaluator {
 
 	private socket?: net.Socket;
 	private receiveBuf = new sb.SmartBuffer();
@@ -51,7 +54,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	private break?: DMBreak;
 	private handles: Handles<IStackNode> = new Handles<IStackNode>();
 	private evalIdCounter = 0;
-	private evalMap = new Map<number, DebugProtocol.EvaluateResponse>();
+	private evalMap = new Map<number, (v:DMRespEvaluate) => void>();
     private sourcePaths: string[] = [];
 	
 	public constructor() {
@@ -232,11 +235,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 				const response = this.evalMap.get(evalResp.evalId);
 				if (response) {
 					this.evalMap.delete(evalResp.evalId);
-					response.body = {
-						result: "TODO",
-						variablesReference: 0
-					};
-					this.sendResponse(response);
+					response(evalResp);
 				}
 				break;
 			}
@@ -359,8 +358,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
-	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void
-	{
+	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void {
 		const stack = this.break!.stacks!.children[args.frameId];
 		response.body = {
 			scopes: [
@@ -374,52 +372,59 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
-	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void
-	{
+	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void {
 		if (this.break) {
-			const node = <StackNodeContainer> this.handles.get(args.variablesReference);
-			response.body = {
-				variables: node.children.map(node => {
-					if (node instanceof LuaXObjectValue) {
-						const vn = <LuaXObjectValue> node;
-						return new Variable(vn.name, vn.data);
-					}
-					this.log(node);
-					return new Variable("", "");
-				})
-			};
+			const node = this.handles.get(args.variablesReference);
+			const ctx = { evaluator: this, handles: this.handles };
+			node.computeChildren(ctx).then(vars => {
+				response.body = { variables: vars.map(node => node.toVariable(ctx)) };
+				this.sendResponse(response);
+			});
+		} else {
+			this.sendResponse(response);
 		}
-		this.sendResponse(response);
 	}
 
-	protected continueRequest(response: DebugProtocol.ContinueResponse, args: DebugProtocol.ContinueArguments): void
-	{
+	protected continueRequest(response: DebugProtocol.ContinueResponse, args: DebugProtocol.ContinueArguments): void {
 		this.send(new LuaAttachMessage(DebugMessageId.Continue));
 		this.sendResponse(response);
 	}
-	protected nextRequest(response: DebugProtocol.NextResponse, args: DebugProtocol.NextArguments): void
-	{
+
+	protected nextRequest(response: DebugProtocol.NextResponse, args: DebugProtocol.NextArguments): void {
 		this.send(new LuaAttachMessage(DebugMessageId.StepOver));
 		this.sendResponse(response);
 	}
-	protected stepInRequest(response: DebugProtocol.StepInResponse, args: DebugProtocol.StepInArguments): void
-	{
+
+	protected stepInRequest(response: DebugProtocol.StepInResponse, args: DebugProtocol.StepInArguments): void {
 		this.send(new LuaAttachMessage(DebugMessageId.StepInto));
 		this.sendResponse(response);
 	}
-	protected stepOutRequest(response: DebugProtocol.StepOutResponse, args: DebugProtocol.StepOutArguments): void
-	{
+
+	protected stepOutRequest(response: DebugProtocol.StepOutResponse, args: DebugProtocol.StepOutArguments): void {
 		this.send(new LuaAttachMessage(DebugMessageId.StepOut));
 		this.sendResponse(response);
 	}
 
-	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void
-	{
-		const id = this.evalIdCounter++;
+	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
 		const stackId = args.frameId || 0;
-		const req = new DMReqEvaluate(this.break!.L, id, stackId, args.expression);
-		this.send(req);
+		this.eval(args.expression, stackId).then(v => {
+			const ctx = { evaluator: this, handles: this.handles };
+			const variable = v.resultNode.children[0].toVariable(ctx);
+			response.body = {
+				result: variable.name,
+				variablesReference: variable.variablesReference
+			};
+			this.sendResponse(response);
+		});
+	}
 
-		this.evalMap.set(id, response);
+	eval(expr: string, stack: number): Thenable<DMRespEvaluate> {
+		return new Promise((resolve) => {
+			const id = this.evalIdCounter++;
+			const stackId = stack;
+			const req = new DMReqEvaluate(this.break!.L, id, stackId, expr, 2);
+			this.evalMap.set(id, resolve);
+			this.send(req);
+		});
 	}
 }

@@ -1,4 +1,6 @@
 import { ByteArray } from "./ByteArray";
+import { Variable, Handles } from "vscode-debugadapter";
+import { DebugProtocol } from "vscode-debugprotocol";
 
 export enum DebugMessageId {
     ReqInitialize,
@@ -220,17 +222,32 @@ export enum StackNodeId {
     Error,
 }
 
+export interface ExprEvaluator {
+	eval(expr: string, stack: number): Thenable<DMRespEvaluate>;
+}
+
 interface Context {
 
 }
 
-export interface IStackNode {
-    read(ctx: Context, buf: ByteArray): void;
+interface ComputeContext {
+    evaluator: ExprEvaluator;
+    handles: Handles<IStackNode>;
 }
 
-class StackNode implements IStackNode {
-    read(ctx: Context, buf: ByteArray) {
+export interface IStackNode {
+    read(ctx: Context, buf: ByteArray): void;
+    toVariable(ctx: ComputeContext): Variable;
+    computeChildren(ctx: ComputeContext): Thenable<IStackNode[]>;
+}
 
+abstract class StackNode implements IStackNode {
+    abstract read(ctx: Context, buf: ByteArray): void;
+
+    abstract toVariable(ctx: ComputeContext): Variable;
+
+    computeChildren(ctx: ComputeContext): Thenable<IStackNode[]> {
+        return Promise.resolve([]);
     }
 }
 
@@ -244,6 +261,14 @@ export class StackNodeContainer extends StackNode {
             const child = readNode(ctx, buf);
             this.children.push(child);
         }
+    }
+
+    toVariable() {
+        return new Variable("NodeContainer", "");
+    }
+
+    computeChildren(ctx: ComputeContext): Thenable<IStackNode[]> {
+        return Promise.resolve(this.children);
     }
 }
 
@@ -259,9 +284,13 @@ export class StackRootNode extends StackNodeContainer {
         this.line = buf.readInt32();
         this.functionName = buf.readString();
     }
+
+    toVariable() {
+        return new Variable("Root", "");
+    }
 }
 
-export class LuaXObjectValue extends StackNode {
+export abstract class LuaXObjectValue extends StackNode {
 
     public name = "";
     public type = "";
@@ -275,6 +304,10 @@ export class LuaXObjectValue extends StackNode {
 
     toKeyString() {
         return this.name;
+    }
+
+    toVariable(ctx: ComputeContext): Variable {
+        return new Variable(this.name, this.data);
     }
 }
 
@@ -294,6 +327,25 @@ class LuaXTable extends LuaXObjectValue {
                 this.children.push(value);
             }
         }
+    }
+
+    computeChildren(ctx: ComputeContext): Thenable<IStackNode[]> {
+        if (this.children.length > 0) {
+            return Promise.resolve(this.children);
+        }
+        return new Promise((resolve) => {
+            ctx.evaluator.eval(this.name, 0).then(value => {
+                const n = value.resultNode.children[0];
+                if (n instanceof LuaXTable) {
+                    this.children = n.children;
+                    resolve(n.children);
+                }
+            });
+        });
+    }
+
+    toVariable(ctx: ComputeContext): DebugProtocol.Variable {
+        return { name: this.name, value: this.data, variablesReference: ctx.handles.create(this), type:"object" };
     }
 }
 
