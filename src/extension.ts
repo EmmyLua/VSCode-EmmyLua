@@ -34,6 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     let provder = new AttachDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", provder));
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", provder));
     savedContext.subscriptions.push(provder);
     vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
         console.log(e.body);

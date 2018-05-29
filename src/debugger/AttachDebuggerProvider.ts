@@ -33,6 +33,9 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
+        if (debugConfiguration.type === "emmylua_launch") {
+            return debugConfiguration;
+        }
         if (debugConfiguration.pid > 0) {
             return debugConfiguration;
         }

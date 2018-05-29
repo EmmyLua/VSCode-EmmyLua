@@ -2,5 +2,10 @@
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",
     "debug.attach.target_pid": "Target pid",
-    "debug.attach.desc": "Attach process debugger"
+    "debug.attach.desc": "Attach process debugger",
+
+    
+    "debug.launch.label": "EmmyLua: Launch exe",
+    "debug.launch.name": "Launch exe",
+    "debug.launch.desc": "Launch exe"
 }

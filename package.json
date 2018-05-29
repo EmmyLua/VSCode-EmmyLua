@@ -97,6 +97,57 @@
                 "languages": [
                     "lua"
                 ]
+            },
+            
+            {
+                "type": "emmylua_launch",
+                "label": "EmmyLua Launch Debug",
+                "program": "./out/debugger/AttachDebugAdapter.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "启动程序",
+                                "default": "lua.exe"
+                            },
+                            "workingDir": {
+                                "type": "string",
+                                "description": "工作目录",
+                                "default": ""
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "emmylua_launch",
+                        "request": "launch",
+                        "name": "%debug.launch.name%",
+                        "program": "lua.exe",
+                        "workingDir": "workingDir"
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "%debug.launch.label%",
+                        "description": "%debug.launch.desc%",
+                        "body": {
+                            "type": "emmylua_launch",
+                            "request": "launch",
+                            "name": "%debug.launch.name%",
+                            "program": "lua.exe",
+                            "workingDir": "workingDir"
+                        }
+                    }
+                ],
+                "languages": [
+                    "lua"
+                ]
             }
         ],
         "configuration": {

@@ -1,5 +1,5 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, StoppedEvent, StackFrame, Source, Thread, Variable, Handles
+	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent, Breakpoint, StoppedEvent, StackFrame, Source, Thread, Variable, Handles, Response
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
 import * as cp from "child_process";
@@ -12,13 +12,22 @@ import { ByteArray } from './ByteArray';
 import * as path from 'path';
 import * as fs from 'fs';
 
-var emmyToolExe:string, emmyLua: string;
+var emmyArchExe:string, emmyLua: string;
 var breakpointId:number = 0;
 
-interface AttachRequestArguments extends DebugProtocol.AttachRequestArguments {
-	pid: number;
+interface EmmyDebugArguments {
 	extensionPath: string;
     sourcePaths: string[];
+}
+
+interface EmmyAttachRequestArguments extends DebugProtocol.AttachRequestArguments, EmmyDebugArguments {
+	pid: number;
+}
+
+interface EmmyLaunchRequesetArguments extends DebugProtocol.LaunchRequestArguments, EmmyDebugArguments {
+	program: string;
+	arguments: string[];
+	workingDir: string;
 }
 
 interface EmmyBreakpoint {
@@ -51,30 +60,44 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.setDebuggerLinesStartAt1(false);
 	}
 
-	protected attachRequest(response: DebugProtocol.AttachResponse, args: AttachRequestArguments): void {
-		emmyToolExe = `${args.extensionPath}/server/windows/x86/emmy.tool.exe`;
+	private initEnv(args: EmmyDebugArguments) {
+		emmyArchExe = `${args.extensionPath}/server/windows/x86/emmy.arch.exe`;
 		emmyLua = `${args.extensionPath}/server/Emmy.lua`;
 		this.sourcePaths = args.sourcePaths;
+	}
 
-		let argList = [emmyToolExe, " ", "-m", "attach", "-p", args.pid, "-e", emmyLua];
-		
-		cp.exec(argList.join(" "), (err, stdout) => {
-			if (err) {
-				this.sendEvent(new OutputEvent(err.message));
-			}
-			if (stdout) {
-				this.sendEvent(new OutputEvent(stdout));
-				var lines = stdout.split("\n");
-				lines.forEach(line => {
-					if (line.startsWith("port:")) {
-						var port = parseInt(line.substr(5));
-						this.connect(port, response);
-					}
-				});
-			}
-		}).on("error", e => {
+	protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyLaunchRequesetArguments): void {
+		this.initEnv(args);
+		cp.exec(`${emmyArchExe} arch -file ${args.program}`, (err, stdout) => {
+			const isX86 = stdout === "1";
+			const arch = isX86 ? "x86" : "x64";
+			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
+			const cmd = `${toolExe} -m run --cmd ${args.program} -e ${emmyLua} -w ${args.workingDir} --console true`;
+			this.runDebugger(cmd, response);
+		});
+	}
+
+	protected attachRequest(response: DebugProtocol.AttachResponse, args: EmmyAttachRequestArguments): void {
+		this.initEnv(args);
+		const emmyToolExe = `${args.extensionPath}/server/windows/x86/emmy.tool.exe`;
+		let argList = [emmyToolExe, "-m", "attach", "-p", args.pid, "-e", emmyLua];
+		this.runDebugger(argList.join(" "), response);
+	}
+
+	private runDebugger(cmd: string, response: Response) {
+		const ls = cp.exec(cmd).on("error", e => {
 			this.sendEvent(new OutputEvent(e.message));
 			this.sendEvent(new TerminatedEvent());
+		});
+		ls.stdout.on("data", (stdout:string) => {
+			this.sendEvent(new OutputEvent(stdout));
+			var lines = stdout.split("\n");
+			lines.forEach(line => {
+				if (line.startsWith("port:")) {
+					var port = parseInt(line.substr(5));
+					this.connect(port, response);
+				}
+			});
 		});
 	}
 
