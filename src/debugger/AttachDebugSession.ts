@@ -79,9 +79,13 @@ export class AttachDebugSession extends LoggingDebugSession {
 
 	protected attachRequest(response: DebugProtocol.AttachResponse, args: EmmyAttachRequestArguments): void {
 		this.initEnv(args);
-		const emmyToolExe = `${args.extensionPath}/server/windows/x86/emmy.tool.exe`;
-		let argList = [emmyToolExe, "-m", "attach", "-p", args.pid, "-e", emmyLua];
-		this.runDebugger(argList.join(" "), response);
+		cp.exec(`${emmyArchExe} arch -pid ${args.pid}`, (err, stdout) => {
+			const isX86 = stdout === "1";
+			const arch = isX86 ? "x86" : "x64";
+			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
+			let argList = [toolExe, "-m", "attach", "-p", args.pid, "-e", emmyLua];
+			this.runDebugger(argList.join(" "), response);
+		});
 	}
 
 	private runDebugger(cmd: string, response: DebugProtocol.AttachResponse) {
