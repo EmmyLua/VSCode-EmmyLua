@@ -119,6 +119,11 @@
                                 "type": "string",
                                 "description": "工作目录",
                                 "default": ""
+                            },
+                            "arguments": {
+                                "type": "array",
+                                "description": "运行参数",
+                                "default": "[]"
                             }
                         }
                     }

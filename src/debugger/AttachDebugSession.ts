@@ -72,7 +72,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 			const isX86 = stdout === "1";
 			const arch = isX86 ? "x86" : "x64";
 			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
-			const cmd = `${toolExe} -m run --cmd ${args.program} -e ${emmyLua} -w ${args.workingDir} --console true`;
+			const cmd = `${toolExe} -m run --cmd ${args.program} -e ${emmyLua} -w ${args.workingDir} --console true -a ${args.arguments.join(" ")}`;
 			this.runDebugger(cmd, response);
 		});
 	}
@@ -84,7 +84,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.runDebugger(argList.join(" "), response);
 	}
 
-	private runDebugger(cmd: string, response: Response) {
+	private runDebugger(cmd: string, response: DebugProtocol.AttachResponse) {
 		const ls = cp.exec(cmd).on("error", e => {
 			this.sendEvent(new OutputEvent(e.message));
 			this.sendEvent(new TerminatedEvent());
@@ -96,6 +96,9 @@ export class AttachDebugSession extends LoggingDebugSession {
 				if (line.startsWith("port:")) {
 					var port = parseInt(line.substr(5));
 					this.connect(port, response);
+					this.once("initialized", () => {
+						ls.stdin.write("resume\n");
+					});
 				}
 			});
 		});
@@ -171,6 +174,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 		switch (msg.id) {
 			case DebugMessageId.RespInitialize: {
 				this.sendEvent(new InitializedEvent());
+				this.emit("initialized");
 				break;
 			}
 			case DebugMessageId.Message: {	
@@ -184,14 +188,27 @@ export class AttachDebugSession extends LoggingDebugSession {
 			case DebugMessageId.LoadScript: {
 				let mm = msg as DMLoadScript;
 				if (mm.fileName) {
-					const filePath = this.resolvePath(mm.fileName);
+					var filePath = this.resolvePath(mm.fileName);
 					if (filePath) {
+						filePath = this.normalize(filePath);
 						this.sendEvent(new OutputEvent(`load:${mm.fileName}\n`));
 						const script: LoadedScript = {
 							path: filePath,
 							index: mm.index
 						};
-						this.loadedScripts.set(filePath.toLowerCase(), script);
+						this.loadedScripts.set(filePath, script);
+
+						// send breakpoints
+						const bpList = this.breakpoints.get(filePath);
+						//this.log("---- send bp");
+						//this.log(bpList);
+						//this.log(filePath);
+						if (bpList) {
+							for (let index = 0; index < bpList.length; index++) {
+								const bp = bpList[index];
+								this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(bp.line)));
+							}
+						}
 					} else {
 						this.sendEvent(new OutputEvent(`file not found:${mm.fileName}\n`));
 					}
@@ -244,12 +261,14 @@ export class AttachDebugSession extends LoggingDebugSession {
 
 	protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
 		let lines = args.breakpoints || [];
-		const path = <string> args.source.path;
+		const path = this.normalize(<string> args.source.path);
 
 		let bpList = this.breakpoints.get(path);
 		if (!bpList) {
 			bpList = new Array<EmmyBreakpoint>();
 			this.breakpoints.set(path, bpList);
+			//this.log("--- set bp");
+			//this.log(path);
 		}
 		const bps = bpList;
 
@@ -273,6 +292,10 @@ export class AttachDebugSession extends LoggingDebugSession {
 		this.sendResponse(response);
 	}
 
+	private normalize(path: string) {
+		return path.toLowerCase();
+	}
+
 	private resolvePath(filePath: string): string | undefined {
 		if (path.isAbsolute(filePath)) {
 			if (fs.existsSync(filePath)) {
@@ -293,7 +316,7 @@ export class AttachDebugSession extends LoggingDebugSession {
 	private findScript(path: string): LoadedScript | undefined {
 		const filePath = this.resolvePath(path);
 		if (filePath) {
-			return this.loadedScripts.get(filePath.toLowerCase());
+			return this.loadedScripts.get(this.normalize(filePath));
 		}
 	}
 
