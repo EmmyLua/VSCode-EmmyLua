@@ -234,7 +234,7 @@ export interface LoadedScriptManager {
 }
 
 export interface ExprEvaluator {
-	eval(expr: string, stack: number): Thenable<DMRespEvaluate>;
+	eval(expr: string, stack?: number): Thenable<DMRespEvaluate>;
 }
 
 interface Context {
@@ -368,7 +368,7 @@ class LuaXTable extends LuaXObjectValue {
             return Promise.resolve(this.children);
         }
         return new Promise((resolve) => {
-            ctx.evaluator.eval(this.calcExpr(), 0).then(value => {
+            ctx.evaluator.eval(this.calcExpr()).then(value => {
                 const n = value.resultNode.children[0];
                 if (n instanceof LuaXTable) {
                     this.children = n.children;

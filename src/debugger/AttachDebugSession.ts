@@ -48,6 +48,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 	private breakpoints = new Map<string, EmmyBreakpoint[]>();
 	private loadedScripts = new Map<string, LoadedScript>();
 	private break?: DMBreak;
+	private curFrameId = 0;
 	private handles: Handles<IStackNode> = new Handles<IStackNode>();
 	private evalIdCounter = 0;
 	private evalMap = new Map<number, (v:DMRespEvaluate) => void>();
@@ -346,7 +347,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 					if (script) {
 						source = new Source(path.basename(script.path), this.resolvePath(script.path));
 					}
-					return new StackFrame(index, root.functionName, source, this.convertDebuggerLineToClient(root.line));
+					return new StackFrame(index++, root.functionName, source, this.convertDebuggerLineToClient(root.line));
 				}),
 				totalFrames: stacks.children.length
 			};
@@ -355,11 +356,12 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 	}
 
 	protected scopesRequest(response: DebugProtocol.ScopesResponse, args: DebugProtocol.ScopesArguments): void {
+		this.curFrameId = args.frameId;
 		const stack = this.break!.stacks!.children[args.frameId];
 		response.body = {
 			scopes: [
 				{
-					name: "Local",
+					name: "Variables",
 					variablesReference: this.handles.create(stack),
 					expensive: false
 				}
@@ -402,8 +404,9 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 	}
 
 	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
-		const stackId = args.frameId || 0;
-		this.eval(args.expression, stackId).then(v => {
+		const frameId = args.frameId || 0;
+		this.curFrameId = frameId;
+		this.eval(args.expression, frameId).then(v => {
 			const ctx = { evaluator: this, handles: this.handles, scriptManager: this };
 			const variable = v.resultNode.children[0].toVariable(ctx);
 			response.body = {
@@ -414,10 +417,13 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		});
 	}
 
-	eval(expr: string, stack: number): Thenable<DMRespEvaluate> {
+	eval(expr: string, frameId: number = -1): Thenable<DMRespEvaluate> {
+		if (frameId < 0) {
+			frameId = this.curFrameId;
+		}
 		return new Promise((resolve) => {
 			const id = this.evalIdCounter++;
-			const stackId = stack;
+			const stackId = frameId;
 			const req = new DMReqEvaluate(this.break!.L, id, stackId, expr, 2);
 			this.evalMap.set(id, resolve);
 			this.send(req);
