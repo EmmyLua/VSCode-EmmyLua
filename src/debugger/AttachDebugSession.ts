@@ -9,7 +9,8 @@ import * as sb from "smart-buffer";
 import {
 	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript,
 	DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, IStackNode,
-	DMReqEvaluate, DMRespEvaluate, ExprEvaluator, LoadedScript, LoadedScriptManager
+	DMReqEvaluate, DMRespEvaluate, ExprEvaluator, LoadedScript, LoadedScriptManager,
+	DMDelBreakpoint
 } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
@@ -37,6 +38,7 @@ interface EmmyLaunchRequesetArguments extends DebugProtocol.LaunchRequestArgumen
 
 interface EmmyBreakpoint {
 	id: number;
+	scriptIndex: number;
 	line: number;
 }
 
@@ -215,8 +217,9 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 						const bpList = this.breakpoints.get(filePath);
 						if (bpList) {
 							for (let index = 0; index < bpList.length; index++) {
-								const bp = bpList[index];
-								this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(bp.line)));
+								const ebp = bpList[index];
+								ebp.scriptIndex = script.index;
+								this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(ebp.line)));
 							}
 						}
 					} else {
@@ -272,30 +275,45 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		let lines = args.breakpoints || [];
 		const path = this.normalize(<string> args.source.path);
 
-		let bpList = this.breakpoints.get(path);
-		if (!bpList) {
-			bpList = new Array<EmmyBreakpoint>();
-			this.breakpoints.set(path, bpList);
+		let existBps = this.breakpoints.get(path);
+		const existMap = new Map<number, EmmyBreakpoint>();
+		if (existBps) {
+			existBps.forEach(bp => existMap.set(bp.line, bp));
 		}
-		const bps = bpList;
+		const bps = <EmmyBreakpoint[]>[];
 
 		const breakpoints = new Array<DebugProtocol.Breakpoint>();
 		lines.forEach(bp => {
 			const bpk = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
 			bpk.id = ++breakpointId;
 			breakpoints.push(bpk);
-			
-			bps.push({ id: breakpointId, line: bp.line });
 
-			//send
-			const script = this.findScript(path);
-			if (script) {
-				this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(bp.line)));
+			const exist = existMap.get(bp.line);
+			if (exist) {
+				bps.push(exist);
+				existMap.delete(bp.line);
+			} else {
+				const ebp: EmmyBreakpoint = { id: breakpointId, line: bp.line, scriptIndex: -1 };
+	
+				//send
+				const script = this.findScript(path);
+				if (script) {
+					this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(bp.line)));
+					ebp.scriptIndex = script.index;
+				}
+				bps.push(ebp);
 			}
 		});
 		response.body = {
 			breakpoints: breakpoints
 		};
+
+		this.breakpoints.set(path, bps);
+		existMap.forEach((v, k) => {
+			if (v.scriptIndex > 0) {
+				this.send(new DMDelBreakpoint(v.scriptIndex, this.convertClientLineToDebugger(v.line)));
+			}
+		});
 		this.sendResponse(response);
 	}
 

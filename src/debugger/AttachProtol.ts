@@ -116,6 +116,23 @@ export class DMAddBreakpoint extends LuaAttachMessage {
     }
 }
 
+export class DMDelBreakpoint extends LuaAttachMessage {
+    scriptIndex: number;
+    line: number;
+
+    constructor(si: number, l: number) {
+        super(DebugMessageId.DelBreakpoint);
+        this.scriptIndex = si;
+        this.line = l;
+    }
+
+    write(buf: ByteArray) {
+        super.write(buf);
+        buf.writeUint32(this.scriptIndex);
+        buf.writeUint32(this.line);
+    }
+}
+
 export class DMLoadScript extends LuaAttachMessage {
     fileName?:string;
     source?:string;
