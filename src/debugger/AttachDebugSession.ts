@@ -72,8 +72,11 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 			const isX86 = stdout === "1";
 			const arch = isX86 ? "x86" : "x64";
 			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
-			const cmd = `${toolExe} -m run --cmd ${args.program} -e ${emmyLua} -w ${args.workingDir} --console true -a ${args.arguments.join(" ")}`;
-			const ls = this.runDebugger(cmd, args, response);
+			const argList = [toolExe, "-m", "run", "-c", args.program, "-e", emmyLua, '-w', args.workingDir, "--console", "true"];
+			if (args.arguments.length > 0) {
+				argList.push("-a", args.arguments.join(" "));
+			}
+			const ls = this.runDebugger(argList.join(" "), args, response);
 			this.once("initialized", () => {
 				ls.stdin.write("resume\n");
 			});

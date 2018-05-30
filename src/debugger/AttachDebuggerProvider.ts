@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import { WorkspaceFolder, DebugConfiguration, CancellationToken, ProviderResult } from 'vscode';
 import { savedContext } from '../extension';
 import * as cp from "child_process";
-import { basename } from 'path';
+import { basename, normalize } from 'path';
 
 var parseString = require('xml2js').parseString;
 
@@ -16,9 +16,22 @@ interface AttachDebugConfiguration extends DebugConfiguration {
     pid: number;
     extensionPath: string;
     sourcePaths: string[];
+    
+	program?: string;
+	arguments?: string[];
+	workingDir?: string;
 }
 
 export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
+    private isNullOrEmpty(s?: string): boolean {
+        return !s || s.trim().length === 0;
+    }
+
+    private getSourceRoots(): string[] {
+        var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
+        var config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots");
+        return list.concat(config.map(item => { return normalize(item); }));
+    }
 
     provideDebugConfigurations(folder: WorkspaceFolder | undefined, token?: CancellationToken): ProviderResult<DebugConfiguration[]> {
         var config: DebugConfiguration = {
@@ -32,8 +45,14 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
 
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
-        debugConfiguration.sourcePaths = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
+        debugConfiguration.sourcePaths = this.getSourceRoots();
         if (debugConfiguration.type === "emmylua_launch") {
+            if (this.isNullOrEmpty(debugConfiguration.workingDir)) {
+                debugConfiguration.workingDir = "%workspaceRoot%";
+            }
+            if (!debugConfiguration.arguments) {
+                debugConfiguration.arguments = [];
+            }
             return debugConfiguration;
         }
         if (debugConfiguration.pid > 0) {
