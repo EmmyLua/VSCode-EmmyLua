@@ -9,7 +9,7 @@ import * as sb from "smart-buffer";
 import {
 	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript,
 	DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, IStackNode,
-	DMReqEvaluate, DMRespEvaluate, ExprEvaluator
+	DMReqEvaluate, DMRespEvaluate, ExprEvaluator, LoadedScript, LoadedScriptManager
 } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
@@ -40,13 +40,7 @@ interface EmmyBreakpoint {
 	line: number;
 }
 
-interface LoadedScript {
-	path: string;
-	index: number;
-	source?: string;
-}
-
-export class AttachDebugSession extends LoggingDebugSession implements ExprEvaluator {
+export class AttachDebugSession extends LoggingDebugSession implements ExprEvaluator, LoadedScriptManager {
 
 	private socket?: net.Socket;
 	private receiveBuf = new sb.SmartBuffer();
@@ -321,7 +315,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		}
 	}
 
-	private findScript(path: string): LoadedScript | undefined {
+	public findScript(path: string): LoadedScript | undefined {
 		const filePath = this.resolvePath(path);
 		if (filePath) {
 			return this.loadedScripts.get(this.normalize(filePath));
@@ -332,7 +326,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		this.sendEvent(new Event("log", obj));
 	}
 
-	private fundScriptByIndex(index: number): LoadedScript|undefined {
+	public findScriptByIndex(index: number): LoadedScript | undefined {
 		for (const iterator of this.loadedScripts) {
 			if (iterator["1"].index === index) {
 				return iterator["1"];
@@ -347,7 +341,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 			response.body = {
 				stackFrames: stacks.children.map(child => {
 					const root = <StackRootNode> child;
-					const script = this.fundScriptByIndex(root.scriptIndex);
+					const script = this.findScriptByIndex(root.scriptIndex);
 					var source: Source | undefined;
 					if (script) {
 						source = new Source(path.basename(script.path), this.resolvePath(script.path));
@@ -377,7 +371,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 	protected variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): void {
 		if (this.break) {
 			const node = this.handles.get(args.variablesReference);
-			const ctx = { evaluator: this, handles: this.handles };
+			const ctx = { evaluator: this, handles: this.handles, scriptManager: this };
 			node.computeChildren(ctx).then(vars => {
 				response.body = { variables: vars.map(node => node.toVariable(ctx)) };
 				this.sendResponse(response);
@@ -410,7 +404,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 	protected evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): void {
 		const stackId = args.frameId || 0;
 		this.eval(args.expression, stackId).then(v => {
-			const ctx = { evaluator: this, handles: this.handles };
+			const ctx = { evaluator: this, handles: this.handles, scriptManager: this };
 			const variable = v.resultNode.children[0].toVariable(ctx);
 			response.body = {
 				result: variable.name,

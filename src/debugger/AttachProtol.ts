@@ -222,6 +222,17 @@ export enum StackNodeId {
     Error,
 }
 
+export interface LoadedScript {
+	path: string;
+	index: number;
+	source?: string;
+}
+
+export interface LoadedScriptManager {
+    findScript(path: string): LoadedScript | undefined;
+    findScriptByIndex(index: number): LoadedScript | undefined;
+}
+
 export interface ExprEvaluator {
 	eval(expr: string, stack: number): Thenable<DMRespEvaluate>;
 }
@@ -233,6 +244,7 @@ interface Context {
 interface ComputeContext {
     evaluator: ExprEvaluator;
     handles: Handles<IStackNode>;
+    scriptManager: LoadedScriptManager;
 }
 
 export interface IStackNode {
@@ -345,7 +357,7 @@ class LuaXTable extends LuaXObjectValue {
     }
 
     toVariable(ctx: ComputeContext): DebugProtocol.Variable {
-        return { name: this.name, value: this.data, variablesReference: ctx.handles.create(this), type:"object" };
+        return { name: this.name, value: "table", variablesReference: ctx.handles.create(this), type:"object" };
     }
 }
 
@@ -370,6 +382,19 @@ class LuaXFunction extends LuaXObjectValue {
         super.read(ctx, buf);
         this.script = buf.readUint32();
         this.line = buf.readUint32();
+    }
+
+    toVariable(ctx: ComputeContext): Variable {
+        var desc = "native";
+        if (this.line >= 0 && this.script >= 0) {
+            const script = ctx.scriptManager.findScriptByIndex(this.script);
+            if (script) {
+                desc = `line:${this.line}, script:${script.path}`;
+            } else {
+                desc = "unknown source";
+            }
+        }
+        return new Variable(this.name, desc);
     }
 }
 
