@@ -71,6 +71,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		var isX86 = true;
 		cp.exec(`${emmyArchExe} arch -file ${args.program}`, (err, stdout) => isX86 = stdout === "1").on("exit", code => {
 			if (code === 0xffffffff) {
+				this.sendEvent(new OutputEvent(`Program: ${args.program} not found!`));
 				this.sendEvent(new TerminatedEvent());
 			} else {
 				const arch = isX86 ? "x86" : "x64";
@@ -212,9 +213,6 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 
 						// send breakpoints
 						const bpList = this.breakpoints.get(filePath);
-						//this.log("---- send bp");
-						//this.log(bpList);
-						//this.log(filePath);
 						if (bpList) {
 							for (let index = 0; index < bpList.length; index++) {
 								const bp = bpList[index];
@@ -278,8 +276,6 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		if (!bpList) {
 			bpList = new Array<EmmyBreakpoint>();
 			this.breakpoints.set(path, bpList);
-			//this.log("--- set bp");
-			//this.log(path);
 		}
 		const bps = bpList;
 
