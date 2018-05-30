@@ -68,18 +68,22 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyLaunchRequesetArguments): void {
 		this.initEnv(args);
-		cp.exec(`${emmyArchExe} arch -file ${args.program}`, (err, stdout) => {
-			const isX86 = stdout === "1";
-			const arch = isX86 ? "x86" : "x64";
-			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
-			const argList = [toolExe, "-m", "run", "-c", args.program, "-e", emmyLua, '-w', args.workingDir, "--console", "true"];
-			if (args.arguments.length > 0) {
-				argList.push("-a", args.arguments.join(" "));
+		var isX86 = true;
+		cp.exec(`${emmyArchExe} arch -file ${args.program}`, (err, stdout) => isX86 = stdout === "1").on("exit", code => {
+			if (code === 0xffffffff) {
+				this.sendEvent(new TerminatedEvent());
+			} else {
+				const arch = isX86 ? "x86" : "x64";
+				const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
+				const argList = [toolExe, "-m", "run", "-c", args.program, "-e", emmyLua, '-w', args.workingDir, "--console", "true"];
+				if (args.arguments.length > 0) {
+					argList.push("-a", args.arguments.join(" "));
+				}
+				const ls = this.runDebugger(argList.join(" "), args, response);
+				this.once("initialized", () => {
+					ls.stdin.write("resume\n");
+				});
 			}
-			const ls = this.runDebugger(argList.join(" "), args, response);
-			this.once("initialized", () => {
-				ls.stdin.write("resume\n");
-			});
 		});
 	}
 
@@ -240,6 +244,9 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 				break;
 			}
 			case DebugMessageId.SetBreakpoint: {
+				break;
+			}
+			case DebugMessageId.CreateVM: {
 				break;
 			}
 			default: this.log(msg);
