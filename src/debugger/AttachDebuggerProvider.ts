@@ -36,9 +36,9 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
     provideDebugConfigurations(folder: WorkspaceFolder | undefined, token?: CancellationToken): ProviderResult<DebugConfiguration[]> {
         var config: DebugConfiguration = {
             name: "Attach",
-            type: "emmyLuaAttach",
+            type: "emmylua_attach",
             request: "attach",
-            pid: "${workspaceFolder}/${command:emmy.debugger.ask_pid}"
+            pid: 0
         };
         return [config];
     }

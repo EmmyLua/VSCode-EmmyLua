@@ -1,22 +1,21 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+
 import * as vscode from 'vscode';
 import * as path from "path";
 import * as net from "net";
-import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
 import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
 import findJava from "./findJava";
+import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
 import { Proposed } from 'vscode-languageserver-protocol';
 import { AttachDebuggerProvider } from './debugger/AttachDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
-export var savedContext: vscode.ExtensionContext;
-var client: LanguageClient;
-var activeEditor: vscode.TextEditor;
-var progressBar: vscode.StatusBarItem;
-var javaExecutablePath: string|null;
+export let savedContext: vscode.ExtensionContext;
+let client: LanguageClient;
+let activeEditor: vscode.TextEditor;
+let progressBar: vscode.StatusBarItem;
+let javaExecutablePath: string|null;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
@@ -32,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
 
-    let provder = new AttachDebuggerProvider();
+    const provder = new AttachDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", provder));
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", provder));
     savedContext.subscriptions.push(provder);
@@ -46,7 +45,7 @@ function asProtocol(workspaceFolder: vscode.WorkspaceFolder): Proposed.Workspace
 }
 
 function onDidChangeWorkspaceFolders(event: vscode.WorkspaceFoldersChangeEvent) {
-    let params: Proposed.DidChangeWorkspaceFoldersParams = {
+    const params: Proposed.DidChangeWorkspaceFoldersParams = {
         event: {
             added: event.added.map(folder => asProtocol(folder)),
             removed: event.removed.map(folder => asProtocol(folder))
@@ -92,7 +91,7 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
 }
 
 function startClient() {
-    let clientOptions: LanguageClientOptions = {
+    const clientOptions: LanguageClientOptions = {
         documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
         synchronize: {
             configurationSection: LANGUAGE_ID,
@@ -107,10 +106,10 @@ function startClient() {
     };
 
     let socketMode = false;
-    var serverOptions: ServerOptions;
+    let serverOptions: ServerOptions;
     if (socketMode) {
         // The server is a started as a separate app and listens on port 5007
-        let connectionInfo = {
+        const connectionInfo = {
             port: 5007
         };
         serverOptions = () => {
@@ -126,8 +125,8 @@ function startClient() {
             return Promise.resolve(result);
         };
     } else {
-        let cp = path.resolve(savedContext.extensionPath, "server", "*");
-        let exePath = javaExecutablePath || "java";
+        const cp = path.resolve(savedContext.extensionPath, "server", "*");
+        const exePath = javaExecutablePath || "java";
         console.log('exe path : ' + exePath);
         serverOptions = {
             command: exePath,
@@ -154,7 +153,7 @@ function startClient() {
             startClient();
         });
     });
-    let disposable = client.start();
+    const disposable = client.start();
     savedContext.subscriptions.push(disposable);
 }
 
@@ -169,8 +168,8 @@ function restartServer() {
 }
 
 function showReferences(uri: string, pos: vscode.Position) {
-    let u = vscode.Uri.parse(uri);
-    let p = new vscode.Position(pos.line, pos.character);
+    const u = vscode.Uri.parse(uri);
+    const p = new vscode.Position(pos.line, pos.character);
     vscode.commands.executeCommand("vscode.executeReferenceProvider", u, p).then(locations => {
         vscode.commands.executeCommand("editor.action.showReferences", u, p, locations);
     });
