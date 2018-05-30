@@ -1,4 +1,8 @@
 {
+    "emmylua.java.home": "Specifies the path to the java home",
+    "emmylua.source.roots": "Source roots of your project",
+    "emmylua.completion.caseSensitive": "Case sensitive completion",
+
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",
     "debug.attach.target_pid": "Target pid",

@@ -1,6 +1,14 @@
 {
+    "emmylua.java.home": "设置JAVA_HOME路径",
+    "emmylua.source.roots": "设置source roots",
+    "emmylua.completion.caseSensitive": "Case sensitive completion",
+
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",
     "debug.attach.target_pid": "目标进程ID",
-    "debug.attach.desc": "附加进程调试"
+    "debug.attach.desc": "附加进程调试",
+
+    "debug.launch.label": "EmmyLua: 启动并附加程序",
+    "debug.launch.name": "启动并附加程序",
+    "debug.launch.desc": "启动程序，并使用附加调试器附加到进程调试"
 }

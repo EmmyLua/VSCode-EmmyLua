@@ -180,19 +180,19 @@
                         "null"
                     ],
                     "default": null,
-                    "description": "Specifies the path to the java home"
+                    "description": "%emmylua.java.home%"
                 },
                 "emmylua.source.roots": {
                     "type": [
                         "array"
                     ],
                     "default": null,
-                    "description": "Source roots of your project"
+                    "description": "%emmylua.source.roots%"
                 },
                 "emmylua.completion.caseSensitive": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Case sensitive completion"
+                    "description": "%emmylua.completion.caseSensitive%"
                 },
                 "emmylua.colors.parameter": {
                     "type": "string",
