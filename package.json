@@ -169,6 +169,65 @@
                 "languages": [
                     "lua"
                 ]
+            },
+            {
+                "type": "emmylua_remote",
+                "label": "EmmyLua Remote Debug",
+                "program": "./out/debugger/MobDebugAdapter.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program",
+                            "workingDir",
+                            "arguments"
+                        ], 
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "启动程序",
+                                "default": "lua.exe"
+                            },
+                            "workingDir": {
+                                "type": "string",
+                                "description": "工作目录",
+                                "default": "${workspaceRoot}"
+                            },
+                            "arguments": {
+                                "type": "array",
+                                "description": "运行参数",
+                                "default": []
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "emmylua_remote",
+                        "request": "launch",
+                        "name": "EmmyLua Remote",
+                        "program": "lua.exe",
+                        "workingDir": "${workspaceRoot}",
+                        "arguments": []
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "%debug.launch.label%",
+                        "description": "%debug.launch.desc%",
+                        "body": {
+                            "type": "emmylua_remote",
+                            "request": "launch",
+                            "name": "EmmyLua Remote",
+                            "program": "lua.exe",
+                            "workingDir": "${workspaceRoot}",
+                            "arguments": []
+                        }
+                    }
+                ],
+                "languages": [
+                    "lua"
+                ]
             }
         ],
         "configuration": {

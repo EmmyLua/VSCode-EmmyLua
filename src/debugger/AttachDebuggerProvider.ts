@@ -5,21 +5,12 @@ import { WorkspaceFolder, DebugConfiguration, CancellationToken, ProviderResult 
 import { savedContext } from '../extension';
 import * as cp from "child_process";
 import { basename, normalize } from 'path';
+import { AttachDebugConfiguration } from './types';
 
 var parseString = require('xml2js').parseString;
 
 interface ProcessInfoItem extends vscode.QuickPickItem {
     pid: number;
-}
-
-interface AttachDebugConfiguration extends DebugConfiguration {
-    pid: number;
-    extensionPath: string;
-    sourcePaths: string[];
-    
-	program?: string;
-	arguments?: string[];
-	workingDir?: string;
 }
 
 export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
