@@ -248,6 +248,7 @@ interface ComputeContext {
 }
 
 export interface IStackNode {
+    parent?: IStackNode;
     read(ctx: Context, buf: ByteArray): void;
     toVariable(ctx: ComputeContext): Variable;
     computeChildren(ctx: ComputeContext): Thenable<IStackNode[]>;
@@ -308,6 +309,8 @@ export abstract class LuaXObjectValue extends StackNode {
     public type = "";
     public data = "";
 
+    public parent?: LuaXObjectValue;
+
     read(ctx: Context, buf: ByteArray) {
         this.name = buf.readString();
         this.type = buf.readString();
@@ -326,6 +329,25 @@ export abstract class LuaXObjectValue extends StackNode {
 class LuaXTable extends LuaXObjectValue {
 
     public children = new Array<IStackNode>();
+
+    private calcExpr() {
+        var p: IStackNode | undefined = this;
+        var list = [];
+        while (p instanceof LuaXObjectValue) {
+            const name = p.name;
+            list.push(name);
+            p = p.parent;
+        }
+        const head = list.pop();
+        list = list.reverse().map(n => {
+            if (n.startsWith('[')) {
+                return n;
+            } else {
+                return `["${n}"]`;
+            }
+        });
+        return head + list.join("");
+    }
 
     read(ctx: Context, buf: ByteArray) {
         super.read(ctx, buf);
@@ -346,10 +368,11 @@ class LuaXTable extends LuaXObjectValue {
             return Promise.resolve(this.children);
         }
         return new Promise((resolve) => {
-            ctx.evaluator.eval(this.name, 0).then(value => {
+            ctx.evaluator.eval(this.calcExpr(), 0).then(value => {
                 const n = value.resultNode.children[0];
                 if (n instanceof LuaXTable) {
                     this.children = n.children;
+                    this.children.forEach(node => node.parent = this);
                     resolve(n.children);
                 }
             });
