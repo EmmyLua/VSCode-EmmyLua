@@ -18,4 +18,5 @@ export interface MobDebugConfiguration extends EmmyDebugConfiguration {
 	program?: string;
 	arguments?: string[];
 	workingDir?: string;
+	port?: number;
 }

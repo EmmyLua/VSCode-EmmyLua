@@ -28,9 +28,12 @@ export class MobDebugSession extends EmmyDebugSession {
     private launchServer(port: number): Thenable<net.Server> {
         return new Promise(resolve => {
             const socket = net.createServer(skt => {
-                this.client = new MobClient(skt);
+                this.printConsole("Connected.");
+                this.client = new MobClient(this, skt);
                 this.sendEvent(new InitializedEvent());
             }).on("listening", () => {
+                this.printConsole(`Start mobdebug server at port:${port}`);
+                this.printConsole("Waiting for process connection...");
                 resolve(socket);
             }).listen(port);
             this.server = socket;
@@ -44,13 +47,18 @@ export class MobDebugSession extends EmmyDebugSession {
 
 class MobClient {
     socket: net.Socket;
-    constructor(socket: net.Socket) {
+    session: MobDebugSession;
+
+    constructor(session:MobDebugSession, socket: net.Socket) {
         this.socket = socket;
+        this.session = session;
         this.init();
     }
 
     private init() {
-
+        this.socket.on("data", data => {
+            this.session.printConsole(data.toString());
+        });
     }
 
     close() {

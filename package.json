@@ -180,7 +180,8 @@
                         "required": [
                             "program",
                             "workingDir",
-                            "arguments"
+                            "arguments",
+                            "port"
                         ], 
                         "properties": {
                             "program": {
@@ -197,6 +198,11 @@
                                 "type": "array",
                                 "description": "运行参数",
                                 "default": []
+                            },
+                            "port": {
+                                "type": "number",
+                                "description": "调试端口",
+                                "default": 8172
                             }
                         }
                     }
@@ -208,20 +214,22 @@
                         "name": "EmmyLua Remote",
                         "program": "lua.exe",
                         "workingDir": "${workspaceRoot}",
-                        "arguments": []
+                        "arguments": [],
+                        "port": 8172
                     }
                 ],
                 "configurationSnippets": [
                     {
-                        "label": "%debug.launch.label%",
-                        "description": "%debug.launch.desc%",
+                        "label": "EmmyLua: Remote",
+                        "description": "EmmyLua: Remote",
                         "body": {
                             "type": "emmylua_remote",
                             "request": "launch",
                             "name": "EmmyLua Remote",
                             "program": "lua.exe",
                             "workingDir": "${workspaceRoot}",
-                            "arguments": []
+                            "arguments": [],
+                            "port": 8172
                         }
                     }
                 ],

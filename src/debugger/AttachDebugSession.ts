@@ -1,5 +1,5 @@
 import {
-	LoggingDebugSession, Event, OutputEvent, TerminatedEvent, InitializedEvent,
+	OutputEvent, TerminatedEvent, InitializedEvent,
 	Breakpoint, StoppedEvent, StackFrame, Source, Thread, Handles
 } from 'vscode-debugadapter';
 import { DebugProtocol } from "vscode-debugprotocol";
@@ -15,6 +15,7 @@ import {
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
 import * as fs from 'fs';
+import { EmmyDebugSession } from './EmmyDebugSession';
 
 var emmyArchExe:string, emmyLua: string;
 var breakpointId:number = 0;
@@ -42,7 +43,7 @@ interface EmmyBreakpoint {
 	line: number;
 }
 
-export class AttachDebugSession extends LoggingDebugSession implements ExprEvaluator, LoadedScriptManager {
+export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluator, LoadedScriptManager {
 
 	private socket?: net.Socket;
 	private receiveBuf = new sb.SmartBuffer();
@@ -57,7 +58,7 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
     private sourcePaths: string[] = [];
 	
 	public constructor() {
-		super("emmy_attach.txt");
+		super();
 		this.setDebuggerColumnsStartAt1(false);
 		this.setDebuggerLinesStartAt1(false);
 	}
@@ -345,10 +346,6 @@ export class AttachDebugSession extends LoggingDebugSession implements ExprEvalu
 		if (filePath) {
 			return this.loadedScripts.get(this.normalize(filePath));
 		}
-	}
-
-	private log(obj: any) {
-		this.sendEvent(new Event("log", obj));
 	}
 
 	public findScriptByIndex(index: number): LoadedScript | undefined {
