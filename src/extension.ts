@@ -60,10 +60,8 @@ function onDidChangeWorkspaceFolders(event: vscode.WorkspaceFoldersChangeEvent) 
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
-    if (activeEditor) {
-        setTimeout(() => {
-            Annotator.requestAnnotators(activeEditor, client);
-        }, 0.1);
+    if (activeEditor && activeEditor.document === event.document) {
+        Annotator.requestAnnotators(activeEditor, client);
     }
 }
 
@@ -110,7 +108,7 @@ function startClient() {
         }
     };
 
-    let socketMode = false;
+    let socketMode = true;
     let serverOptions: ServerOptions;
     if (socketMode) {
         // The server is a started as a separate app and listens on port 5007

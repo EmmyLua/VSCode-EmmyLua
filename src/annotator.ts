@@ -30,7 +30,16 @@ export function onDidChangeConfiguration(client: LanguageClient) {
     updateDecorations();
 }
 
+let timeoutToReqAnn: NodeJS.Timer;
+
 export function requestAnnotators(editor: vscode.TextEditor, client: LanguageClient) {
+    clearTimeout(timeoutToReqAnn);
+    timeoutToReqAnn = setTimeout(() => {
+        requestAnnotatorsImpl(editor, client);
+    }, 300);
+}
+
+function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient) {
     if (!D_PARAM) {
         updateDecorations();
     }
