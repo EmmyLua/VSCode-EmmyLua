@@ -2,7 +2,8 @@ import * as path from "path";
 import * as vscode from "vscode";
 
 function validateJava(javaPath: string): boolean {
-    return true;
+	//TODO check java path
+    return false;
 }
 
 export default function(): string|null {
