@@ -1,0 +1,68 @@
+{
+    "local": {
+        "prefix": "local",
+        "body": "local ${1:var} = ${0:nil}",
+        "description": "local variable = ...",
+        "scope": "source.lua"
+    },
+    "if": {
+        "prefix": "if",
+        "body": "if ${1:condition} then\n\t${0:-- body}\nend",
+        "description": "if",
+        "scope": "source.lua"
+    },
+    "else if": {
+        "prefix": "else if",
+        "body": "else if ${1:condition} then\n\t${0:-- body}",
+        "description": "else if",
+        "scope": "source.lua"
+    },
+    "for": {
+        "prefix": "for",
+        "body": "for ${1:i} = ${2:1}, ${3:10} do\n\t${0:-- body}\nend",
+        "description": "for i = 1, n do end",
+        "scope": "source.lua"
+    },
+    "fori": {
+        "prefix": "fori",
+        "body": "for ${1:index}, ${2:value} in ipairs(${3:myTable}) do\n\t${0:-- body}\nend",
+        "description": "for i, v in ipairs(table) do end",
+        "scope": "source.lua"
+    },
+    "forp": {
+        "prefix": "forp",
+        "body": "for ${1:key}, ${2:value} in pairs(${3:myTable}) do\n\t${0:-- body}\nend",
+        "description": "for k, v in pairs(table) do end",
+        "scope": "source.lua"
+    },
+    "do": {
+        "prefix": "do",
+        "body": "do\n\t${0:-- body}\nend",
+        "description": "do",
+        "scope": "source.lua"
+    },
+    "while": {
+        "prefix": "while",
+        "body": "while ${1:condition} do\n\t${0:-- body}\nend",
+        "description": "while",
+        "scope": "source.lua"
+    },
+    "repeat": {
+        "prefix": "repeat",
+        "body": "repeat\n\t${0:-- body}\nuntil ${1:condition}",
+        "description": "repeat",
+        "scope": "source.lua"
+    },
+    "local function": {
+        "prefix": "local function",
+        "body": "local function ${1:func}(${2:})\n\t${0:-- body}\nend",
+        "description": "local function",
+        "scope": "source.lua"
+    },
+    "function": {
+        "prefix": "function",
+        "body": "function ${1:func}(${2:})\n\t${0:-- body}\nend",
+        "description": "function",
+        "scope": "source.lua"
+    }
+}

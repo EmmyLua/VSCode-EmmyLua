@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua plugin for vscode",
-    "version": "0.0.3",
+    "version": "0.0.4-preview",
     "publisher": "tangzx",
     "engines": {
         "vscode": "^1.21.0"
@@ -28,6 +28,12 @@
             {
                 "command": "emmy.restartServer",
                 "title": "EmmyLua: Restart Lua Server"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "lua",
+                "path": "./snippets/snippets.json"
             }
         ],
         "languages": [
