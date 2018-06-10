@@ -108,7 +108,7 @@ function startClient() {
         }
     };
 
-    let socketMode = true;
+    let socketMode = false;
     let serverOptions: ServerOptions;
     if (socketMode) {
         // The server is a started as a separate app and listens on port 5007
@@ -152,7 +152,7 @@ function startClient() {
 
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     }).catch(reson => {
-        vscode.window.showErrorMessage("Failed to start `EmmyLua` language server!", "Try again").then(item => {
+        vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again").then(item => {
             startClient();
         });
     });

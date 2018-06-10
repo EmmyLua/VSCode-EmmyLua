@@ -15,9 +15,7 @@ export default function(): string|null {
     var settingsPath = vscode.workspace.getConfiguration("emmylua").get("java.home");
     if (settingsPath) {
         let javaPath = path.join(<string>settingsPath, "bin", executableFile);
-        if (validateJava(javaPath)) {
-            return javaPath;
-        }
+        return javaPath;
     }
 
 	if("JAVA_HOME" in process.env) {
