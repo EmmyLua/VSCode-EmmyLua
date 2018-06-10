@@ -106,6 +106,10 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 		const ls = cp.exec(cmd).on("error", e => {
 			this.sendEvent(new OutputEvent(e.message));
 			this.sendEvent(new TerminatedEvent());
+		}).on("exit", code => {
+			if (code !== 0) {
+				this.sendEvent(new TerminatedEvent());
+			}
 		});
 		ls.stdout.on("data", (stdout:string) => {
 			this.sendEvent(new OutputEvent(stdout));

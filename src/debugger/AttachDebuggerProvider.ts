@@ -39,7 +39,10 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
         debugConfiguration.sourcePaths = this.getSourceRoots();
         if (debugConfiguration.type === "emmylua_launch") {
             if (this.isNullOrEmpty(debugConfiguration.workingDir)) {
-                debugConfiguration.workingDir = "%workspaceRoot%";
+                var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
+                if (list.length > 0) {
+                    debugConfiguration.workingDir = list[0];
+                }
             }
             if (!debugConfiguration.arguments) {
                 debugConfiguration.arguments = [];
