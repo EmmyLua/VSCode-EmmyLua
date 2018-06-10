@@ -20,7 +20,7 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
 
     private getSourceRoots(): string[] {
         var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
-        var config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots");
+        var config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
         return list.concat(config.map(item => { return normalize(item); }));
     }
 
