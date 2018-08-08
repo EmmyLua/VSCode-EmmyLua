@@ -104,7 +104,6 @@
                     "lua"
                 ]
             },
-            
             {
                 "type": "emmylua_launch",
                 "label": "EmmyLua Launch Debug",
@@ -188,7 +187,7 @@
                             "workingDir",
                             "arguments",
                             "port"
-                        ], 
+                        ],
                         "properties": {
                             "program": {
                                 "type": "string",
@@ -300,17 +299,18 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
+        "tslint": "^5.8.0",
         "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "tslint": "^5.8.0"
+        "vscode": "^1.1.6"
     },
     "dependencies": {
-        "vscode-languageclient": "^3.3.0",
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43",
+        "lua-fmt": "^2.6.0",
+        "smart-buffer": "^4.0.1",
         "vscode-debugadapter": "1.27.0",
         "vscode-debugprotocol": "1.27.0",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42",
-        "smart-buffer": "^4.0.1",
+        "vscode-languageclient": "^3.3.0",
         "xml2js": "^0.4.19"
     }
 }
