@@ -7,7 +7,6 @@ import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
-import { Proposed } from 'vscode-languageserver-protocol';
 import { AttachDebuggerProvider } from './debugger/AttachDebuggerProvider';
 import { MobDebuggerProvider } from './debugger/MobDebuggerProvider';
 
@@ -27,7 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, savedContext.subscriptions);
     vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, savedContext.subscriptions);
-    vscode.workspace.onDidChangeWorkspaceFolders(onDidChangeWorkspaceFolders, null, savedContext.subscriptions);
     vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions);
     vscode.commands.registerCommand("emmy.restartServer", restartServer);
     vscode.commands.registerCommand("emmy.showReferences", showReferences);
@@ -43,20 +41,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
         console.log(e.body);
     });
-}
-
-function asProtocol(workspaceFolder: vscode.WorkspaceFolder): Proposed.WorkspaceFolder {
-    return { uri: workspaceFolder.uri.toString(), name: workspaceFolder.name };
-}
-
-function onDidChangeWorkspaceFolders(event: vscode.WorkspaceFoldersChangeEvent) {
-    const params: Proposed.DidChangeWorkspaceFoldersParams = {
-        event: {
-            added: event.added.map(folder => asProtocol(folder)),
-            removed: event.removed.map(folder => asProtocol(folder))
-        }
-    };
-    client.sendNotification("emmy/didChangeWorkspaceFolders", params);
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
