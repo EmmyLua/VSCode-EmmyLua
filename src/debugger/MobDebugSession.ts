@@ -41,7 +41,8 @@ export class MobDebugSession extends EmmyDebugSession {
     }
 
     shutdown(): void {
-
+        console.log(this.server);
+        console.log(this.client);
     }
 }
 
