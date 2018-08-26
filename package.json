@@ -1,8 +1,8 @@
 {
     "name": "emmylua",
     "displayName": "EmmyLua",
-    "description": "EmmyLua plugin for vscode",
-    "version": "0.0.5-preview",
+    "description": "EmmyLua for vscode",
+    "version": "0.0.6-preview",
     "publisher": "tangzx",
     "engines": {
         "vscode": "^1.21.0"
