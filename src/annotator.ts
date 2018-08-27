@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode';
-import { IAnnotator, AnnotatorType } from './notifications';
+import { AnnotatorType } from './notifications';
 import { LanguageClient } from 'vscode-languageclient';
 import * as notifications from "./notifications";
 
@@ -46,28 +46,42 @@ function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient
 
     let params:notifications.AnnotatorParams = { uri: editor.document.uri.toString() };
     client.sendRequest<notifications.IAnnotator[]>("emmy/annotator", params).then(list => {
+        let map: Map<AnnotatorType, vscode.Range[]> = new Map();
+        map.set(AnnotatorType.DocType, []);
+        map.set(AnnotatorType.Param, []);
+        map.set(AnnotatorType.Global, []);
+
         list.forEach(data => {
             let uri = vscode.Uri.parse(data.uri);
             vscode.window.visibleTextEditors.forEach((editor) => {
                 let docUri = editor.document.uri;
                 if (uri.path.toLowerCase() === docUri.path.toLowerCase()) {
-                    updateAnnotators(editor, data);
+                    var list = map.get(data.type);
+                    if (list === undefined) {
+                        list = data.ranges;
+                    } else {
+                        list = list.concat(data.ranges);
+                    }
+                    map.set(data.type, list);
                 }
             });
+        });
+        map.forEach((v, k) => {
+            updateAnnotators(editor, k, v);
         });
     });
 }
 
-function updateAnnotators(editor: vscode.TextEditor, annotator: IAnnotator) {
-    switch (annotator.type) {
+function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, ranges: vscode.Range[]) {
+    switch (type) {
         case AnnotatorType.Param:
-        editor.setDecorations(D_PARAM, annotator.ranges);
+        editor.setDecorations(D_PARAM, ranges);
         break;
         case AnnotatorType.Global:
-        editor.setDecorations(D_GLOBAL, annotator.ranges);
+        editor.setDecorations(D_GLOBAL, ranges);
         break;
         case AnnotatorType.DocType:
-        editor.setDecorations(D_DOC_TYPE, annotator.ranges);
+        editor.setDecorations(D_DOC_TYPE, ranges);
         break;
     }
 }
