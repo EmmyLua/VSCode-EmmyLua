@@ -12,6 +12,8 @@ import { MobDebuggerProvider } from './debugger/MobDebuggerProvider';
 import { formatText } from 'lua-fmt';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
+const DEBUG_MODE = false;
+
 export let savedContext: vscode.ExtensionContext;
 let client: LanguageClient;
 let activeEditor: vscode.TextEditor;
@@ -100,9 +102,8 @@ function startClient() {
         }
     };
 
-    let socketMode = false;
     let serverOptions: ServerOptions;
-    if (socketMode) {
+    if (DEBUG_MODE) {
         // The server is a started as a separate app and listens on port 5007
         const connectionInfo = {
             port: 5007
