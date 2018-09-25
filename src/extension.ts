@@ -91,7 +91,7 @@ function startClient() {
     const clientOptions: LanguageClientOptions = {
         documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
         synchronize: {
-            configurationSection: LANGUAGE_ID,
+            configurationSection: "emmylua",
             fileEvents: [
                 vscode.workspace.createFileSystemWatcher("**/*.lua")
             ]
