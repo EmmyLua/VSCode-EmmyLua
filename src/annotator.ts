@@ -7,23 +7,21 @@ import * as notifications from "./notifications";
 let D_PARAM:vscode.TextEditorDecorationType;
 let D_GLOBAL:vscode.TextEditorDecorationType;
 let D_DOC_TYPE:vscode.TextEditorDecorationType;
+let D_UPVALUE:vscode.TextEditorDecorationType;
 
-function createDecoration(key: string): vscode.TextEditorDecorationType {
+function createDecoration(key: string, config: vscode.DecorationRenderOptions|undefined = undefined): vscode.TextEditorDecorationType {
     let color = vscode.workspace.getConfiguration("emmylua").get(key);
-    return vscode.window.createTextEditorDecorationType({
-        light: {
-            color: color
-        },
-        dark: {
-            color: color
-        }
-    });
+    config = config || {};
+    config.light = { color: color};
+    config.dark = { color: color};
+    return vscode.window.createTextEditorDecorationType(config);
 }
 
 function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
+    D_UPVALUE = createDecoration("", { textDecoration: "underline" });
 }
 
 export function onDidChangeConfiguration(client: LanguageClient) {
@@ -50,6 +48,7 @@ function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient
         map.set(AnnotatorType.DocType, []);
         map.set(AnnotatorType.Param, []);
         map.set(AnnotatorType.Global, []);
+        map.set(AnnotatorType.Upvalue, []);
 
         list.forEach(data => {
             let uri = vscode.Uri.parse(data.uri);
@@ -82,6 +81,9 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, ranges
         break;
         case AnnotatorType.DocType:
         editor.setDecorations(D_DOC_TYPE, ranges);
+        break;
+        case AnnotatorType.Upvalue:
+        editor.setDecorations(D_UPVALUE, ranges);
         break;
     }
 }

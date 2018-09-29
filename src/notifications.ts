@@ -7,7 +7,8 @@ export interface AnnotatorParams {
 export enum AnnotatorType {
     Param,
     Global,
-    DocType
+    DocType,
+    Upvalue,
 }
 
 export interface IAnnotator {
