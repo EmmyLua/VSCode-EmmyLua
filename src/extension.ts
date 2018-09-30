@@ -10,6 +10,7 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from
 import { AttachDebuggerProvider } from './debugger/AttachDebuggerProvider';
 import { MobDebuggerProvider } from './debugger/MobDebuggerProvider';
 import { formatText } from 'lua-fmt';
+import { LuaLanguageConfiguration } from './languageConfiguration';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
 const DEBUG_MODE = false;
@@ -39,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }
     );
+    vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration());
 
     const attProvider = new AttachDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
