@@ -5,7 +5,7 @@
     "version": "0.0.8-preview",
     "publisher": "tangzx",
     "engines": {
-        "vscode": "^1.21.0"
+        "vscode": "^1.27.0"
     },
     "categories": [
         "Programming Languages",
@@ -304,7 +304,7 @@
         "vscode": "1.1.21"
     },
     "dependencies": {
-        "vscode-languageclient": "4.3.0",
+        "vscode-languageclient": "5.1.0",
         "vscode-debugadapter": "1.31.0",
         "vscode-debugprotocol": "1.31.0",
         "@types/mocha": "^2.2.42",
