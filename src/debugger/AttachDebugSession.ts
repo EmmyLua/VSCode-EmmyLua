@@ -71,13 +71,14 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyLaunchRequesetArguments): void {
 		this.initEnv(args);
-		var isX86 = true;
-		cp.exec(`${emmyArchExe} arch -file ${args.program}`, (err, stdout) => isX86 = stdout === "1").on("exit", code => {
+		cp.exec(`${emmyArchExe} arch -file ${args.program}`).on("exit", code => {
 			if (code === 0xffffffff) {
 				this.sendEvent(new OutputEvent(`Program: ${args.program} not found!`));
 				this.sendEvent(new TerminatedEvent());
 			} else {
+				const isX86 = code === 1;
 				const arch = isX86 ? "x86" : "x64";
+				this.sendEvent(new OutputEvent(`Launch program with ${arch} debugger.\n`));
 				const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
 				const argList = [toolExe, "-m", "run", "-c", args.program, "-e", emmyLua, '-w', args.workingDir, "--console", "true"];
 				if (args.arguments.length > 0) {
