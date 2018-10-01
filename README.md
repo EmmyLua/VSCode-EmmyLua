@@ -1,4 +1,8 @@
-# EmmyLua for VSCode (Unstable)
+# EmmyLua for VSCode
+
+VSCode version of [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua)
+
+QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下载)
 
 [![Online EmmyLua Doc](https://img.shields.io/badge/emmy-doc-46BC99.svg?style=flat-square)](https://emmylua.github.io)
 [![donate](https://img.shields.io/badge/donate-emmy-FF69B4.svg?style=flat-square)](https://emmylua.github.io/donate.html)
