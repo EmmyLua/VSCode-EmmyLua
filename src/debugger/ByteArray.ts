@@ -23,12 +23,12 @@ export class ByteArray {
     }
 
     writeUint64(value: number) {
-        this.buffer.writeUInt32BE(value >> 8);
-        this.buffer.writeUInt32BE(value & 0xfffffff);
+        this.buffer.writeUInt32BE(value >> 31);
+        this.buffer.writeUInt32BE(value & 0xffffffff);
     }
 
     readUint64():  number {
-        let l = this.buffer.readUInt32BE() << 8;
+        let l = this.buffer.readUInt32BE() << 31;
         let r = this.buffer.readUInt32BE();
         return l + r;
     }

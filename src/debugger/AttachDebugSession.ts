@@ -336,11 +336,16 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 				return undefined;
 			}
 		}
+		const extList = ["", ".lua", ".lua.txt"];
 		for (let index = 0; index < this.sourcePaths.length; index++) {
 			const p = this.sourcePaths[index];
-			const absPath = path.join(p, filePath);
-			if (fs.existsSync(absPath)) {
-				return absPath;
+			for (let j = 0; j < extList.length; j++) {
+				const ext = extList[j];
+				
+				const absPath = path.join(p, `${filePath}${ext}`);
+				if (fs.existsSync(absPath)) {
+					return absPath;
+				}
 			}
 		}
 	}
