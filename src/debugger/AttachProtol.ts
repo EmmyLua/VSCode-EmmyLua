@@ -400,7 +400,7 @@ class LuaXTable extends LuaXObjectValue {
 
     toVariable(ctx: ComputeContext): DebugProtocol.Variable {
         let ref = ctx.handles.create(this);
-        return { name: "table", value: "table", variablesReference: ref, type:"object" };
+        return { name: this.name, value: "table", variablesReference: ref, type:"object" };
     }
 }
 

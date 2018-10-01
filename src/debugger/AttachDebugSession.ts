@@ -446,7 +446,7 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 			}
 			const variable = node.toVariable(ctx);
 			response.body = {
-				result: variable.name,
+				result: variable.value,
 				variablesReference: variable.variablesReference
 			};
 			this.sendResponse(response);
