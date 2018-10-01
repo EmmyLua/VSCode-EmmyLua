@@ -265,13 +265,15 @@ interface ComputeContext {
 }
 
 export interface IStackNode {
-    parent?: IStackNode;
+    parent: IStackNode | undefined;
     read(ctx: Context, buf: ByteArray): void;
     toVariable(ctx: ComputeContext): Variable;
     computeChildren(ctx: ComputeContext): Thenable<IStackNode[]>;
 }
 
 abstract class StackNode implements IStackNode {
+    parent: IStackNode | undefined;
+
     abstract read(ctx: Context, buf: ByteArray): void;
 
     abstract toVariable(ctx: ComputeContext): Variable;
@@ -326,8 +328,6 @@ export abstract class LuaXObjectValue extends StackNode {
     public type = "";
     public data = "";
 
-    public parent?: LuaXObjectValue;
-
     read(ctx: Context, buf: ByteArray) {
         this.name = buf.readString();
         this.type = buf.readString();
@@ -375,6 +375,7 @@ class LuaXTable extends LuaXObjectValue {
                 const key = <LuaXObjectValue> readNode(ctx, buf);
                 const value = <LuaXObjectValue> readNode(ctx, buf);
                 value.name = key.toKeyString();
+                value.parent = this;
                 this.children.push(value);
             }
         }
@@ -385,19 +386,21 @@ class LuaXTable extends LuaXObjectValue {
             return Promise.resolve(this.children);
         }
         return new Promise((resolve) => {
-            ctx.evaluator.eval(this.calcExpr()).then(value => {
+            let expr = this.calcExpr();
+            ctx.evaluator.eval(expr).then(value => {
                 const n = value.resultNode.children[0];
                 if (n instanceof LuaXTable) {
                     this.children = n.children;
-                    this.children.forEach(node => node.parent = this);
-                    resolve(n.children);
+                    this.children.map(c => c.parent = this);
                 }
+                resolve(this.children);
             });
         });
     }
 
     toVariable(ctx: ComputeContext): DebugProtocol.Variable {
-        return { name: this.name, value: "table", variablesReference: ctx.handles.create(this), type:"object" };
+        let ref = ctx.handles.create(this);
+        return { name: "table", value: "table", variablesReference: ref, type:"object" };
     }
 }
 

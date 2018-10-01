@@ -10,7 +10,8 @@ import {
 	LuaAttachMessage, DMReqInitialize, DebugMessageId, DMMessage, DMLoadScript,
 	DMAddBreakpoint, DMBreak, StackNodeContainer, StackRootNode, IStackNode,
 	DMReqEvaluate, DMRespEvaluate, ExprEvaluator, LoadedScript, LoadedScriptManager,
-	DMDelBreakpoint
+	DMDelBreakpoint,
+	LuaXObjectValue
 } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
@@ -439,7 +440,11 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 		this.curFrameId = frameId;
 		this.eval(args.expression, frameId).then(v => {
 			const ctx = { evaluator: this, handles: this.handles, scriptManager: this };
-			const variable = v.resultNode.children[0].toVariable(ctx);
+			const node = v.resultNode.children[0];
+			if (node instanceof LuaXObjectValue) {
+				node.name = args.expression;
+			}
+			const variable = node.toVariable(ctx);
 			response.body = {
 				result: variable.name,
 				variablesReference: variable.variablesReference
