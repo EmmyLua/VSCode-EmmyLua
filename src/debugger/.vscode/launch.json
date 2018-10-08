@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "启动程序",
+            "program": "${workspaceFolder}/../../out/debugger/AttachDebugAdapter.js",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+			"args": [ "--server=4711" ],
+        }
+    ]
+}
