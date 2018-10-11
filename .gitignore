@@ -7,5 +7,6 @@ node_modules
 .gradle
 .idea
 build
-server
+/debugger
+/server
 /package-lock.json

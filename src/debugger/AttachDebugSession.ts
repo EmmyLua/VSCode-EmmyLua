@@ -65,8 +65,8 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 	}
 
 	private initEnv(args: EmmyDebugArguments) {
-		emmyArchExe = `${args.extensionPath}/server/windows/x86/emmy.arch.exe`;
-		emmyLua = `${args.extensionPath}/server/Emmy.lua`;
+		emmyArchExe = `${args.extensionPath}/debugger/windows/x86/emmy.arch.exe`;
+		emmyLua = `${args.extensionPath}/debugger/Emmy.lua`;
 		this.sourcePaths = args.sourcePaths;
 	}
 
@@ -80,7 +80,7 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 				const isX86 = code === 1;
 				const arch = isX86 ? "x86" : "x64";
 				this.sendEvent(new OutputEvent(`Launch program with ${arch} debugger.\n`));
-				const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
+				const toolExe = `${args.extensionPath}/debugger/windows/${arch}/emmy.tool.exe`;
 				const argList = [toolExe, "-m", "run", "-c", args.program, "-e", emmyLua, '-w', args.workingDir, "--console", "true"];
 				if (args.arguments.length > 0) {
 					argList.push("-a", args.arguments.join(" "));
@@ -98,7 +98,7 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 		cp.exec(`${emmyArchExe} arch -pid ${args.pid}`, (err, stdout) => {
 			const isX86 = stdout === "1";
 			const arch = isX86 ? "x86" : "x64";
-			const toolExe = `${args.extensionPath}/server/windows/${arch}/emmy.tool.exe`;
+			const toolExe = `${args.extensionPath}/debugger/windows/${arch}/emmy.tool.exe`;
 			let argList = [toolExe, "-m", "attach", "-p", args.pid, "-e", emmyLua];
 			this.runDebugger(argList.join(" "), args, response);
 		});
