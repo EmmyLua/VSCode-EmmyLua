@@ -14,41 +14,20 @@ interface ProcessInfoItem extends vscode.QuickPickItem {
 }
 
 export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
-    private isNullOrEmpty(s?: string): boolean {
+    protected isNullOrEmpty(s?: string): boolean {
         return !s || s.trim().length === 0;
     }
 
-    private getSourceRoots(): string[] {
+    protected getSourceRoots(): string[] {
         var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
         var config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
         return list.concat(config.map(item => { return normalize(item); }));
     }
 
-    provideDebugConfigurations(folder: WorkspaceFolder | undefined, token?: CancellationToken): ProviderResult<DebugConfiguration[]> {
-        var config: DebugConfiguration = {
-            name: "Attach",
-            type: "emmylua_attach",
-            request: "attach",
-            pid: 0
-        };
-        return [config];
-    }
-
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
-        if (debugConfiguration.type === "emmylua_launch") {
-            if (this.isNullOrEmpty(debugConfiguration.workingDir)) {
-                var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
-                if (list.length > 0) {
-                    debugConfiguration.workingDir = list[0];
-                }
-            }
-            if (!debugConfiguration.arguments) {
-                debugConfiguration.arguments = [];
-            }
-            return debugConfiguration;
-        }
+        debugConfiguration.request = "attach";
         if (debugConfiguration.pid > 0) {
             return debugConfiguration;
         }
@@ -84,5 +63,27 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
 
     dispose() {
 
+    }
+}
+
+export class AttachLaunchDebuggerProvider extends AttachDebuggerProvider {
+    resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
+        debugConfiguration.extensionPath = savedContext.extensionPath;
+        debugConfiguration.sourcePaths = this.getSourceRoots();
+        debugConfiguration.type = "emmylua_launch";
+        debugConfiguration.request = "launch";
+        if (this.isNullOrEmpty(debugConfiguration.workingDir)) {
+            var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
+            if (list.length > 0) {
+                debugConfiguration.workingDir = list[0];
+            }
+        }
+        if (this.isNullOrEmpty(debugConfiguration.program)) {
+            debugConfiguration.program = "lua";
+        }
+        if (!debugConfiguration.arguments) {
+            debugConfiguration.arguments = [];
+        }
+        return debugConfiguration;
     }
 }

@@ -7,7 +7,7 @@ import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
-import { AttachDebuggerProvider } from './debugger/AttachDebuggerProvider';
+import { AttachDebuggerProvider, AttachLaunchDebuggerProvider } from './debugger/AttachDebuggerProvider';
 import { MobDebuggerProvider } from './debugger/MobDebuggerProvider';
 import { formatText } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
@@ -44,8 +44,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     const attProvider = new AttachDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
-    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attProvider));
     savedContext.subscriptions.push(attProvider);
+    const attLaunchProvider = new AttachLaunchDebuggerProvider();
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attLaunchProvider));
+    savedContext.subscriptions.push(attLaunchProvider);
     const mobProvider = new MobDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_remote", mobProvider));
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_remote_launch", mobProvider));
