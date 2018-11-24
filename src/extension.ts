@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import * as path from "path";
 import * as net from "net";
+import * as process from "process";
 import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
 import findJava from "./findJava";
@@ -13,7 +14,7 @@ import { formatText } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
-const DEBUG_MODE = false;
+var DEBUG_MODE = false;
 
 export let savedContext: vscode.ExtensionContext;
 let client: LanguageClient;
@@ -23,6 +24,7 @@ let javaExecutablePath: string|null;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
+    DEBUG_MODE = process.env['EMMY_DEV'] === "true";
     savedContext = context;
     progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     javaExecutablePath = findJava();
@@ -102,6 +104,7 @@ function startClient() {
         },
         initializationOptions: {
             stdFolder: vscode.Uri.file(path.resolve(savedContext.extensionPath, "res/std")).toString(),
+            apiFolders : [],
             workspaceFolders: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.map(f => f.uri.toString()) : null,
         }
     };

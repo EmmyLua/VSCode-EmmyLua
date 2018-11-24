@@ -16,6 +16,9 @@
             "outFiles": [
                 "${workspaceFolder}/out/**/*.js"
             ],
+            "env": {
+                "EMMY_DEV": "true"
+            },
             "preLaunchTask": "npm: watch"
         },
         {
