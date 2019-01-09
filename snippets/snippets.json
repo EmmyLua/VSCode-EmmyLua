@@ -11,10 +11,10 @@
         "description": "if",
         "scope": "source.lua"
     },
-    "else if": {
-        "prefix": "else if",
-        "body": "else if ${1:condition} then\n\t${0:-- body}",
-        "description": "else if",
+    "elseif": {
+        "prefix": "elseif",
+        "body": "elseif ${1:condition} then\n\t${0:-- body}",
+        "description": "elseif",
         "scope": "source.lua"
     },
     "for": {
