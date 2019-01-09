@@ -217,7 +217,7 @@
 			"name": "constant.other.placeholder.lua"
 		},
 		{
-			"match": "\\b(break|do|else|for|if|elseif|goto|return|then|repeat|while|until|end|function|local|in)\\b",
+			"match": "\\b(break|do|else|for|if|elseif|goto|return|then|repeat|while|until|end|function|local|in|not|or)\\b",
 			"name": "keyword.control.lua"
 		},
 		{
