@@ -258,13 +258,18 @@
                     "type": [
                         "array"
                     ],
-                    "default": null,
+                    "default": [],
                     "description": "%emmylua.source.roots%"
                 },
                 "emmylua.completion.caseSensitive": {
                     "type": "boolean",
                     "default": true,
                     "description": "%emmylua.completion.caseSensitive%"
+                },
+                "emmylua.codeLens": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.codeLens%"
                 },
                 "emmylua.colors.parameter": {
                     "type": "string",
