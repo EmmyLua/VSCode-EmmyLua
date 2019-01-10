@@ -86,6 +86,7 @@ function error(message, level) end
 --- itself does not use this variable; changing its value does not affect any
 --- environment, nor vice versa.
 ---@class _G
+_G = {}
 
 ---
 --- If `object` does not have a metatable, returns **nil**. Otherwise, if the
@@ -139,7 +140,7 @@ function ipairs(t) end
 ---@param chunk fun():string
 ---@param chunkname string
 ---@param mode string
----@param env nay
+---@param env any
 function load(chunk, chunkname, mode, env) end
 
 ---
@@ -216,7 +217,7 @@ function print(...) end
 --- a boolean.
 ---@param v1 any
 ---@param v2 any
----@returns boolean
+---@return boolean
 function rawequal(v1, v2) end
 
 ---
@@ -281,8 +282,10 @@ function require(modname) end
 --- `index`. a negative number indexes from the end (-1 is the last argument).
 --- Otherwise, `index` must be the string "#", and `select` returns
 --- the total number of extra arguments it received.
+---@generic T
 ---@param index number|string
----@return any
+---@vararg T
+---@return T
 function select(index, ...) end
 
 ---
@@ -292,9 +295,10 @@ function select(index, ...) end
 --- metatable has a `"__metatable"` field, raises an error.
 ---
 --- This function returns `table`.
----@param table table
+---@generic T
+---@param table T
 ---@param metatable table
----@return table
+---@return T
 function setmetatable(table, metatable) end
 
 ---
