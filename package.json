@@ -263,7 +263,7 @@
                 },
                 "emmylua.completion.caseSensitive": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "%emmylua.completion.caseSensitive%"
                 },
                 "emmylua.codeLens": {
