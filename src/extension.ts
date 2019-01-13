@@ -30,20 +30,24 @@ export function activate(context: vscode.ExtensionContext) {
     javaExecutablePath = findJava();
     startClient();
 
-    vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, savedContext.subscriptions);
-    vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, savedContext.subscriptions);
-    vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions);
-    vscode.commands.registerCommand("emmy.restartServer", restartServer);
-    vscode.commands.registerCommand("emmy.showReferences", showReferences);
+    savedContext.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, savedContext.subscriptions));
+    savedContext.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, savedContext.subscriptions));
+    savedContext.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions));
+    savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
+    savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
 
-    vscode.languages.registerDocumentFormattingEditProvider({ scheme: "file", language: LANGUAGE_ID }, {
+    savedContext.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: "file", language: LANGUAGE_ID }, {
             provideDocumentFormattingEdits(document, position, token): vscode.ProviderResult<vscode.TextEdit[]> {
                 return [new vscode.TextEdit(new vscode.Range(0, 0, document.lineCount, 0), formatText(document.getText()))];
             }
         }
-    );
-    vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration());
+    ));
+    savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
+    registerDebuggers();
+}
+
+function registerDebuggers() {
     const attProvider = new AttachDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
     savedContext.subscriptions.push(attProvider);
@@ -54,9 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_remote", mobProvider));
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_remote_launch", mobProvider));
     savedContext.subscriptions.push(mobProvider);
-    vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
+    savedContext.subscriptions.push(vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
         console.log(e.body);
-    });
+    }));
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
