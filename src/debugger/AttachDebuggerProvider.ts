@@ -28,14 +28,19 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
         debugConfiguration.request = "attach";
+        debugConfiguration.type = "emmylua_attach";
         if (debugConfiguration.pid > 0) {
             return debugConfiguration;
         }
         // list processes
         return new Promise((resolve, reject) => {
-            const args = [`${savedContext.extensionPath}/server/windows/x86/emmy.arch.exe`, " ", "list_processes"];
+            const args = [`${savedContext.extensionPath}/debugger/windows/x86/emmy.arch.exe`, " ", "list_processes"];
             cp.exec(args.join(" "), (err, stdout, stderr) => {
                 parseString(stdout, function (err:any, result:any) {
+                    if (!result || err) {
+                        reject();
+                        return;
+                    }
                     const items = <ProcessInfoItem[]> result.list.process.map((data:any) => {
                         const pid = data["$"].pid;
                         const title = data.title[0];
