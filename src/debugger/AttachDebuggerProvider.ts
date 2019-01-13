@@ -79,11 +79,21 @@ export class AttachLaunchDebuggerProvider extends AttachDebuggerProvider {
             }
         }
         if (this.isNullOrEmpty(debugConfiguration.program)) {
-            debugConfiguration.program = "lua";
+            let program = vscode.workspace.getConfiguration("emmylua").get<string>("debugger.defaultProgram");
+            debugConfiguration.program = program;
         }
         if (!debugConfiguration.arguments) {
-            debugConfiguration.arguments = [];
+            let cur = vscode.window.activeTextEditor;
+            let args: string[] = [];
+            if (cur) {
+                args.push(cur.document.uri.fsPath);
+            }
+            debugConfiguration.arguments = args;
         }
         return debugConfiguration;
+    }
+
+    provideDebugConfigurations(folder: WorkspaceFolder | undefined, token?: CancellationToken): ProviderResult<DebugConfiguration[]> {
+        return [];
     }
 }

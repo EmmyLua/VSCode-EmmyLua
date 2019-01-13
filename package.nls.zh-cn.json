@@ -3,6 +3,7 @@
     "emmylua.source.roots": "设置source roots",
     "emmylua.completion.caseSensitive": "代码完成提示是否大小写敏感",
     "emmylua.codeLens": "是否显示codeLens（显示引用计数）",
+    "emmylua.debugger.defaultProgram": "默认启动或调试的程序, 如 'c:/lua/lua.exe'",
 
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",

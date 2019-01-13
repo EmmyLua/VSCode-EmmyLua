@@ -204,6 +204,11 @@
                     "default": false,
                     "description": "%emmylua.codeLens%"
                 },
+                "emmylua.debugger.defaultProgram": {
+                    "type": "string",
+                    "default": "lua",
+                    "description": "%emmylua.debugger.defaultProgram%"
+                },
                 "emmylua.colors.parameter": {
                     "type": "string",
                     "default": "#99FFCC"
