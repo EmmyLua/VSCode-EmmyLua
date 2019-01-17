@@ -338,18 +338,54 @@ export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluato
 				return undefined;
 			}
 		}
-		const extList = ["", ".lua", ".lua.txt"];
+		
+		const baseName = path.basename(filePath).toLowerCase();
+		let bestMatch: string | undefined;
+		let matchDepth = -1;
 		for (let index = 0; index < this.sourcePaths.length; index++) {
 			const p = this.sourcePaths[index];
-			for (let j = 0; j < extList.length; j++) {
-				const ext = extList[j];
-				
-				const absPath = path.join(p, `${filePath}${ext}`);
-				if (fs.existsSync(absPath)) {
-					return absPath;
+			let result: string[] = [];
+			this.findFilesByName(p, baseName, result);
+			result.forEach((fp, _) => {
+				let depth = this.matchDepth(filePath, fp);
+				if (matchDepth < depth) {
+					bestMatch = fp;
+					matchDepth = depth;
 				}
+			});
+		}
+		return bestMatch;
+	}
+
+	private matchDepth(pathA: string, pathB: string): number {
+		const aParts = pathA.split(/[\\/]/gi);
+		const bParts = pathB.split(/[\\/]/gi);
+		let depth = 0;
+		for (let i = 1; i < aParts.length && i < bParts.length; i++) {
+			const a = aParts[aParts.length - 1 - i];
+			const b = bParts[bParts.length - 1 - i];
+			if (a.toLowerCase() ===  b.toLowerCase()) {
+				depth++;
+			} else {
+				break;
 			}
 		}
+		return depth;
+	}
+
+	private findFilesByName(dir: string, targetBaseName: string, results: string[]) {
+		fs.readdirSync(dir).forEach((name, _) => {
+			let subFilePath = path.resolve(dir, name);
+			let stat = fs.statSync(subFilePath);
+			if (stat.isDirectory()) {
+				this.findFilesByName(subFilePath, targetBaseName, results);
+			} else {
+				let baseName = name.toLowerCase();
+				if (baseName.startsWith(targetBaseName)) {
+					results.push(subFilePath);
+				}
+			}
+		});
 	}
 
 	public findScript(path: string): LoadedScript | undefined {
