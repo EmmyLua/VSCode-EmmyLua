@@ -34,7 +34,7 @@ export function requestAnnotators(editor: vscode.TextEditor, client: LanguageCli
     clearTimeout(timeoutToReqAnn);
     timeoutToReqAnn = setTimeout(() => {
         requestAnnotatorsImpl(editor, client);
-    }, 300);
+    }, 150);
 }
 
 function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient) {
