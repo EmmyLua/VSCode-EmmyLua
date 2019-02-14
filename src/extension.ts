@@ -137,7 +137,7 @@ function startClient() {
         console.log('exe path : ' + exePath);
         serverOptions = {
             command: exePath,
-            args: ["-cp", cp, "com.tang.vscode.MainKt"]
+            args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseConcMarkSweepGC"]
         };
     }
     
