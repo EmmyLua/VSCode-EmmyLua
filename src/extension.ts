@@ -148,7 +148,7 @@ async function doStartServer() {
     const clientOptions: LanguageClientOptions = {
         documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
         synchronize: {
-            configurationSection: "emmylua",
+            configurationSection: ["emmylua", "files.associations"],
             fileEvents: [
                 vscode.workspace.createFileSystemWatcher("**/*.lua")
             ]
@@ -157,6 +157,7 @@ async function doStartServer() {
             stdFolder: vscode.Uri.file(path.resolve(savedContext.extensionPath, "res/std")).toString(),
             apiFolders : [],
             workspaceFolders: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.map(f => f.uri.toString()) : null,
+            client: 'vsc'
         }
     };
 
