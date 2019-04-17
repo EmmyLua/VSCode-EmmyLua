@@ -6,6 +6,7 @@ import * as net from "net";
 import * as process from "process";
 import * as Annotator from "./annotator";
 import * as notifications from "./notifications";
+import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
 import { AttachDebuggerProvider, AttachLaunchDebuggerProvider } from './debugger/AttachDebuggerProvider';
@@ -28,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext = context;
     progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     javaExecutablePath = findJava();
-    startClient();
+    startServer();
 
     savedContext.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, savedContext.subscriptions));
     savedContext.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, savedContext.subscriptions));
@@ -77,7 +78,6 @@ function onDidChangeActiveTextEditor(editor: vscode.TextEditor|undefined) {
     Annotator.requestAnnotators(activeEditor, client);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {
     stopServer();
 }
@@ -97,7 +97,54 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
     }
 }
 
-function startClient() {
+async function validateJava() {
+    const exePath = javaExecutablePath || "java";
+    console.log('exe path : ' + exePath);
+    
+    return new Promise((resolve, reject) => {
+        cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
+            let regexp:RegExp = /java version "((\d+)\.(\d+).+?)"/g;
+            if (stderr) {
+                let match = regexp.exec(stderr);
+                if (match) {
+                    let major = parseInt(match[2]);
+                    let minor = parseInt(match[3]);
+                    // java 1.8+
+                    if (!isNaN(major) && !isNaN(minor)) {
+                        if (major > 1 || minor >= 8) {
+                            resolve();
+                            return;
+                        }
+                    }
+                    reject(`Unsupported Java version: ${match[1]}, please install Java 1.8 or above.`);
+                    return;
+                }
+            }
+            reject("Can't find Java! Please install Java and set JAVA_HOME environment variable.");
+        });
+    });
+}
+
+async function startServer() {
+    try {
+        if (!DEBUG_MODE) {
+            await validateJava();
+        }
+    } catch (error) {
+        vscode.window.showErrorMessage(error, "Try again")
+        .then(startServer);
+        return;
+    }
+    doStartServer().then(() => {
+        onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
+    })
+    .catch(reson => {
+        vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
+        .then(startServer);
+    });
+}
+
+async function doStartServer() {
     const clientOptions: LanguageClientOptions = {
         documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
         synchronize: {
@@ -134,7 +181,6 @@ function startClient() {
     } else {
         const cp = path.resolve(savedContext.extensionPath, "server", "*");
         const exePath = javaExecutablePath || "java";
-        console.log('exe path : ' + exePath);
         serverOptions = {
             command: exePath,
             args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseConcMarkSweepGC"]
@@ -142,35 +188,25 @@ function startClient() {
     }
     
     client = new LanguageClient(LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
-    client.onReady().then(() => {
-        console.log("client ready");
-        client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
-            progressBar.show();
-            progressBar.text = d.text;
-            if (d.percent >= 1) {
-                setTimeout(() => {
-                    progressBar.hide();
-                }, 3000);
-            }
-        });
-
-        onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    }).catch(reson => {
-        vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again").then(item => {
-            startClient();
-        });
+    savedContext.subscriptions.push(client.start());
+    await client.onReady();
+    console.log("client ready");
+    client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
+        progressBar.show();
+        progressBar.text = d.text;
+        if (d.percent >= 1) {
+            setTimeout(() => {
+                progressBar.hide();
+            }, 3000);
+        }
     });
-    const disposable = client.start();
-    savedContext.subscriptions.push(disposable);
 }
 
 function restartServer() {
     if (!client) {
-        startClient();
+        startServer();
     } else {
-        client.stop().then(() => {
-            startClient();
-        });
+        client.stop().then(startServer);
     }
 }
 
