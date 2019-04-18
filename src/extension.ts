@@ -120,7 +120,7 @@ async function validateJava() {
                     return;
                 }
             }
-            reject("Can't find Java! Please install Java and set JAVA_HOME environment variable.");
+            reject("Can't find Java! Please install Java 1.8 or above and set JAVA_HOME environment variable.");
         });
     });
 }
