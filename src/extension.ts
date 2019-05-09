@@ -103,18 +103,16 @@ async function validateJava() {
     
     return new Promise((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
-            let regexp:RegExp = /java version "((\d+)\.(\d+).+?)"/g;
+            let regexp:RegExp = /java version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {
                 let match = regexp.exec(stderr);
                 if (match) {
-                    let major = parseInt(match[2]);
-                    let minor = parseInt(match[3]);
+                    let major = parseInt(match[2]) || 0;
+                    let minor = parseInt(match[4]) || 0;
                     // java 1.8+
-                    if (!isNaN(major) && !isNaN(minor)) {
-                        if (major > 1 || minor >= 8) {
-                            resolve();
-                            return;
-                        }
+                    if (major > 1 || (major === 1 && minor >= 8)) {
+                        resolve();
+                        return;
                     }
                     reject(`Unsupported Java version: ${match[1]}, please install Java 1.8 or above.`);
                     return;
