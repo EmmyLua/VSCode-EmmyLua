@@ -1,6 +1,6 @@
 import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
 
-export abstract class EmmyDebugSession extends LoggingDebugSession {
+export abstract class DebugSession extends LoggingDebugSession {
     constructor() {
         super("emmy.debug.txt");
     }

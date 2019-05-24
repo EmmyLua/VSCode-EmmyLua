@@ -16,7 +16,7 @@ import {
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
 import * as fs from 'fs';
-import { EmmyDebugSession } from './EmmyDebugSession';
+import { DebugSession } from './DebugSession';
 
 var emmyArchExe:string, emmyLua: string;
 var breakpointId:number = 0;
@@ -44,7 +44,7 @@ interface EmmyBreakpoint {
 	line: number;
 }
 
-export class AttachDebugSession extends EmmyDebugSession implements ExprEvaluator, LoadedScriptManager {
+export class AttachDebugSession extends DebugSession implements ExprEvaluator, LoadedScriptManager {
 
 	private socket?: net.Socket;
 	private receiveBuf = new sb.SmartBuffer();

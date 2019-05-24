@@ -1,4 +1,4 @@
-import { EmmyDebugSession } from "./EmmyDebugSession";
+import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { InitializedEvent } from "vscode-debugadapter";
 import * as cp from "child_process";
@@ -13,7 +13,7 @@ interface MobLaunchArguments extends DebugProtocol.LaunchRequestArguments {
     port: number;
 }
 
-export class MobDebugSession extends EmmyDebugSession {
+export class MobDebugSession extends DebugSession {
     private server?: net.Server;
     private client?: MobClient;
 
