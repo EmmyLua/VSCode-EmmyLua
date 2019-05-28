@@ -10,9 +10,9 @@ import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
 import { AttachDebuggerProvider, AttachLaunchDebuggerProvider } from './debugger/AttachDebuggerProvider';
-import { MobDebuggerProvider } from './debugger/MobDebuggerProvider';
 import { formatText } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
+import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
 var DEBUG_MODE = false;
@@ -55,13 +55,9 @@ function registerDebuggers() {
     const attLaunchProvider = new AttachLaunchDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attLaunchProvider));
     savedContext.subscriptions.push(attLaunchProvider);
-    const mobProvider = new MobDebuggerProvider();
-    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_remote", mobProvider));
-    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_remote_launch", mobProvider));
-    savedContext.subscriptions.push(mobProvider);
-    savedContext.subscriptions.push(vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
-        console.log(e.body);
-    }));
+    const emmyProvider = new EmmyDebuggerProvider();
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
+    savedContext.subscriptions.push(emmyProvider);
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {

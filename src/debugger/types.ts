@@ -1,12 +1,12 @@
 
 import {  DebugConfiguration } from 'vscode';
 
-interface EmmyDebugConfiguration extends DebugConfiguration {
+interface DebugConfigurationBase extends DebugConfiguration {
     extensionPath: string;
     sourcePaths: string[];
 }
 
-export interface AttachDebugConfiguration extends EmmyDebugConfiguration {
+export interface AttachDebugConfiguration extends DebugConfigurationBase {
     pid: number;
     
 	program?: string;
@@ -14,9 +14,5 @@ export interface AttachDebugConfiguration extends EmmyDebugConfiguration {
 	workingDir?: string;
 }
 
-export interface MobDebugConfiguration extends EmmyDebugConfiguration {
-	program?: string;
-	arguments?: string[];
-	workingDir?: string;
-	port?: number;
+export interface EmmyDebugConfiguration extends DebugConfigurationBase {
 }
