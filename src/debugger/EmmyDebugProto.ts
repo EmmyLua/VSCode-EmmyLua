@@ -42,6 +42,7 @@ export interface Variable {
     name: string;
     nameType: VariableNameType;
     value: string;
+    valueType: string;
     children?: Variable[];
 }
 
@@ -100,10 +101,11 @@ export interface BreakNotify {
     stacks: Stack[];
 }
 
-export interface EvalReq {
+export interface EvalReq extends Message {
     seq: number;
     expr: string;
     stackLevel: number;
+    depth: number;
 }
 
 export interface EvalRsp {
