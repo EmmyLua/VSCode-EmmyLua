@@ -17,7 +17,7 @@ export class EmmyDebuggerProvider implements vscode.DebugConfigurationProvider {
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: EmmyDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
-        debugConfiguration.request = "attach";
+        debugConfiguration.request = "launch";
         debugConfiguration.type = "emmylua_new";
         return debugConfiguration;
     }

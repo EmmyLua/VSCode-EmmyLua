@@ -185,7 +185,10 @@
                         "required": [
                             "program",
                             "workingDir",
-                            "arguments"
+                            "arguments",
+                            "host",
+                            "port",
+                            "connection"
                         ],
                         "properties": {
                             "program": {
@@ -202,6 +205,21 @@
                                 "type": "array",
                                 "description": "运行参数",
                                 "default": []
+                            },
+                            "host": {
+                                "type": "string",
+                                "description": "host",
+                                "default": "localhost"
+                            },
+                            "port": {
+                                "type": "number",
+                                "description": "port",
+                                "default": 9966
+                            },
+                            "connection": {
+                                "type": "string",
+                                "description": "连接方式",
+                                "default": "IDE_CONNECT_DEBUGGER"
                             }
                         }
                     }
@@ -226,7 +244,10 @@
                             "name": "EmmyLua New Debug",
                             "program": "lua.exe",
                             "workingDir": "${workspaceRoot}",
-                            "arguments": []
+                            "arguments": [],
+                            "host": "localhost",
+                            "port": 9966,
+                            "connection": "IDE_CONNECT_DEBUGGER"
                         }
                     }
                 ],

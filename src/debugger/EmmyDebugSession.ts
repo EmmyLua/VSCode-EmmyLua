@@ -6,10 +6,14 @@ import { DebugProtocol } from "vscode-debugprotocol";
 import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent } from "vscode-debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
 import { readFileSync } from "fs";
+import { join } from "path";
 
 interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
 	extensionPath: string;
-	sourcePaths: string[];
+    sourcePaths: string[];
+    host: string;
+    port: number;
+    connection: string;
 }
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
@@ -20,33 +24,41 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     private breakNotify: proto.IBreakNotify | null = null;
     private currentFrameId = 0;
     private evalIdCount = 0;
+    private args: EmmyDebugArguments | undefined;
     handles = new Handles<IEmmyStackNode>();
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
-        /*const socket = net.createServer(client => {
-            this.client = client;
-            readline.createInterface({
-                input: <NodeJS.ReadableStream> client,
-                output: client
-            })
-            .on("line", line => this.onReceiveLine(line));
-        }).listen(9966);
-        //.listen('\\\\.\\pipe\\emmylua-emmy');
-        this.socket = socket;*/
-        // send resp
+        this.args = args;
+        if (args.connection === 'DEBUGGER_CONNECT_IDE') {
+            const socket = net.createServer(client => {
+                this.client = client;
+                readline.createInterface({
+                    input: <NodeJS.ReadableStream> client,
+                    output: client
+                })
+                .on("line", line => this.onReceiveLine(line));
+            }).listen(args.port);
+            //.listen('\\\\.\\pipe\\emmylua-emmy');
+            this.socket = socket;
+        }
+        else {
+            // send resp
+            const client = net.connect(args.port, args.host)
+            .on('connect', () => {
+                this.onConnect(client);
+            });
+        }
         this.sendResponse(response);
-        const client = net.connect(9966, "localhost", )
-        .on('connect', () => {
-            this.onConnect(client);
-        });
     }
 
     private onConnect(client: net.Socket) {
         this.client = client;
         this.readClient(client);
 
+        const extPath = this.args!.extensionPath;
+        const emmyHelperPath = join(extPath, 'debugger/emmy/emmyHelper.lua');
         // send init event
-        const emmyHelper = readFileSync('D:/Git/OpenSource/EmmyLua/VSCode-EmmyLua/debugger/emmy/emmyHelper.lua');
+        const emmyHelper = readFileSync(emmyHelperPath);
         const initReq: proto.IInitReq = { cmd: proto.MessageCMD.InitReq, emmyHelper: emmyHelper.toString() };
         this.sendMessage(initReq);
 
