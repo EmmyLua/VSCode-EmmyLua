@@ -3,10 +3,10 @@ import * as readline from 'readline';
 import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent } from "vscode-debugadapter";
+import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint } from "vscode-debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, normalize } from "path";
 
 interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
 	extensionPath: string;
@@ -23,9 +23,17 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     private currentCmd: proto.MessageCMD = proto.MessageCMD.Unknown;
     private breakNotify: proto.IBreakNotify | undefined;
     private currentFrameId = 0;
+    private breakPointId = 0;
     private evalIdCount = 0;
     private args: EmmyDebugArguments | undefined;
     handles = new Handles<IEmmyStackNode>();
+
+    protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
+        response.body = {
+            
+        };
+        this.sendResponse(response);
+    }
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
         this.args = args;
@@ -66,6 +74,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
         // send ready
         this.sendMessage({ cmd: proto.MessageCMD.ReadyReq });
+        this.sendEvent(new InitializedEvent());
     }
 
     private readClient(client: net.Socket) {
@@ -217,6 +226,34 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             };
             this.on('onEvalRsp', listener);
         });
+    }
+
+    protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
+        const source = args.source;
+        if (source && source.path) {
+            const path = normalize(source.path);
+            const bps = args.breakpoints || [];
+            const bpsResp: DebugProtocol.Breakpoint[] = [];
+            const bpsProto: proto.IBreakPoint[] = [];
+            for (let i = 0; i < bps.length; i++) {
+                const bp = bps[i];
+                bpsProto.push({
+                    file: path,
+                    line: bp.line
+                });
+
+                const bpResp = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
+                bpResp.id = this.breakPointId++;
+                bpsResp.push(bpResp);
+            }
+            const req: proto.IAddBreakPointReq = {
+                breakPoints: bpsProto,
+                cmd: proto.MessageCMD.AddBreakPointReq
+            };
+            this.sendMessage(req);
+            response.body = { breakpoints: bpsResp };
+        }
+        this.sendResponse(response);
     }
 
     private sendDebugAction(response: DebugProtocol.Response, action: proto.DebugAction) {

@@ -67,8 +67,6 @@ export interface IStack {
 export interface IBreakPoint {
     file: string;
     line: number;
-    condtion: string;
-    hitCount: number;
 }
 
 export interface IInitReq extends IMessage {
@@ -79,7 +77,7 @@ export interface InitRsp {
 }
 
 // add breakpoint
-export interface IAddBreakPointReq {
+export interface IAddBreakPointReq extends IMessage {
     breakPoints: IBreakPoint[];
 }
 export interface IAddBreakPointRsp {
