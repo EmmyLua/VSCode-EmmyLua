@@ -3,21 +3,22 @@ import * as readline from 'readline';
 import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { StoppedEvent, StackFrame, Thread, Source, Handles } from "vscode-debugadapter";
+import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent } from "vscode-debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
+import { readFileSync } from "fs";
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
     private socket: net.Server | null = null;
     private client: net.Socket | null = null;
     private readHeader = true;
     private currentCmd: proto.MessageCMD = proto.MessageCMD.Unknown;
-    private breakNotify: proto.BreakNotify | null = null;
+    private breakNotify: proto.IBreakNotify | null = null;
     private currentFrameId = 0;
     private evalIdCount = 0;
     handles = new Handles<IEmmyStackNode>();
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: DebugProtocol.LaunchRequestArguments): void {
-        const socket = net.createServer(client => {
+        /*const socket = net.createServer(client => {
             this.client = client;
             readline.createInterface({
                 input: <NodeJS.ReadableStream> client,
@@ -26,14 +27,47 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             .on("line", line => this.onReceiveLine(line));
         }).listen(9966);
         //.listen('\\\\.\\pipe\\emmylua-emmy');
-        this.socket = socket;
+        this.socket = socket;*/
         // send resp
         this.sendResponse(response);
+        const client = net.connect(9966, "localhost", )
+        .on('connect', () => {
+            this.onConnect(client);
+        });
+    }
+
+    private onConnect(client: net.Socket) {
+        this.client = client;
+        this.readClient(client);
+
+        // send init event
+        const emmyHelper = readFileSync('D:/Git/OpenSource/EmmyLua/VSCode-EmmyLua/debugger/emmy/emmyHelper.lua');
+        const initReq: proto.IInitReq = { cmd: proto.MessageCMD.InitReq, emmyHelper: emmyHelper.toString() };
+        this.sendMessage(initReq);
+
+        // add breakpoints
+
+        // send ready
+        this.sendMessage({ cmd: proto.MessageCMD.ReadyReq });
+    }
+
+    private readClient(client: net.Socket) {
+        readline.createInterface({
+            input: <NodeJS.ReadableStream> client,
+            output: client
+        })
+        .on("line", line => this.onReceiveLine(line));
+        client.on('close', hadErr => this.onSocketClose())
+        .on('error', err => this.onSocketClose());
+    }
+
+    private onSocketClose() {
+        this.sendEvent(new TerminatedEvent());
     }
     
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
         this.sendDebugAction(response, proto.DebugAction.Stop);
-        setTimeout(() => {    
+        setTimeout(() => {
             if (this.socket) {
                 this.socket.close();
                 this.socket = null;
@@ -117,8 +151,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
 	protected async variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): Promise<void> {
 		if (this.breakNotify) {
-            const stack = this.handles.get(args.variablesReference);
-            const children = await stack.computeChildren(this);
+            const node = this.handles.get(args.variablesReference);
+            const children = await node.computeChildren(this);
             response.body = {
                 variables: children.map(v => v.toVariable(this))
             };
@@ -140,8 +174,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendResponse(response);
     }
 
-    async eval(expr: string, depth: number = 1): Promise<proto.Variable | null> {
-        const req: proto.EvalReq = {
+    async eval(expr: string, depth: number = 1): Promise<proto.IVariable | null> {
+        const req: proto.IEvalReq = {
             cmd: proto.MessageCMD.EvalReq,
             seq: this.evalIdCount++,
             stackLevel: this.currentFrameId,
@@ -150,7 +184,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         };
         this.sendMessage(req);
         return new Promise((resolve, reject) => {
-            const listener = (msg: proto.EvalRsp) => {
+            const listener = (msg: proto.IEvalRsp) => {
                 if (msg.seq === req.seq) {
                     this.removeListener('onEvalRsp', listener);
                     if (msg.success) {
@@ -165,9 +199,13 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     }
 
     private sendDebugAction(response: DebugProtocol.Response, action: proto.DebugAction) {
-        const req: proto.ActionReq = { cmd: proto.MessageCMD.ActionReq, action: action };
+        const req: proto.IActionReq = { cmd: proto.MessageCMD.ActionReq, action: action };
         this.sendMessage(req);
         this.sendResponse(response);
+    }
+
+    protected pauseRequest(response: DebugProtocol.PauseResponse, args: DebugProtocol.PauseArguments): void {
+        this.sendDebugAction(response, proto.DebugAction.Break);
     }
 
     protected continueRequest(response: DebugProtocol.ContinueResponse, args: DebugProtocol.ContinueArguments): void {

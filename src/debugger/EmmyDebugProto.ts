@@ -1,8 +1,12 @@
 // describe debugger proto
 export enum MessageCMD {
     Unknown,
+
     InitReq,
     InitRsp,
+
+    ReadyReq,
+    ReadyRsp,
 
     AddBreakPointReq,
     AddBreakPointRsp,
@@ -20,64 +24,72 @@ export enum MessageCMD {
     BreakNotify,
 }
 
-interface Message {
+export interface IMessage {
     cmd: MessageCMD;
 }
 
 export enum ValueType {
-    VBool,
-    VString,
-    VTable,
-    VFunction,
-    VThread,
-    VUserdata
+    TNIL,
+    TBOOLEAN,
+    TLIGHTUSERDATA,
+    TNUMBER,
+    TSTRING,
+    TTABLE,
+    TFUNCTION,
+    TUSERDATA,
+    TTHREAD,
+
+    GROUP,
 }
 
 export enum VariableNameType {
     NString, NNumber, NComplex, 
 }
 
-export interface Variable {
-    type: ValueType;
+export interface IVariable {
     name: string;
     nameType: VariableNameType;
     value: string;
-    valueType: string;
-    children?: Variable[];
+    valueType: ValueType;
+    valueTypeName: string;
+    children?: IVariable[];
 }
 
-export interface Stack {
-    level: number;
+export interface IStack {
     file: string;
-    functionName: string;
     line: number;
-    localVariables: Variable[];
-    upvalueVariables: Variable[];
+    functionName: string;
+    level: number;
+    localVariables: IVariable[];
+    upvalueVariables: IVariable[];
 }
 
-export interface BreakPoint {
+export interface IBreakPoint {
     file: string;
     line: number;
     condtion: string;
     hitCount: number;
 }
 
+export interface IInitReq extends IMessage {
+    emmyHelper: string;
+}
 export interface InitRsp {
     version: string;
 }
 
 // add breakpoint
-export interface AddBreakPointReq {
-    breakPoints: BreakPoint[];
+export interface IAddBreakPointReq {
+    breakPoints: IBreakPoint[];
 }
-export interface AddBreakPointRsp {
+export interface IAddBreakPointRsp {
 }
 
 // remove breakpoint
-export interface RemoveBreakPointReq {
-    breakPoints: BreakPoint[];
+export interface IRemoveBreakPointReq {
+    breakPoints: IBreakPoint[];
 }
-export interface RemoveBreakPointRsp {
+export interface IRemoveBreakPointRsp {
 }
 
 export enum DebugAction {
@@ -90,27 +102,27 @@ export enum DebugAction {
 }
 
 // break, continue, step over, step into, step out, stop
-export interface ActionReq extends Message {
+export interface IActionReq extends IMessage {
     action: DebugAction;
 }
-export interface ActionRsp {
+export interface IActionRsp {
 }
 
 // on break
-export interface BreakNotify {
-    stacks: Stack[];
+export interface IBreakNotify {
+    stacks: IStack[];
 }
 
-export interface EvalReq extends Message {
+export interface IEvalReq extends IMessage {
     seq: number;
     expr: string;
     stackLevel: number;
     depth: number;
 }
 
-export interface EvalRsp {
+export interface IEvalRsp {
     seq: number;
     success: boolean;
     error: string;
-    value: Variable;
+    value: IVariable;
 }

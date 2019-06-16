@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "启动程序",
-            "program": "${workspaceFolder}/../../out/debugger/AttachDebugAdapter.js",
+            "program": "${workspaceFolder}/../../out/debugger/EmmyDebugSession.js",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ],
