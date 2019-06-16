@@ -206,6 +206,11 @@
                                 "type": "string",
                                 "description": "连接方式",
                                 "default": "IDE_CONNECT_DEBUGGER"
+                            },
+                            "ext": {
+                                "type": "array",
+                                "description": "Lua文件后缀",
+                                "default": [".lua"]
                             }
                         }
                     }
@@ -214,7 +219,11 @@
                     {
                         "type": "emmylua_new",
                         "request": "launch",
-                        "name": "EmmyLua New Debug"
+                        "name": "EmmyLua New Debug",
+                        "host": "localhost",
+                        "port": 9966,
+                        "ext": [".lua"],
+                        "connection": "IDE_CONNECT_DEBUGGER"
                     }
                 ],
                 "configurationSnippets": [
@@ -227,6 +236,7 @@
                             "name": "EmmyLua New Debug",
                             "host": "localhost",
                             "port": 9966,
+                            "ext": [".lua"],
                             "connection": "IDE_CONNECT_DEBUGGER"
                         }
                     }

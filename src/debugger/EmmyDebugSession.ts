@@ -13,6 +13,7 @@ interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
     sourcePaths: string[];
     host: string;
     port: number;
+    ext: string[];
     connection: string;
 }
 
@@ -146,11 +147,15 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected async stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): Promise<void> {
         if (this.breakNotify) {
+            const ext = this.args ? this.args.ext : [];
             const stackFrames: StackFrame[] = [];
             for (let i = 0; i < this.breakNotify.stacks.length; i++) {
                 const stack = this.breakNotify.stacks[i];
-                const file = await this.findFile(stack.file);
-                var source = new Source(stack.file, file);
+                let file = stack.file;
+                if (stack.line >= 0) {
+                    file = await this.findFile(stack.file, ext);
+                }
+                let source = new Source(stack.file, file);
                 stackFrames.push(new StackFrame(stack.level, stack.functionName, source, stack.line));
             }
             response.body = {

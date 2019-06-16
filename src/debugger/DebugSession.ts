@@ -1,5 +1,4 @@
 import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
-import * as path from 'path';
 import { DebugProtocol } from "vscode-debugprotocol";
 
 export abstract class DebugSession extends LoggingDebugSession {
@@ -26,10 +25,9 @@ export abstract class DebugSession extends LoggingDebugSession {
         }
     }
 
-    async findFile(file: string): Promise<string> {
-        const base = path.parse(file).base;
+    async findFile(file: string, ext: string[]): Promise<string> {
         const seq = this._findFileSeq++;
-        this.sendEvent(new Event('findFileReq', { include: base, seq: seq }));
+        this.sendEvent(new Event('findFileReq', { file: file, ext: ext, seq: seq }));
         return new Promise<string>((resolve, c) => {
             const listener = (body: any) => {
                 if (seq === body.seq) {

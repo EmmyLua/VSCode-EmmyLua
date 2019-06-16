@@ -63,13 +63,28 @@ function registerDebuggers() {
     savedContext.subscriptions.push(vscode.debug.onDidReceiveDebugSessionCustomEvent(onDebugCustomEvent));
 }
 
-function onDebugCustomEvent(e: vscode.DebugSessionCustomEvent) {
+async function onDebugCustomEvent(e: vscode.DebugSessionCustomEvent) {
     if (e.event === 'findFileReq') {
-        const include = e.body.include;
+        const file: string = e.body.file;
+        const ext: string[] = e.body.ext;
         const seq = e.body.seq;
-        vscode.workspace.findFiles(include).then(urls => {
-            e.session.customRequest('findFileRsp', { files: urls.map(it => it.fsPath), seq: seq });
-        });
+        const parsedPath = path.parse(file);
+        let fileNames = [parsedPath.base];
+        for (let i = 0; i < ext.length; i++) {
+            const e = ext[i];
+            fileNames.push(`${parsedPath.base}${e}`);
+        }
+        let results: vscode.Uri[] = [];
+        for (let i = 0; i < fileNames.length; i++) {
+            const fileName = fileNames[i];
+            let include = `**/${fileName}`;
+            const uris = await vscode.workspace.findFiles(include);
+            if (uris.length > 0) {
+                results = uris;
+                break;
+            }
+        }
+        e.session.customRequest('findFileRsp', { files: results.map(it => it.fsPath), seq: seq });
     }
 }
 
