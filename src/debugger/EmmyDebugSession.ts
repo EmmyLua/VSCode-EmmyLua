@@ -7,6 +7,11 @@ import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent } fr
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 
+interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
+	extensionPath: string;
+	sourcePaths: string[];
+}
+
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
     private socket: net.Server | null = null;
     private client: net.Socket | null = null;
@@ -17,7 +22,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     private evalIdCount = 0;
     handles = new Handles<IEmmyStackNode>();
 
-    protected launchRequest(response: DebugProtocol.LaunchResponse, args: DebugProtocol.LaunchRequestArguments): void {
+    protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
         /*const socket = net.createServer(client => {
             this.client = client;
             readline.createInterface({

@@ -15,4 +15,6 @@ export interface AttachDebugConfiguration extends DebugConfigurationBase {
 }
 
 export interface EmmyDebugConfiguration extends DebugConfigurationBase {
+    host: string;
+    port: number;
 }
