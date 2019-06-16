@@ -28,6 +28,10 @@
             {
                 "command": "emmy.restartServer",
                 "title": "EmmyLua: Restart Lua Server"
+            },
+            {
+                "command": "emmy.insertEmmyDebugCode",
+                "title": "EmmyLua: Insert Emmy Debugger Code"
             }
         ],
         "snippets": [
@@ -177,35 +181,17 @@
             },
             {
                 "type": "emmylua_new",
-                "label": "EmmyLua New Debug",
+                "label": "EmmyLua New Debugger",
                 "program": "./out/debugger/EmmyDebugSession.js",
                 "runtime": "node",
                 "configurationAttributes": {
                     "launch": {
                         "required": [
-                            "program",
-                            "workingDir",
-                            "arguments",
                             "host",
                             "port",
                             "connection"
                         ],
                         "properties": {
-                            "program": {
-                                "type": "string",
-                                "description": "启动程序",
-                                "default": "lua.exe"
-                            },
-                            "workingDir": {
-                                "type": "string",
-                                "description": "工作目录",
-                                "default": "${workspaceRoot}"
-                            },
-                            "arguments": {
-                                "type": "array",
-                                "description": "运行参数",
-                                "default": []
-                            },
                             "host": {
                                 "type": "string",
                                 "description": "host",
@@ -228,10 +214,7 @@
                     {
                         "type": "emmylua_new",
                         "request": "launch",
-                        "name": "EmmyLua New Debug",
-                        "program": "lua.exe",
-                        "workingDir": "${workspaceRoot}",
-                        "arguments": []
+                        "name": "EmmyLua New Debug"
                     }
                 ],
                 "configurationSnippets": [
@@ -242,9 +225,6 @@
                             "type": "emmylua_new",
                             "request": "launch",
                             "name": "EmmyLua New Debug",
-                            "program": "lua.exe",
-                            "workingDir": "${workspaceRoot}",
-                            "arguments": [],
                             "host": "localhost",
                             "port": 9966,
                             "connection": "IDE_CONNECT_DEBUGGER"

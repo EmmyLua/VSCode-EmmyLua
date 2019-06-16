@@ -36,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, savedContext.subscriptions));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
+    savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
 
     savedContext.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: "file", language: LANGUAGE_ID }, {
             provideDocumentFormattingEdits(document, position, token): vscode.ProviderResult<vscode.TextEdit[]> {
@@ -229,4 +230,41 @@ function stopServer() {
     if (client) {
         client.stop();
     }
+}
+
+async function insertEmmyDebugCode() {
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+        return;
+    }
+    const document = activeEditor.document;
+    if (document.languageId !== 'lua') {
+        return;
+    }
+    const arch = await vscode.window.showQuickPick(['x64', 'x86']);
+    if (!arch) {
+        return;
+    }
+    // const host = await vscode.window.showInputBox({ value: 'localhost', prompt: "侦听主机地址" });
+    // if (!host) {
+    //     return;
+    // }
+    // let port = 9966;
+    // await vscode.window.showInputBox({ value: '9966', prompt: '侦听端口', validateInput: function(v) {
+    //     try {
+    //         port = parseInt(v);
+    //     } catch (error) {
+    //         return '请输入正确的端口';
+    //     }
+    //     return undefined;
+    // }});
+
+    const host = 'localhost';
+    const port = 9966;
+    const dll = path.join(savedContext.extensionPath, `debugger/emmy/windows/${arch}/?.dll`);
+    const ins = new vscode.SnippetString();
+    ins.appendText(`package.cpath = package.cpath .. ";${dll.replace(/\\/g, '/')}"\n`);
+    ins.appendText(`local dbg = require("emmy_core")\n`);
+    ins.appendText(`dbg.tcpListen("${host}", ${port})`);
+    activeEditor.insertSnippet(ins);
 }

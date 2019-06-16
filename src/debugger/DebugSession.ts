@@ -1,7 +1,6 @@
 import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
 import * as path from 'path';
 import { DebugProtocol } from "vscode-debugprotocol";
-import { Uri } from "vscode";
 
 export abstract class DebugSession extends LoggingDebugSession {
     constructor() {
