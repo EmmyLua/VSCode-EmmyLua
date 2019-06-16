@@ -17,11 +17,11 @@ interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
 }
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
-    private socket: net.Server | null = null;
-    private client: net.Socket | null = null;
+    private socket: net.Server | undefined;
+    private client: net.Socket | undefined;
     private readHeader = true;
     private currentCmd: proto.MessageCMD = proto.MessageCMD.Unknown;
-    private breakNotify: proto.IBreakNotify | null = null;
+    private breakNotify: proto.IBreakNotify | undefined;
     private currentFrameId = 0;
     private evalIdCount = 0;
     private args: EmmyDebugArguments | undefined;
@@ -87,11 +87,11 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         setTimeout(() => {
             if (this.socket) {
                 this.socket.close();
-                this.socket = null;
+                this.socket = undefined;
             }
             if (this.client) {
                 this.client.end();
-                this.client = null;
+                this.client = undefined;
             }
         }, 1000);
     }
@@ -135,14 +135,18 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 		this.sendResponse(response);
 	}
 
-    protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
+    protected async stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): Promise<void> {
         if (this.breakNotify) {
+            const stackFrames: StackFrame[] = [];
+            for (let i = 0; i < this.breakNotify.stacks.length; i++) {
+                const stack = this.breakNotify.stacks[i];
+                const file = await this.findFile(stack.file);
+                var source = new Source(stack.file, file);
+                stackFrames.push(new StackFrame(stack.level, stack.functionName, source, stack.line));
+            }
             response.body = {
-                stackFrames: this.breakNotify.stacks.map(stack => {
-                    var source = new Source(stack.file);
-                    return new StackFrame(stack.level, stack.functionName, source, this.convertDebuggerLineToClient(stack.line));
-                }),
-                totalFrames: this.breakNotify.stacks.length
+                stackFrames: stackFrames,
+                totalFrames: stackFrames.length
             };
         }
         this.sendResponse(response);
@@ -191,7 +195,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendResponse(response);
     }
 
-    async eval(expr: string, depth: number = 1): Promise<proto.IVariable | null> {
+    async eval(expr: string, depth: number = 1): Promise<proto.IVariable> {
         const req: proto.IEvalReq = {
             cmd: proto.MessageCMD.EvalReq,
             seq: this.evalIdCount++,
@@ -200,7 +204,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             depth: depth
         };
         this.sendMessage(req);
-        return new Promise((resolve, reject) => {
+        return new Promise<proto.IVariable>((resolve, reject) => {
             const listener = (msg: proto.IEvalRsp) => {
                 if (msg.seq === req.seq) {
                     this.removeListener('onEvalRsp', listener);

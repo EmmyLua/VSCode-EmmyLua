@@ -58,6 +58,18 @@ function registerDebuggers() {
     const emmyProvider = new EmmyDebuggerProvider();
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
     savedContext.subscriptions.push(emmyProvider);
+
+    savedContext.subscriptions.push(vscode.debug.onDidReceiveDebugSessionCustomEvent(onDebugCustomEvent));
+}
+
+function onDebugCustomEvent(e: vscode.DebugSessionCustomEvent) {
+    if (e.event === 'findFileReq') {
+        const include = e.body.include;
+        const seq = e.body.seq;
+        vscode.workspace.findFiles(include).then(urls => {
+            e.session.customRequest('findFileRsp', { files: urls.map(it => it.fsPath), seq: seq });
+        });
+    }
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
