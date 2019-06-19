@@ -68,7 +68,11 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         const emmyHelperPath = join(extPath, 'debugger/emmy/emmyHelper.lua');
         // send init event
         const emmyHelper = readFileSync(emmyHelperPath);
-        const initReq: proto.IInitReq = { cmd: proto.MessageCMD.InitReq, emmyHelper: emmyHelper.toString() };
+        const initReq: proto.IInitReq = {
+            cmd: proto.MessageCMD.InitReq,
+            emmyHelper: emmyHelper.toString(),
+            ext: this.args!.ext
+        };
         this.sendMessage(initReq);
 
         // add breakpoints
@@ -147,7 +151,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected async stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): Promise<void> {
         if (this.breakNotify) {
-            const ext = this.args ? this.args.ext : [];
+            const ext = this.args ? this.args.ext : [".lua"];
             const stackFrames: StackFrame[] = [];
             for (let i = 0; i < this.breakNotify.stacks.length; i++) {
                 const stack = this.breakNotify.stacks[i];

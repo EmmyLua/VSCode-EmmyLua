@@ -71,6 +71,7 @@ export interface IBreakPoint {
 
 export interface IInitReq extends IMessage {
     emmyHelper: string;
+    ext: string[];
 }
 export interface InitRsp {
     version: string;
