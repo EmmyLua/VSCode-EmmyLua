@@ -153,11 +153,15 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         if (this.breakNotify) {
             const ext = this.args ? this.args.ext : [".lua"];
             const stackFrames: StackFrame[] = [];
-            for (let i = 0; i < this.breakNotify.stacks.length; i++) {
-                const stack = this.breakNotify.stacks[i];
+            const stacks = this.breakNotify.stacks;
+            for (let i = 0; i < stacks.length; i++) {
+                const stack = stacks[i];
                 let file = stack.file;
                 if (stack.line >= 0) {
                     file = await this.findFile(stack.file, ext);
+                }
+                else if (i < stacks.length - 1) {
+                    continue;
                 }
                 let source = new Source(stack.file, file);
                 stackFrames.push(new StackFrame(stack.level, stack.functionName, source, stack.line));
