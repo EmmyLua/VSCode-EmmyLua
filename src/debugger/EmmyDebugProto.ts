@@ -80,6 +80,7 @@ export interface InitRsp {
 // add breakpoint
 export interface IAddBreakPointReq extends IMessage {
     breakPoints: IBreakPoint[];
+    clear: boolean;
 }
 export interface IAddBreakPointRsp {
 }

@@ -243,11 +243,11 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
         const source = args.source;
+        const bpsProto: proto.IBreakPoint[] = [];
         if (source && source.path) {
             const path = normalize(source.path);
             const bps = args.breakpoints || [];
             const bpsResp: DebugProtocol.Breakpoint[] = [];
-            const bpsProto: proto.IBreakPoint[] = [];
             for (let i = 0; i < bps.length; i++) {
                 const bp = bps[i];
                 bpsProto.push({
@@ -259,13 +259,14 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 bpResp.id = this.breakPointId++;
                 bpsResp.push(bpResp);
             }
-            const req: proto.IAddBreakPointReq = {
-                breakPoints: bpsProto,
-                cmd: proto.MessageCMD.AddBreakPointReq
-            };
-            this.sendMessage(req);
             response.body = { breakpoints: bpsResp };
         }
+        const req: proto.IAddBreakPointReq = {
+            breakPoints: bpsProto,
+            clear: true,
+            cmd: proto.MessageCMD.AddBreakPointReq
+        };
+        this.sendMessage(req);
         this.sendResponse(response);
     }
 
