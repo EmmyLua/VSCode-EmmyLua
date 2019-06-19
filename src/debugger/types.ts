@@ -18,4 +18,5 @@ export interface EmmyDebugConfiguration extends DebugConfigurationBase {
     host: string;
     port: number;
     ext: string[];
+    ideConnectDebugger: boolean;
 }

@@ -14,7 +14,7 @@ interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
     host: string;
     port: number;
     ext: string[];
-    connection: string;
+    ideConnectDebugger: boolean;
 }
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
@@ -38,7 +38,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
         this.args = args;
-        if (args.connection === 'DEBUGGER_CONNECT_IDE') {
+        if (!args.ideConnectDebugger) {
             const socket = net.createServer(client => {
                 this.client = client;
                 readline.createInterface({

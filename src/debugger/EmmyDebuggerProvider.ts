@@ -17,8 +17,14 @@ export class EmmyDebuggerProvider implements vscode.DebugConfigurationProvider {
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: EmmyDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
-        debugConfiguration.request = "launch";
-        debugConfiguration.type = "emmylua_new";
+        if (!debugConfiguration.request) {
+            debugConfiguration.request = "launch";
+            debugConfiguration.type = "emmylua_new";
+            debugConfiguration.ideConnectDebugger = true;
+            debugConfiguration.host = 'localhost';
+            debugConfiguration.port = 9966;
+            debugConfiguration.ext = [".lua", ".lua.txt", ".lua.bytes"];
+        }
         return debugConfiguration;
     }
 

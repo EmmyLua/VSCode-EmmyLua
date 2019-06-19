@@ -189,7 +189,7 @@
                         "required": [
                             "host",
                             "port",
-                            "connection"
+                            "ideConnectDebugger"
                         ],
                         "properties": {
                             "host": {
@@ -202,10 +202,10 @@
                                 "description": "port",
                                 "default": 9966
                             },
-                            "connection": {
-                                "type": "string",
+                            "ideConnectDebugger": {
+                                "type": "boolean",
                                 "description": "连接方式",
-                                "default": "IDE_CONNECT_DEBUGGER"
+                                "default": true
                             },
                             "ext": {
                                 "type": "array",
@@ -222,8 +222,8 @@
                         "name": "EmmyLua New Debug",
                         "host": "localhost",
                         "port": 9966,
-                        "ext": [".lua"],
-                        "connection": "IDE_CONNECT_DEBUGGER"
+                        "ext": [".lua", ".lua.txt", ".lua.bytes"],
+                        "ideConnectDebugger": true
                     }
                 ],
                 "configurationSnippets": [
@@ -236,8 +236,8 @@
                             "name": "EmmyLua New Debug",
                             "host": "localhost",
                             "port": 9966,
-                            "ext": [".lua"],
-                            "connection": "IDE_CONNECT_DEBUGGER"
+                            "ext": [".lua", ".lua.txt", ".lua.bytes"],
+                            "ideConnectDebugger": true
                         }
                     }
                 ],
