@@ -23,8 +23,21 @@ export class EmmyDebuggerProvider implements vscode.DebugConfigurationProvider {
             debugConfiguration.ideConnectDebugger = true;
             debugConfiguration.host = 'localhost';
             debugConfiguration.port = 9966;
-            debugConfiguration.ext = [".lua", ".lua.txt", ".lua.bytes"];
         }
+
+        const ext = ['.lua'];
+        const associations: any = vscode.workspace.getConfiguration("files").get("associations");
+        for (const key in associations) {
+            if (associations.hasOwnProperty(key)) {
+                const element = associations[key];
+                if (element === 'lua' && key.substr(0, 2) === '*.') {
+                    ext.push(key.substr(1));
+                }
+            }
+        }
+
+        debugConfiguration.ext = ext;
+
         return debugConfiguration;
     }
 
