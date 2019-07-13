@@ -11,7 +11,8 @@ export interface AttachDebugConfiguration extends DebugConfigurationBase {
     
 	program?: string;
 	arguments?: string[];
-	workingDir?: string;
+    workingDir?: string;
+    ext: string[];
 }
 
 export interface EmmyDebugConfiguration extends DebugConfigurationBase {

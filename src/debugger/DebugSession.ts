@@ -1,11 +1,13 @@
 import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
+import * as path from 'path';
 
 export abstract class DebugSession extends LoggingDebugSession {
     constructor() {
         super("emmy.debug.txt");
     }
 
+    protected ext: string[] = ['.lua'];
     private _findFileSeq = 0;
     private _fileCache = new Map<string, string>();
 
@@ -26,14 +28,17 @@ export abstract class DebugSession extends LoggingDebugSession {
         }
     }
 
-    async findFile(file: string, ext: string[]): Promise<string> {
+    async findFile(file: string): Promise<string> {
+        if (path.isAbsolute(file)) {
+            return file;
+		}
         const r = this._fileCache.get(file);
         if (r) {
             return r;
         }
 
         const seq = this._findFileSeq++;
-        this.sendEvent(new Event('findFileReq', { file: file, ext: ext, seq: seq }));
+        this.sendEvent(new Event('findFileReq', { file: file, ext: this.ext, seq: seq }));
         return new Promise<string>((resolve, c) => {
             const listener = (body: any) => {
                 if (seq === body.seq) {

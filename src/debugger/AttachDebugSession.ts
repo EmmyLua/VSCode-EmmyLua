@@ -15,7 +15,6 @@ import {
 } from './AttachProtol';
 import { ByteArray } from './ByteArray';
 import * as path from 'path';
-import * as fs from 'fs';
 import { DebugSession } from './DebugSession';
 
 var emmyArchExe:string, emmyLua: string;
@@ -26,6 +25,7 @@ interface EmmyDebugArguments {
 	sourcePaths: string[];
 	captureStd: boolean;
 	captureOutputDebugString: boolean;
+    ext: string[];
 }
 
 interface EmmyAttachRequestArguments extends DebugProtocol.AttachRequestArguments, EmmyDebugArguments {
@@ -36,6 +36,7 @@ interface EmmyLaunchRequesetArguments extends DebugProtocol.LaunchRequestArgumen
 	program: string;
 	arguments: string[];
 	workingDir: string;
+    ext: string[];
 }
 
 interface EmmyBreakpoint {
@@ -56,7 +57,6 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 	private handles: Handles<IStackNode> = new Handles<IStackNode>();
 	private evalIdCounter = 0;
 	private evalMap = new Map<number, (v:DMRespEvaluate) => void>();
-    private sourcePaths: string[] = [];
 	
 	public constructor() {
 		super();
@@ -67,11 +67,11 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 	private initEnv(args: EmmyDebugArguments) {
 		emmyArchExe = `${args.extensionPath}/debugger/windows/x86/emmy.arch.exe`;
 		emmyLua = `${args.extensionPath}/debugger/Emmy.lua`;
-		this.sourcePaths = args.sourcePaths;
 	}
 
 	protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyLaunchRequesetArguments): void {
 		this.initEnv(args);
+		this.ext = args.ext;
 		cp.exec(`${emmyArchExe} arch -file ${args.program}`).on("exit", code => {
 			if (code === 0xffffffff) {
 				this.sendEvent(new OutputEvent(`Program: ${args.program} not found!`));
@@ -95,6 +95,7 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 
 	protected attachRequest(response: DebugProtocol.AttachResponse, args: EmmyAttachRequestArguments): void {
 		this.initEnv(args);
+		this.ext = args.ext;
 		cp.exec(`${emmyArchExe} arch -pid ${args.pid}`, (err, stdout) => {
 			const isX86 = stdout === "1";
 			const arch = isX86 ? "x86" : "x64";
@@ -192,7 +193,7 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 		}
 	}
 
-	private handleMessage(msg: LuaAttachMessage) {
+	private async handleMessage(msg: LuaAttachMessage) {
 		switch (msg.id) {
 			case DebugMessageId.RespInitialize: {
 				this.sendEvent(new InitializedEvent());
@@ -210,7 +211,7 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 			case DebugMessageId.LoadScript: {
 				let mm = msg as DMLoadScript;
 				if (mm.fileName) {
-					var filePath = this.resolvePath(mm.fileName);
+					var filePath = await this.findFile(mm.fileName);
 					if (filePath) {
 						filePath = this.normalize(filePath);
 						this.sendEvent(new OutputEvent(`load:${mm.fileName}\n`));
@@ -278,7 +279,7 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 		this.sendResponse(response);
 	}
 
-	protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
+	protected async setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments) {
 		let lines = args.breakpoints || [];
 		const path = this.normalize(<string> args.source.path);
 
@@ -290,7 +291,8 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 		const bps = <EmmyBreakpoint[]>[];
 
 		const breakpoints = new Array<DebugProtocol.Breakpoint>();
-		lines.forEach(bp => {
+		for (let i = 0; i < lines.length; i++) {
+			const bp = lines[i];
 			const bpk = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
 			bpk.id = ++breakpointId;
 			breakpoints.push(bpk);
@@ -303,20 +305,20 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 				const ebp: EmmyBreakpoint = { id: breakpointId, line: bp.line, scriptIndex: -1 };
 	
 				//send
-				const script = this.findScript(path);
+				const script = await this.findScript(path);
 				if (script) {
 					this.send(new DMAddBreakpoint(script.index, this.convertClientLineToDebugger(bp.line)));
 					ebp.scriptIndex = script.index;
 				}
 				bps.push(ebp);
 			}
-		});
+		}
 		response.body = {
 			breakpoints: breakpoints
 		};
 
 		this.breakpoints.set(path, bps);
-		existMap.forEach((v, k) => {
+		existMap.forEach((v) => {
 			if (v.scriptIndex > 0) {
 				this.send(new DMDelBreakpoint(v.scriptIndex, this.convertClientLineToDebugger(v.line)));
 			}
@@ -330,69 +332,9 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 		return filePath;
 	}
 
-	private resolvePath(filePath: string): string | undefined {
-		if (path.isAbsolute(filePath)) {
-			if (fs.existsSync(filePath)) {
-				return filePath;
-			} else {
-				return undefined;
-			}
-		}
-		
-		const baseName = path.basename(filePath).toLowerCase();
-		let bestMatch: string | undefined;
-		let matchDepth = -1;
-		for (let index = 0; index < this.sourcePaths.length; index++) {
-			const p = this.sourcePaths[index];
-			let result: string[] = [];
-			this.findFilesByName(p, baseName, result);
-			result.forEach((fp, _) => {
-				let depth = this.matchDepth(filePath, fp);
-				if (matchDepth < depth) {
-					bestMatch = fp;
-					matchDepth = depth;
-				}
-			});
-		}
-		return bestMatch;
-	}
-
-	private matchDepth(pathA: string, pathB: string): number {
-		const aParts = pathA.split(/[\\/]/gi);
-		const bParts = pathB.split(/[\\/]/gi);
-		let depth = 0;
-		for (let i = 1; i < aParts.length && i < bParts.length; i++) {
-			const a = aParts[aParts.length - 1 - i];
-			const b = bParts[bParts.length - 1 - i];
-			if (a.toLowerCase() ===  b.toLowerCase()) {
-				depth++;
-			} else {
-				break;
-			}
-		}
-		return depth;
-	}
-
-	private findFilesByName(dir: string, targetBaseName: string, results: string[]) {
-		fs.readdirSync(dir).forEach((name, _) => {
-			let subFilePath = path.resolve(dir, name);
-			let stat = fs.statSync(subFilePath);
-			if (stat.isDirectory()) {
-				this.findFilesByName(subFilePath, targetBaseName, results);
-			} else {
-				let baseName = name.toLowerCase();
-				if (baseName.startsWith(targetBaseName)) {
-					results.push(subFilePath);
-				}
-			}
-		});
-	}
-
-	public findScript(path: string): LoadedScript | undefined {
-		const filePath = this.resolvePath(path);
-		if (filePath) {
-			return this.loadedScripts.get(this.normalize(filePath));
-		}
+	public async findScript(path: string): Promise<LoadedScript | undefined> {
+		const filePath = await this.findFile(path);
+		return this.loadedScripts.get(this.normalize(filePath));
 	}
 
 	public findScriptByIndex(index: number): LoadedScript | undefined {
@@ -403,21 +345,24 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 		}
 	}
 
-	protected stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): void {
+	protected async stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments) {
 		if (this.break) {
 			const stacks = <StackNodeContainer> this.break.stacks;
-			var index = 0;
+			const stackFrames: StackFrame[] = [];
+			for (let i = 0; i < stacks.children.length; i++) {
+				const root = <StackRootNode> stacks.children[i];
+				const script = this.findScriptByIndex(root.scriptIndex);
+				var source: Source | undefined;
+				if (script) {
+					const file = await this.findFile(script.path);
+					source = new Source(path.basename(script.path), file);
+				}
+				const stackFrame = new StackFrame(i, root.functionName, source, this.convertDebuggerLineToClient(root.line));
+				stackFrames.push(stackFrame);
+			}
 			response.body = {
-				stackFrames: stacks.children.map(child => {
-					const root = <StackRootNode> child;
-					const script = this.findScriptByIndex(root.scriptIndex);
-					var source: Source | undefined;
-					if (script) {
-						source = new Source(path.basename(script.path), this.resolvePath(script.path));
-					}
-					return new StackFrame(index++, root.functionName, source, this.convertDebuggerLineToClient(root.line));
-				}),
-				totalFrames: stacks.children.length
+				stackFrames: stackFrames,
+				totalFrames: stackFrames.length
 			};
 		}
 		this.sendResponse(response);
@@ -489,7 +434,7 @@ export class AttachDebugSession extends DebugSession implements ExprEvaluator, L
 		});
 	}
 
-	eval(expr: string, frameId: number = -1): Thenable<DMRespEvaluate> {
+	eval(expr: string, frameId: number = -1): Promise<DMRespEvaluate> {
 		if (frameId < 0) {
 			frameId = this.curFrameId;
 		}

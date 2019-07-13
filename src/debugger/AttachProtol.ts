@@ -246,7 +246,7 @@ export interface LoadedScript {
 }
 
 export interface LoadedScriptManager {
-    findScript(path: string): LoadedScript | undefined;
+    //findScript(path: string): LoadedScript | undefined;
     findScriptByIndex(index: number): LoadedScript | undefined;
 }
 

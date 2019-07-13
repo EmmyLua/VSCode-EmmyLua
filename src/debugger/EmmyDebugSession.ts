@@ -38,6 +38,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
         this.args = args;
+        this.ext = args.ext;
         if (!args.ideConnectDebugger) {
             const socket = net.createServer(client => {
                 this.client = client;
@@ -151,14 +152,13 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected async stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): Promise<void> {
         if (this.breakNotify) {
-            const ext = this.args ? this.args.ext : [".lua"];
             const stackFrames: StackFrame[] = [];
             const stacks = this.breakNotify.stacks;
             for (let i = 0; i < stacks.length; i++) {
                 const stack = stacks[i];
                 let file = stack.file;
                 if (stack.line >= 0) {
-                    file = await this.findFile(stack.file, ext);
+                    file = await this.findFile(stack.file);
                 }
                 else if (i < stacks.length - 1) {
                     continue;

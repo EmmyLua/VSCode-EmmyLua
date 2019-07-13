@@ -13,6 +13,20 @@ export class EmmyDebuggerProvider implements vscode.DebugConfigurationProvider {
         var config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
         return list.concat(config.map(item => { return normalize(item); }));
     }
+
+    private getExt(): string[] {
+        const ext = ['.lua'];
+        const associations: any = vscode.workspace.getConfiguration("files").get("associations");
+        for (const key in associations) {
+            if (associations.hasOwnProperty(key)) {
+                const element = associations[key];
+                if (element === 'lua' && key.substr(0, 2) === '*.') {
+                    ext.push(key.substr(1));
+                }
+            }
+        }
+        return ext;
+    }
     
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: EmmyDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
@@ -24,19 +38,7 @@ export class EmmyDebuggerProvider implements vscode.DebugConfigurationProvider {
             debugConfiguration.host = 'localhost';
             debugConfiguration.port = 9966;
         }
-
-        const ext = ['.lua'];
-        const associations: any = vscode.workspace.getConfiguration("files").get("associations");
-        for (const key in associations) {
-            if (associations.hasOwnProperty(key)) {
-                const element = associations[key];
-                if (element === 'lua' && key.substr(0, 2) === '*.') {
-                    ext.push(key.substr(1));
-                }
-            }
-        }
-
-        debugConfiguration.ext = ext;
+        debugConfiguration.ext = this.getExt();
 
         return debugConfiguration;
     }

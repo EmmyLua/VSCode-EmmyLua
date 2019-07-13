@@ -23,11 +23,26 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
         return list.concat(config.map(item => { return normalize(item); }));
     }
 
+    private getExt(): string[] {
+        const ext = ['.lua'];
+        const associations: any = vscode.workspace.getConfiguration("files").get("associations");
+        for (const key in associations) {
+            if (associations.hasOwnProperty(key)) {
+                const element = associations[key];
+                if (element === 'lua' && key.substr(0, 2) === '*.') {
+                    ext.push(key.substr(1));
+                }
+            }
+        }
+        return ext;
+    }
+
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
         debugConfiguration.request = "attach";
         debugConfiguration.type = "emmylua_attach";
+        debugConfiguration.ext = this.getExt();
         if (debugConfiguration.pid > 0) {
             return debugConfiguration;
         }
