@@ -127,7 +127,7 @@ async function validateJava() {
     
     return new Promise((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
-            let regexp:RegExp = /java version "((\d+)(\.(\d+).+?)?)"/g;
+            let regexp:RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {
                 let match = regexp.exec(stderr);
                 if (match) {
