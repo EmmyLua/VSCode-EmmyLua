@@ -6,6 +6,7 @@ import { savedContext } from '../extension';
 import * as cp from "child_process";
 import { basename, normalize } from 'path';
 import { AttachDebugConfiguration } from './types';
+import * as iconv from 'iconv-lite';
 
 interface ProcessInfoItem extends vscode.QuickPickItem {
     pid: number;
@@ -33,9 +34,12 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
         // list processes
         return new Promise((resolve, reject) => {
             const args = [`${savedContext.extensionPath}/debugger/windows/x86/emmy.arch.exe`, " ", "list_processes"];
-            const options: cp.ExecOptionsWithStringEncoding = { encoding: 'utf8' };
+            const options: cp.ExecOptionsWithBufferEncoding = {
+                encoding: 'buffer'
+            };
             cp.exec(args.join(" "), options, (_err, stdout, _stderr) => {
-                const arr = stdout.split('\r\n');
+                const str = iconv.decode(stdout, 'gbk');
+                const arr = str.split('\r\n');
                 const size = Math.floor(arr.length / 4);
                 const items: ProcessInfoItem[] = [];
                 for (let i = 0; i < size; i++) {

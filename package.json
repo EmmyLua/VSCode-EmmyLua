@@ -210,7 +210,9 @@
                             "ext": {
                                 "type": "array",
                                 "description": "Lua文件后缀",
-                                "default": [".lua"]
+                                "default": [
+                                    ".lua"
+                                ]
                             }
                         }
                     }
@@ -222,7 +224,11 @@
                         "name": "EmmyLua New Debug",
                         "host": "localhost",
                         "port": 9966,
-                        "ext": [".lua", ".lua.txt", ".lua.bytes"],
+                        "ext": [
+                            ".lua",
+                            ".lua.txt",
+                            ".lua.bytes"
+                        ],
                         "ideConnectDebugger": true
                     }
                 ],
@@ -236,7 +242,11 @@
                             "name": "EmmyLua New Debug",
                             "host": "localhost",
                             "port": 9966,
-                            "ext": [".lua", ".lua.txt", ".lua.bytes"],
+                            "ext": [
+                                ".lua",
+                                ".lua.txt",
+                                ".lua.bytes"
+                            ],
                             "ideConnectDebugger": true
                         }
                     }
@@ -323,6 +333,7 @@
         "@types/mocha": "^2.2.42",
         "@types/node": "^7.0.43",
         "lua-fmt": "^2.6.0",
-        "smart-buffer": "^4.0.1"
+        "smart-buffer": "^4.0.1",
+        "iconv-lite": "^0.5.0"
     }
 }
