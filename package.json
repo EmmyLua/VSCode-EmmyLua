@@ -323,7 +323,6 @@
         "@types/mocha": "^2.2.42",
         "@types/node": "^7.0.43",
         "lua-fmt": "^2.6.0",
-        "smart-buffer": "^4.0.1",
-        "xml2js": "^0.4.19"
+        "smart-buffer": "^4.0.1"
     }
 }

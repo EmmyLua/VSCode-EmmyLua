@@ -7,8 +7,6 @@ import * as cp from "child_process";
 import { basename, normalize } from 'path';
 import { AttachDebugConfiguration } from './types';
 
-var parseString = require('xml2js').parseString;
-
 interface ProcessInfoItem extends vscode.QuickPickItem {
     pid: number;
 }
@@ -35,32 +33,32 @@ export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider
         // list processes
         return new Promise((resolve, reject) => {
             const args = [`${savedContext.extensionPath}/debugger/windows/x86/emmy.arch.exe`, " ", "list_processes"];
-            cp.exec(args.join(" "), (err, stdout, stderr) => {
-                parseString(stdout, function (err:any, result:any) {
-                    if (!result || err) {
+            const options: cp.ExecOptionsWithStringEncoding = { encoding: 'utf8' };
+            cp.exec(args.join(" "), options, (_err, stdout, _stderr) => {
+                const arr = stdout.split('\r\n');
+                const size = Math.floor(arr.length / 4);
+                const items: ProcessInfoItem[] = [];
+                for (let i = 0; i < size; i++) {
+                    const pid = parseInt(arr[i * 4]);
+                    const title = arr[i * 4 + 1];
+                    const path = arr[i * 4 + 2];
+                    const name = basename(path);
+                    const item: ProcessInfoItem = {
+                        pid: pid,
+                        label: `${pid} : ${name}`,
+                        description: title,
+                        detail: path
+                    };
+                    items.push(item);
+                }
+                
+                vscode.window.showQuickPick(items, { placeHolder: "Select the process to attach" }).then((item: ProcessInfoItem | undefined) => {
+                    if (item) {
+                        debugConfiguration.pid = item.pid;
+                        resolve(debugConfiguration);
+                    } else {
                         reject();
-                        return;
                     }
-                    const items = <ProcessInfoItem[]> result.list.process.map((data:any) => {
-                        const pid = data["$"].pid;
-                        const title = data.title[0];
-                        const path = data.path[0];
-                        const name = basename(path);
-                        return <ProcessInfoItem> {
-                            pid: pid,
-                            label: `${pid} : ${name}`,
-                            description: title,
-                            detail: path
-                        };
-                    });
-                    vscode.window.showQuickPick(items, { placeHolder: "Select the process to attach" }).then((item: ProcessInfoItem | undefined) => {
-                        if (item) {
-                            debugConfiguration.pid = item.pid;
-                            resolve(debugConfiguration);
-                        } else {
-                            reject();
-                        }
-                    });
                 });
             }).on("error", error => reject);
         });
