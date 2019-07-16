@@ -48,10 +48,11 @@ export enum VariableNameType {
 
 export interface IVariable {
     name: string;
-    nameType: VariableNameType;
+    nameType: ValueType;
     value: string;
     valueType: ValueType;
     valueTypeName: string;
+    cacheId: number;
     children?: IVariable[];
 }
 
@@ -118,6 +119,7 @@ export interface IEvalReq extends IMessage {
     expr: string;
     stackLevel: number;
     depth: number;
+    cacheId: number;
 }
 
 export interface IEvalRsp {

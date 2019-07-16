@@ -4,7 +4,7 @@ import { Handles } from "vscode-debugadapter";
 
 export interface IEmmyStackContext {
     handles: Handles<IEmmyStackNode>;
-    eval(expr: string, depth: number): Promise<proto.IVariable | null>;
+    eval(expr: string, cacheId: number, depth: number): Promise<proto.IVariable | null>;
 }
 
 export interface IEmmyStackNode {
@@ -45,8 +45,19 @@ export class EmmyVariable implements IEmmyStackNode {
             case proto.ValueType.TTABLE:
                 value = 'table';
                 break;
+            case proto.ValueType.TSTRING:
+                value = `"${this.data.value}"`;
+                break;
         }
-        this.variable = { name: this.data.name, value: value, variablesReference: 0 };
+        let name = this.data.name;
+        switch (this.data.nameType) {
+            case proto.ValueType.TSTRING:
+                break;
+            default:
+                name = `[${name}]`;
+                break;
+        }
+        this.variable = { name: name, value: value, variablesReference: 0 };
     }
 
     toVariable(ctx: IEmmyStackContext): DebugProtocol.Variable {
@@ -87,7 +98,7 @@ export class EmmyVariable implements IEmmyStackNode {
             children = this.data.children;
         }
         else {
-            const evalResult = await ctx.eval(this.getExpr(), 2);
+            const evalResult = await ctx.eval(this.getExpr(),this.data.cacheId, 2);
             if (evalResult && evalResult.children) {
                 children = evalResult.children;
             }
