@@ -10,3 +10,4 @@ build
 /debugger
 /server
 /package-lock.json
+/temp
