@@ -5,3 +5,12 @@ node_js:
 script:
   - npm i vsce -g
   - sh build.sh
+deploy:
+  provider: releases
+  api_key: $OAUTH_TOKEN
+  file_glob: true
+  file: "*.vsix"
+  skip_cleanup: true
+  draft: false
+  on:
+    tags: true
