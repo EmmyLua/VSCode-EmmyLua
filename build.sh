@@ -1,15 +1,15 @@
 mkdir -p temp
 
 DOWNLOAD_URL="https://github.com/EmmyLua/EmmyLuaDebugger/releases/download"
-EMMY_DEBUGGER_VERSION="1.0.1"
+EMMY_CORE_VERSION="1.0.1"
 
 function download() {
     echo "download emmy_core.so"
-    wget "${DOWNLOAD_URL}/${EMMY_DEBUGGER_VERSION}/emmy_core.so" -O temp/emmy_core.so
+    wget "${DOWNLOAD_URL}/${EMMY_CORE_VERSION}/emmy_core.so" -O temp/emmy_core.so
     echo "download emmy_core@x86.zip"
-    wget "${DOWNLOAD_URL}/${EMMY_DEBUGGER_VERSION}/emmy_core@x86.zip" -O temp/emmy_core@x86.zip
+    wget "${DOWNLOAD_URL}/${EMMY_CORE_VERSION}/emmy_core@x86.zip" -O temp/emmy_core@x86.zip
     echo "download emmy_core@x64.zip"
-    wget "${DOWNLOAD_URL}/${EMMY_DEBUGGER_VERSION}/emmy_core@x64.zip" -O temp/emmy_core@x64.zip
+    wget "${DOWNLOAD_URL}/${EMMY_CORE_VERSION}/emmy_core@x64.zip" -O temp/emmy_core@x64.zip
 }
 
 function extract() {
