@@ -1,8 +1,6 @@
 version: 1.0.{build}
 image: Ubuntu1804
 stack: node 12
-environment:
-  nodejs_version: "12"
 build_script:
 - sh: >-
     node --version
