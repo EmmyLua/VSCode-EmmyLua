@@ -8,6 +8,6 @@ build_script:
 
     npm i vsce -g
 
-    sh build.sh
+    bash build.sh
 artifacts:
 - path: '*.vsix'
