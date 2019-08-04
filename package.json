@@ -325,14 +325,13 @@
         "tslint": "^5.8.0",
         "typescript": "^2.6.1",
         "vscode": "1.1.21",
-        "download": "^7.1.0"
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43"
     },
     "dependencies": {
         "vscode-languageclient": "5.1.0",
         "vscode-debugadapter": "1.31.0",
         "vscode-debugprotocol": "1.31.0",
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^7.0.43",
         "lua-fmt": "^2.6.0",
         "smart-buffer": "^4.0.1",
         "iconv-lite": "^0.5.0"
