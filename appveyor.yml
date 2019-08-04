@@ -1,0 +1,13 @@
+version: 1.0.{build}
+image: Ubuntu1804
+environment:
+  nodejs_version: "12"
+build_script:
+- sh: >-
+    npm i
+
+    npm i vsce -g
+
+    sh build.sh
+artifacts:
+- path: '*.vsix'
