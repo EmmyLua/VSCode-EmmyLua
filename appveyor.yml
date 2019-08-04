@@ -4,6 +4,8 @@ environment:
   nodejs_version: "12"
 build_script:
 - sh: >-
+    node --version
+
     npm i
 
     npm i vsce -g
