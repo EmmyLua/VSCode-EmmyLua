@@ -309,10 +309,16 @@
                 "editor.quickSuggestions": {
                     "other": true,
                     "comments": true,
-                    "strings": false
+                    "strings": true
                 }
             }
         },
+        "jsonValidation": [
+            {
+                "fileMatch": "emmy.config.json",
+                "url": "./syntaxes/emmy.config.schema.json"
+            }
+        ],
         "colors": []
     },
     "scripts": {

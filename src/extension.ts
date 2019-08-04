@@ -13,6 +13,7 @@ import { AttachDebuggerProvider, AttachLaunchDebuggerProvider } from './debugger
 import { formatText } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
+import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
 var DEBUG_MODE = false;
@@ -22,6 +23,7 @@ let client: LanguageClient;
 let activeEditor: vscode.TextEditor;
 let progressBar: vscode.StatusBarItem;
 let javaExecutablePath: string|null;
+let configWatcher: EmmyConfigWatcher;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
@@ -29,7 +31,6 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext = context;
     progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     javaExecutablePath = findJava();
-    startServer();
 
     savedContext.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, savedContext.subscriptions));
     savedContext.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, savedContext.subscriptions));
@@ -46,6 +47,11 @@ export function activate(context: vscode.ExtensionContext) {
     ));
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
+    configWatcher = new EmmyConfigWatcher();
+    configWatcher.onConfigUpdate(onConfigUpdate);
+    savedContext.subscriptions.push(configWatcher);
+
+    startServer();
     registerDebuggers();
 }
 
@@ -139,6 +145,7 @@ async function startServer() {
 }
 
 async function doStartServer() {
+    const configFiles = await configWatcher.watch();
     const clientOptions: LanguageClientOptions = {
         documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
         synchronize: {
@@ -151,7 +158,8 @@ async function doStartServer() {
             stdFolder: vscode.Uri.file(path.resolve(savedContext.extensionPath, "res/std")).toString(),
             apiFolders : [],
             workspaceFolders: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.map(f => f.uri.toString()) : null,
-            client: 'vsc'
+            client: 'vsc',
+            configFiles: configFiles
         }
     };
 
@@ -216,6 +224,12 @@ function showReferences(uri: string, pos: vscode.Position) {
 function stopServer() {
     if (client) {
         client.stop();
+    }
+}
+
+function onConfigUpdate(e: IEmmyConfigUpdate) {
+    if (client) {
+        client.sendRequest('emmy/updateConfig', e);
     }
 }
 

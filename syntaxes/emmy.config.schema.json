@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "EmmyLua Configuration",
+    "type": "object",
+    "properties": {
+        "lua.version": {
+            "type": "string",
+            "enum": ["lua5.1", "lua5.2", "lua5.3"]
+        },
+        "source": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/sourceRoot",
+                "required": ["dir"]
+            }
+        },
+        "editor": {
+            "type": "object",
+            "properties": {
+                "completionCaseSensitive": {
+                    "type": "boolean"
+                }
+            }
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+    ],
+    "definitions": {
+        "sourceRoot": {
+            "type": "object",
+            "properties": {
+                "dir": {
+                    "type": "string"
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

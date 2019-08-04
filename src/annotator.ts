@@ -12,8 +12,10 @@ let D_UPVALUE:vscode.TextEditorDecorationType;
 function createDecoration(key: string, config: vscode.DecorationRenderOptions|undefined = undefined): vscode.TextEditorDecorationType {
     let color = vscode.workspace.getConfiguration("emmylua").get(key);
     config = config || {};
-    config.light = { color: color};
-    config.dark = { color: color};
+    if (typeof(color) === 'string') {
+        config.light = { color: color};
+        config.dark = { color: color};
+    }
     return vscode.window.createTextEditorDecorationType(config);
 }
 

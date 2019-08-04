@@ -7,4 +7,6 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
 			beforeText: /^---/,
         }
     ];
+
+    public wordPattern = /((?<=')[^']+(?='))|((?<=")[^"]+(?="))|(-?\d*\.\d\w*)|([^\`\~\!\@\$\^\&\*\(\)\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\s]+)/g;
 }
