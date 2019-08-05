@@ -1,42 +1,20 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import * as cp from "child_process";
+import * as iconv from 'iconv-lite';
 import { WorkspaceFolder, DebugConfiguration, CancellationToken, ProviderResult } from 'vscode';
 import { savedContext } from '../extension';
-import * as cp from "child_process";
-import { basename, normalize } from 'path';
+import { basename } from 'path';
 import { AttachDebugConfiguration } from './types';
-import * as iconv from 'iconv-lite';
+import { DebuggerProvider } from './DebuggerProvider';
 
 interface ProcessInfoItem extends vscode.QuickPickItem {
     pid: number;
 }
 
-export class AttachDebuggerProvider implements vscode.DebugConfigurationProvider {
-    protected isNullOrEmpty(s?: string): boolean {
-        return !s || s.trim().length === 0;
-    }
-
-    protected getSourceRoots(): string[] {
-        var list = vscode.workspace.workspaceFolders!.map(f => { return f.uri.fsPath; });
-        var config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
-        return list.concat(config.map(item => { return normalize(item); }));
-    }
-
-    private getExt(): string[] {
-        const ext = ['.lua'];
-        const associations: any = vscode.workspace.getConfiguration("files").get("associations");
-        for (const key in associations) {
-            if (associations.hasOwnProperty(key)) {
-                const element = associations[key];
-                if (element === 'lua' && key.substr(0, 2) === '*.') {
-                    ext.push(key.substr(1));
-                }
-            }
-        }
-        return ext;
-    }
-
+export class AttachDebuggerProvider extends DebuggerProvider {
+    
     resolveDebugConfiguration(folder: WorkspaceFolder | undefined, debugConfiguration: AttachDebugConfiguration, token?: CancellationToken): ProviderResult<DebugConfiguration> {
         debugConfiguration.extensionPath = savedContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
