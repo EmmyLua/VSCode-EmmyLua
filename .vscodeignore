@@ -8,3 +8,5 @@ temp
 tsconfig.json
 vsc-extension-quickstart.md
 tslint.json
+build.sh
+prepare-version.js

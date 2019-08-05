@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 0.2.7-eap-{build}
 image: Ubuntu1804
 stack: node 12
 build_script:
