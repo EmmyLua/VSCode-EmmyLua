@@ -1,4 +1,4 @@
-version: 0.2.7-eap-{build}
+version: 0.2.8-{build}
 image: Ubuntu1804
 stack: node 12
 build_script:
@@ -8,6 +8,8 @@ build_script:
     npm i
 
     npm i vsce -g
+
+    node ./prepare-version.js
 
     bash build.sh
 artifacts:
