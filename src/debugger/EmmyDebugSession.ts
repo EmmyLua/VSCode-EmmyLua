@@ -3,7 +3,7 @@ import * as readline from 'readline';
 import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint } from "vscode-debugadapter";
+import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent } from "vscode-debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 import { join, normalize } from "path";
@@ -27,6 +27,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     private breakPointId = 0;
     private evalIdCount = 0;
     private args: EmmyDebugArguments | undefined;
+    private listenMode = false;
+    private breakpoints: proto.IBreakPoint[] = [];
     handles = new Handles<IEmmyStackNode>();
 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
@@ -40,6 +42,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.args = args;
         this.ext = args.ext;
         if (!args.ideConnectDebugger) {
+            this.listenMode = true;
             const socket = net.createServer(client => {
                 this.client = client;
                 readline.createInterface({
@@ -47,21 +50,38 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                     output: client
                 })
                 .on("line", line => this.onReceiveLine(line));
-            }).listen(args.port);
-            //.listen('\\\\.\\pipe\\emmylua-emmy');
+                this.sendResponse(response);
+                this.onConnect(this.client);
+            })
+            .listen(args.port, args.host)
+            .on('listening', () => {
+                this.sendEvent(new OutputEvent(`Server(${args.host}:${args.port}) open successfully, wait for connection...\n`));
+            })
+            .on('error', err => {
+                this.sendEvent(new OutputEvent(`${err}`, 'stderr'));
+                response.success = false;
+                response.message = `${err}`;
+                this.sendResponse(response);
+            });
             this.socket = socket;
         }
         else {
             // send resp
             const client = net.connect(args.port, args.host)
             .on('connect', () => {
+                this.sendResponse(response);
                 this.onConnect(client);
+            })
+            .on('error', err => {
+                response.success = false;
+                response.message = `${err}`;
+                this.sendResponse(response);
             });
         }
-        this.sendResponse(response);
     }
 
     private onConnect(client: net.Socket) {
+        this.sendEvent(new OutputEvent(`Connected.\n`));
         this.client = client;
         this.readClient(client);
 
@@ -77,6 +97,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendMessage(initReq);
 
         // add breakpoints
+        this.sendBreakpoints();
 
         // send ready
         this.sendMessage({ cmd: proto.MessageCMD.ReadyReq });
@@ -94,7 +115,15 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     }
 
     private onSocketClose() {
-        this.sendEvent(new TerminatedEvent());
+        if (this.client) {
+            this.client.removeAllListeners();
+        }
+        this.sendEvent(new OutputEvent('Disconnected.\n'));
+        if (this.listenMode) {
+            this.client = undefined;
+        } else {
+            this.sendEvent(new TerminatedEvent());
+        }
     }
     
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
@@ -262,13 +291,20 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             }
             response.body = { breakpoints: bpsResp };
         }
-        const req: proto.IAddBreakPointReq = {
-            breakPoints: bpsProto,
-            clear: true,
-            cmd: proto.MessageCMD.AddBreakPointReq
-        };
-        this.sendMessage(req);
+        this.breakpoints = bpsProto;
+        this.sendBreakpoints();
         this.sendResponse(response);
+    }
+
+    private sendBreakpoints() {
+        if (this.breakpoints.length) {
+            const req: proto.IAddBreakPointReq = {
+                breakPoints: this.breakpoints,
+                clear: true,
+                cmd: proto.MessageCMD.AddBreakPointReq
+            };
+            this.sendMessage(req);
+        }
     }
 
     private sendDebugAction(response: DebugProtocol.Response, action: proto.DebugAction) {
