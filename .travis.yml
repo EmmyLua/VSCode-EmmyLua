@@ -4,5 +4,6 @@ node_js:
   - node
 script:
   - npm i vsce -g
-  - node ./prepare-version.js
-  - sh build.sh
+  - node ./build/prepare-version.js
+  - node ./build/prepare.js
+  - vsce package

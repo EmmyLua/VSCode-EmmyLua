@@ -3,14 +3,14 @@ image: Ubuntu1804
 stack: node 12
 build_script:
 - sh: >-
-    node --version
-
     npm i
 
     npm i vsce -g
 
-    node ./prepare-version.js
+    node ./build/prepare-version.js
 
-    bash build.sh
+    node ./build/prepare.js
+
+    vsce package
 artifacts:
 - path: '*.vsix'

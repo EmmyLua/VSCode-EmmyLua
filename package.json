@@ -326,7 +326,9 @@
         "typescript": "^2.6.1",
         "vscode": "1.1.21",
         "@types/mocha": "^2.2.42",
-        "@types/node": "^7.0.43"
+        "@types/node": "^7.0.43",
+        "download": "^7.1.0",
+        "filecopy": "^4.0.2"
     },
     "dependencies": {
         "vscode-languageclient": "5.1.0",

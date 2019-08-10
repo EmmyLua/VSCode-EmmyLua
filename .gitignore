@@ -6,7 +6,6 @@ node_modules
 *.iml
 .gradle
 .idea
-build
 temp
 /debugger
 /server
