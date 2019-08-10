@@ -23,7 +23,7 @@ function download() {
 function extract() {
     # new debugger mac
     mkdir -p debugger/emmy/mac
-    cp temp/emmy_core.so debugger/emmy/mac/emmy_core.dylib
+    cp temp/emmy_core.dylib debugger/emmy/mac/emmy_core.dylib
 
     # new debugger linux
     mkdir -p debugger/emmy/linux
