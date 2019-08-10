@@ -256,29 +256,29 @@ async function insertEmmyDebugCode() {
     if (document.languageId !== 'lua') {
         return;
     }
-    const arch = await vscode.window.showQuickPick(['x64', 'x86']);
-    if (!arch) {
-        return;
+
+    let dllPath = '';
+    const isWindows = process.platform === 'win32';
+    const isMac = process.platform === 'darwin';
+    const isLinux = process.platform === 'linux';
+    if (isWindows) {
+        const arch = await vscode.window.showQuickPick(['x64', 'x86']);
+        if (!arch) {
+            return;
+        }
+        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/windows/${arch}/?.dll`);
     }
-    // const host = await vscode.window.showInputBox({ value: 'localhost', prompt: "侦听主机地址" });
-    // if (!host) {
-    //     return;
-    // }
-    // let port = 9966;
-    // await vscode.window.showInputBox({ value: '9966', prompt: '侦听端口', validateInput: function(v) {
-    //     try {
-    //         port = parseInt(v);
-    //     } catch (error) {
-    //         return '请输入正确的端口';
-    //     }
-    //     return undefined;
-    // }});
+    else if (isMac) {
+        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/mac/emmy_core.dylib`);
+    }
+    else if (isLinux) {
+        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/linux/emmy_core.so`);
+    }
 
     const host = 'localhost';
     const port = 9966;
-    const dll = path.join(savedContext.extensionPath, `debugger/emmy/windows/${arch}/?.dll`);
     const ins = new vscode.SnippetString();
-    ins.appendText(`package.cpath = package.cpath .. ";${dll.replace(/\\/g, '/')}"\n`);
+    ins.appendText(`package.cpath = package.cpath .. ";${dllPath.replace(/\\/g, '/')}"\n`);
     ins.appendText(`local dbg = require("emmy_core")\n`);
     ins.appendText(`dbg.tcpListen("${host}", ${port})`);
     activeEditor.insertSnippet(ins);
