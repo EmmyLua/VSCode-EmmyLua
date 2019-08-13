@@ -89,17 +89,16 @@ async function onDebugCustomEvent(e: vscode.DebugSessionCustomEvent) {
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
-    if (activeEditor && activeEditor.document === event.document) {
+    if (activeEditor && activeEditor.document === event.document && activeEditor.document.languageId === LANGUAGE_ID) {
         Annotator.requestAnnotators(activeEditor, client);
     }
 }
 
-function onDidChangeActiveTextEditor(editor: vscode.TextEditor|undefined) {
-    if (editor === undefined) {
-        return;
+function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined) {
+    if (editor && editor.document.languageId === LANGUAGE_ID) {
+        activeEditor = editor as vscode.TextEditor;
+        Annotator.requestAnnotators(activeEditor, client);
     }
-    activeEditor = editor as vscode.TextEditor;
-    Annotator.requestAnnotators(activeEditor, client);
 }
 
 export function deactivate() {
