@@ -3,7 +3,7 @@ import * as readline from 'readline';
 import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent } from "vscode-debugadapter";
+import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent, Event } from "vscode-debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 import { join, normalize } from "path";
@@ -52,6 +52,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 .on("line", line => this.onReceiveLine(line));
                 this.sendResponse(response);
                 this.onConnect(this.client);
+                this.sendEvent(new Event('onNewConnection'));
             })
             .listen(args.port, args.host)
             .on('listening', () => {
@@ -64,6 +65,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 this.sendResponse(response);
             });
             this.socket = socket;
+            this.sendEvent(new Event('showWaitConnection'));
         }
         else {
             // send resp
@@ -77,6 +79,16 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 response.message = `${err}`;
                 this.sendResponse(response);
             });
+        }
+    }
+
+    protected customRequest(command: string, response: DebugProtocol.Response, args: any): void {
+        if (command === 'stopWaitConnection') {
+            this.sendEvent(new OutputEvent('---> stop'));
+            this.sendEvent(new TerminatedEvent());
+        }
+        else {
+            super.customRequest(command, response, args);
         }
     }
 

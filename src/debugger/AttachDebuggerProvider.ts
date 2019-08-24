@@ -60,10 +60,6 @@ export class AttachDebuggerProvider extends DebuggerProvider {
             }).on("error", error => reject);
         });
     }
-
-    dispose() {
-
-    }
 }
 
 export class AttachLaunchDebuggerProvider extends AttachDebuggerProvider {

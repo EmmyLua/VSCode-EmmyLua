@@ -50,42 +50,15 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function registerDebuggers() {
-    const attProvider = new AttachDebuggerProvider();
+    const attProvider = new AttachDebuggerProvider('emmylua_attach', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
     savedContext.subscriptions.push(attProvider);
-    const attLaunchProvider = new AttachLaunchDebuggerProvider();
+    const attLaunchProvider = new AttachLaunchDebuggerProvider('emmylua_launch', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attLaunchProvider));
     savedContext.subscriptions.push(attLaunchProvider);
-    const emmyProvider = new EmmyDebuggerProvider();
+    const emmyProvider = new EmmyDebuggerProvider('emmylua_new', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
     savedContext.subscriptions.push(emmyProvider);
-
-    savedContext.subscriptions.push(vscode.debug.onDidReceiveDebugSessionCustomEvent(onDebugCustomEvent));
-}
-
-async function onDebugCustomEvent(e: vscode.DebugSessionCustomEvent) {
-    if (e.event === 'findFileReq') {
-        const file: string = e.body.file;
-        const ext: string[] = e.body.ext;
-        const seq = e.body.seq;
-        const parsedPath = path.parse(file);
-        let fileNames = [parsedPath.base];
-        for (let i = 0; i < ext.length; i++) {
-            const e = ext[i];
-            fileNames.push(`${parsedPath.base}${e}`);
-        }
-        let results: vscode.Uri[] = [];
-        for (let i = 0; i < fileNames.length; i++) {
-            const fileName = fileNames[i];
-            let include = `**/${fileName}`;
-            const uris = await vscode.workspace.findFiles(include);
-            if (uris.length > 0) {
-                results = uris;
-                break;
-            }
-        }
-        e.session.customRequest('findFileRsp', { files: results.map(it => it.fsPath), seq: seq });
-    }
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {

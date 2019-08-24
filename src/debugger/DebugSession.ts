@@ -26,6 +26,9 @@ export abstract class DebugSession extends LoggingDebugSession {
         if (command === 'findFileRsp') {
             this.emit('findFileRsp', args);
         }
+        else {
+            this.emit(command);
+        }
     }
 
     async findFile(file: string): Promise<string> {
