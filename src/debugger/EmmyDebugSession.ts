@@ -233,9 +233,9 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     }
     
     protected async evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): Promise<void> {
-        const data = await this.eval(args.expression, 0);
-        if (data) {
-            const emmyVar = new EmmyVariable(data);
+        const evalResp = await this.eval(args.expression, 0);
+        if (evalResp.success) {
+            const emmyVar = new EmmyVariable(evalResp.value);
             const variable = emmyVar.toVariable(this);
             response.body = {
                 result: variable.value,
@@ -243,10 +243,17 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 variablesReference: variable.variablesReference
             };
         }
+        else {
+            response.body = {
+                result: evalResp.error,
+                type: 'string',
+                variablesReference: 0
+            };
+        }
         this.sendResponse(response);
     }
 
-    async eval(expr: string, cacheId: number, depth: number = 1): Promise<proto.IVariable> {
+    async eval(expr: string, cacheId: number, depth: number = 1): Promise<proto.IEvalRsp> {
         const req: proto.IEvalReq = {
             cmd: proto.MessageCMD.EvalReq,
             seq: this.evalIdCount++,
@@ -256,15 +263,11 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             cacheId: cacheId
         };
         this.sendMessage(req);
-        return new Promise<proto.IVariable>((resolve, reject) => {
+        return new Promise<proto.IEvalRsp>((resolve, reject) => {
             const listener = (msg: proto.IEvalRsp) => {
                 if (msg.seq === req.seq) {
                     this.removeListener('onEvalRsp', listener);
-                    if (msg.success) {
-                        resolve(msg.value);
-                    } else {
-                        reject();
-                    }
+                    resolve(msg);
                 }
             };
             this.on('onEvalRsp', listener);
