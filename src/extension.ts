@@ -56,12 +56,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function registerDebuggers() {
-    // const attProvider = new AttachDebuggerProvider('emmylua_attach', savedContext);
-    // savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
-    // savedContext.subscriptions.push(attProvider);
-    // const attLaunchProvider = new AttachLaunchDebuggerProvider('emmylua_launch', savedContext);
-    // savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attLaunchProvider));
-    // savedContext.subscriptions.push(attLaunchProvider);
     const emmyProvider = new EmmyDebuggerProvider('emmylua_new', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
     savedContext.subscriptions.push(emmyProvider);
