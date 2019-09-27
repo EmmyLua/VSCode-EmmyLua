@@ -9,11 +9,11 @@ import * as notifications from "./notifications";
 import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
-import { AttachDebuggerProvider, AttachLaunchDebuggerProvider } from './debugger/AttachDebuggerProvider';
 import { formatText } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
+import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
 var DEBUG_MODE = false;
@@ -56,15 +56,18 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function registerDebuggers() {
-    const attProvider = new AttachDebuggerProvider('emmylua_attach', savedContext);
-    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
-    savedContext.subscriptions.push(attProvider);
-    const attLaunchProvider = new AttachLaunchDebuggerProvider('emmylua_launch', savedContext);
-    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attLaunchProvider));
-    savedContext.subscriptions.push(attLaunchProvider);
+    // const attProvider = new AttachDebuggerProvider('emmylua_attach', savedContext);
+    // savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_attach", attProvider));
+    // savedContext.subscriptions.push(attProvider);
+    // const attLaunchProvider = new AttachLaunchDebuggerProvider('emmylua_launch', savedContext);
+    // savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_launch", attLaunchProvider));
+    // savedContext.subscriptions.push(attLaunchProvider);
     const emmyProvider = new EmmyDebuggerProvider('emmylua_new', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
     savedContext.subscriptions.push(emmyProvider);
+    const emmyAttachProvider = new EmmyAttachDebuggerProvider('emmylua_attach', savedContext);
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_attach', emmyAttachProvider));
+    savedContext.subscriptions.push(emmyAttachProvider);
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {

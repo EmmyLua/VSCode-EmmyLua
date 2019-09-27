@@ -19,16 +19,17 @@ interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
     private socket: net.Server | undefined;
-    private client: net.Socket | undefined;
+    protected client: net.Socket | undefined;
     private readHeader = true;
     private currentCmd: proto.MessageCMD = proto.MessageCMD.Unknown;
     private breakNotify: proto.IBreakNotify | undefined;
     private currentFrameId = 0;
     private breakPointId = 0;
     private evalIdCount = 0;
-    private args: EmmyDebugArguments | undefined;
     private listenMode = false;
     private breakpoints: proto.IBreakPoint[] = [];
+    protected extensionPath: string = '';
+    
     handles = new Handles<IEmmyStackNode>();
 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
@@ -39,8 +40,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     }
 
     protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
-        this.args = args;
         this.ext = args.ext;
+        this.extensionPath = args.extensionPath;
         if (!args.ideConnectDebugger) {
             this.listenMode = true;
             const socket = net.createServer(client => {
@@ -52,6 +53,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 .on("line", line => this.onReceiveLine(line));
                 this.sendResponse(response);
                 this.onConnect(this.client);
+                this.readClient(client);
                 this.sendEvent(new Event('onNewConnection'));
             })
             .listen(args.port, args.host)
@@ -73,6 +75,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             .on('connect', () => {
                 this.sendResponse(response);
                 this.onConnect(client);
+                this.readClient(client);
             })
             .on('error', err => {
                 response.success = false;
@@ -92,19 +95,18 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         }
     }
 
-    private onConnect(client: net.Socket) {
+    protected onConnect(client: net.Socket) {
         this.sendEvent(new OutputEvent(`Connected.\n`));
         this.client = client;
-        this.readClient(client);
 
-        const extPath = this.args!.extensionPath;
+        const extPath = this.extensionPath;
         const emmyHelperPath = join(extPath, 'debugger/emmy/emmyHelper.lua');
         // send init event
         const emmyHelper = readFileSync(emmyHelperPath);
         const initReq: proto.IInitReq = {
             cmd: proto.MessageCMD.InitReq,
             emmyHelper: emmyHelper.toString(),
-            ext: this.args!.ext
+            ext: this.ext
         };
         this.sendMessage(initReq);
 
@@ -116,7 +118,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendEvent(new InitializedEvent());
     }
 
-    private readClient(client: net.Socket) {
+    protected readClient(client: net.Socket) {
         readline.createInterface({
             input: <NodeJS.ReadableStream> client,
             output: client
@@ -163,7 +165,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.readHeader = !this.readHeader;
     }
 
-    private handleMessage(cmd: proto.MessageCMD, msg: any) {
+    protected handleMessage(cmd: proto.MessageCMD, msg: any) {
         switch (cmd) {
             case proto.MessageCMD.BreakNotify:
                 this.breakNotify = msg;
@@ -348,5 +350,3 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendDebugAction(response, proto.DebugAction.StepOut);
     }
 }
-
-EmmyDebugSession.run(EmmyDebugSession);

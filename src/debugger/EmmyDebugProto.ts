@@ -22,6 +22,12 @@ export enum MessageCMD {
 
     // lua -> ide
     BreakNotify,
+    AttachedNotify,
+
+    StartHookReq,
+    StartHookRsp,
+
+    LogNotify,
 }
 
 export interface IMessage {

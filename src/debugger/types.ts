@@ -21,3 +21,6 @@ export interface EmmyDebugConfiguration extends DebugConfigurationBase {
     ext: string[];
     ideConnectDebugger: boolean;
 }
+
+export interface EmmyAttachDebugConfiguration extends AttachDebugConfiguration {
+}
