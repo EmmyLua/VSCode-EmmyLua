@@ -53,7 +53,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
             'arch_pid',
             `${this.pid}`
         ];
-        return new Promise((r, c) => {
+        return new Promise<WinArch>((r, c) => {
             cp.exec(args.join(" "))
             .on('close', (code) => {
                 r(code === 0 ? WinArch.X64 : WinArch.X86);
