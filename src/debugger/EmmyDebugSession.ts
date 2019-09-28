@@ -314,14 +314,12 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     }
 
     private sendBreakpoints() {
-        if (this.breakpoints.length) {
-            const req: proto.IAddBreakPointReq = {
-                breakPoints: this.breakpoints,
-                clear: true,
-                cmd: proto.MessageCMD.AddBreakPointReq
-            };
-            this.sendMessage(req);
-        }
+        const req: proto.IAddBreakPointReq = {
+            breakPoints: this.breakpoints,
+            clear: true,
+            cmd: proto.MessageCMD.AddBreakPointReq
+        };
+        this.sendMessage(req);
     }
 
     private sendDebugAction(response: DebugProtocol.Response, action: proto.DebugAction) {
