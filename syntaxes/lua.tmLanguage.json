@@ -37,6 +37,10 @@
 			]
 		},
 		{
+			"match": "(?<![\\w\\d.])(0[xX][0-9A-Fa-f]+|\\d+)U?LL",
+			"name": "constant.numeric.integer.hexadecimal.lua"
+		},
+		{
 			"match": "(?<![\\w\\d.])0[xX][0-9A-Fa-f]+(?![pPeE.0-9])",
 			"name": "constant.numeric.integer.hexadecimal.lua"
 		},
