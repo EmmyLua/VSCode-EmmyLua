@@ -36,6 +36,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
         const client = net.connect(this.getPort(args.pid), 'localhost')
         .on('connect', () => {
             this.sendResponse(response);
+            this.onConnect(client);
             this.readClient(client);
             this.sendMessage({ cmd: proto.MessageCMD.StartHookReq });
         })
@@ -94,7 +95,6 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
     protected handleMessage(cmd: proto.MessageCMD, msg: any) {
         switch (cmd) {
             case proto.MessageCMD.AttachedNotify:
-                this.onConnect(this.client!);
                 const n: number = msg.state;
                 this.sendEvent(new OutputEvent(`Attached to lua state 0x${n.toString(16)}\n`));
                 break;
