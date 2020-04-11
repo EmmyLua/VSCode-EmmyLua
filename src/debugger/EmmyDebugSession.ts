@@ -46,11 +46,6 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             this.listenMode = true;
             const socket = net.createServer(client => {
                 this.client = client;
-                readline.createInterface({
-                    input: <NodeJS.ReadableStream> client,
-                    output: client
-                })
-                .on("line", line => this.onReceiveLine(line));
                 this.sendResponse(response);
                 this.onConnect(this.client);
                 this.readClient(client);
