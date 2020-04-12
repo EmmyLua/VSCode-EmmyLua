@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
+import {substituteFolder} from "./substitution";
 
 function validateJava(javaPath: string): boolean {
 	//TODO check java path
@@ -14,9 +15,7 @@ export default function(): string|null {
     
     var settingsPath = vscode.workspace.getConfiguration("emmylua").get("java.home");
     if (settingsPath) {
-        let fullPath = (<string>settingsPath).replace(
-            /(\$\{workspaceFolder\})/gmi, 
-            vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : "");
+		let fullPath = substituteFolder(<string>settingsPath);
       	let javaPath = path.join(fullPath, "bin", executableFile);
         return javaPath;
     }
