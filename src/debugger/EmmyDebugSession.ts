@@ -302,11 +302,14 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 bpsResp.push(bpResp);
             }
             response.body = { breakpoints: bpsResp };
+
+            this.breakpoints = this.breakpoints.filter(v => v.file !== path);
+            this.breakpoints = this.breakpoints.concat(bpsProto);
         }
-        this.breakpoints = bpsProto;
         this.sendBreakpoints();
         this.sendResponse(response);
     }
+
 
     private sendBreakpoints() {
         const req: proto.IAddBreakPointReq = {
