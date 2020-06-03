@@ -49,7 +49,11 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                     items.push(item);
                 }
                 
-                vscode.window.showQuickPick(items, { placeHolder: "Select the process to attach" }).then((item: ProcessInfoItem | undefined) => {
+                vscode.window.showQuickPick(items, {
+                    matchOnDescription: true,
+                    matchOnDetail: true,
+                    placeHolder: "Select the process to attach"
+                }).then((item: ProcessInfoItem | undefined) => {
                     if (item) {
                         resolve(item.pid);
                     } else {
