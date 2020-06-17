@@ -8,9 +8,9 @@ interface DebugConfigurationBase extends DebugConfiguration {
 
 export interface AttachDebugConfiguration extends DebugConfigurationBase {
     pid: number;
-    
-	program?: string;
-	arguments?: string[];
+    pName: string;
+    program?: string;
+    arguments?: string[];
     workingDir?: string;
     ext: string[];
 }

@@ -17,14 +17,31 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
         configuration.type = "emmylua_attach";
         configuration.ext = this.getExt();
         if (configuration.pid > 0) {
+            var pidChoose = configuration.pid;
+            //显示当前选中的进程信息
+            vscode.window.showInformationMessage(`connect process ${pidChoose}`);
             return configuration;
         }
-        const pid = await this.pickPID();
+
+        const pid = await this.pickPIDByName(configuration.pName);
         configuration.pid = pid;
         return configuration;
     }
 
-    private async pickPID() {
+    public static isEmpty = (str: any): boolean => {
+        if (
+            str === null ||
+            str === '' ||
+            str === undefined ||
+            str.length === 0
+        ) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private async pickPIDByName(pName: string) {
         return new Promise<number>((resolve, reject) => {
             const args = [`${this.context.extensionPath}/debugger/emmy/windows/x86/emmy_tool.exe`, "list_processes"];
             const options: cp.ExecOptionsWithBufferEncoding = {
@@ -34,7 +51,8 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                 const str = iconv.decode(stdout, 'gbk');
                 const arr = str.split('\r\n');
                 const size = Math.floor(arr.length / 4);
-                const items: ProcessInfoItem[] = [];
+                var items: ProcessInfoItem[] = [];
+                const itemMatchNames: number[] = [];
                 for (let i = 0; i < size; i++) {
                     const pid = parseInt(arr[i * 4]);
                     const title = arr[i * 4 + 1];
@@ -46,20 +64,59 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                         description: title,
                         detail: path
                     };
+
                     items.push(item);
-                }
-                
-                vscode.window.showQuickPick(items, {
-                    matchOnDescription: true,
-                    matchOnDetail: true,
-                    placeHolder: "Select the process to attach"
-                }).then((item: ProcessInfoItem | undefined) => {
-                    if (item) {
-                        resolve(item.pid);
-                    } else {
-                        reject();
+                    if (EmmyAttachDebuggerProvider.isEmpty(pName) == false &&
+                        (title.toLowerCase().indexOf(pName.toLowerCase()) != -1 || path.toLowerCase().indexOf(pName.toLowerCase()) != -1)) {
+                        itemMatchNames.push(pid);
                     }
-                });
+                }
+
+                if (itemMatchNames.length == 1) {
+                    var pidChoose = itemMatchNames[0];
+                    var pChoose:ProcessInfoItem|undefined = items.find(tt => tt.pid == pidChoose);
+                    var pNameChoose = "";
+                    if(pChoose != undefined)
+                    {
+                        pNameChoose = `${pChoose.label} ${pChoose.description}`;
+                    }
+                    resolve(pidChoose);
+                    //显示当前选中的进程信息
+                    vscode.window.showInformationMessage(`connect process ${pNameChoose}`);
+                }
+                else {
+                    var note = "Select the process to attach";
+                    if (EmmyAttachDebuggerProvider.isEmpty(pName) == false) {
+                        if (itemMatchNames.length == 0) {
+                            note = `${note}=== cannot find process match [${pName}]`;
+                        }
+                        else{
+                            //如果配置了pName,且存在多个则仅显示这部分数据
+                            items = items.filter(item => itemMatchNames.find(itemMatch => itemMatch == item.pid));
+                            note = `${note}=== process match [${pName}]`;
+                        }
+                    }
+
+                    vscode.window.showQuickPick(items, {
+                        matchOnDescription: true,
+                        matchOnDetail: true,
+                        placeHolder: note
+                    }).then((item: ProcessInfoItem | undefined) => {
+                        if (item) {
+                            resolve(item.pid);
+                            
+                            var pNameChoose = "";
+                            if(item != undefined)
+                            {
+                                pNameChoose = `${item.label} ${item.description}`;
+                            }
+                            //显示当前选中的进程信息
+                            vscode.window.showInformationMessage(`connect process ${pNameChoose}`);
+                        } else {
+                            reject();
+                        }
+                    });
+                }
             }).on("error", error => reject);
         });
     }
