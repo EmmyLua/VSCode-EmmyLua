@@ -18,7 +18,7 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
         configuration.ext = this.getExt();
         if (configuration.pid > 0) {
             var pidChoose = configuration.pid;
-            //ÏÔÊ¾µ±Ç°Ñ¡ÖÐµÄ½ø³ÌÐÅÏ¢
+            //ï¿½ï¿½Ê¾ï¿½ï¿½Ç°Ñ¡ï¿½ÐµÄ½ï¿½ï¿½ï¿½ï¿½Ï¢
             vscode.window.showInformationMessage(`connect process ${pidChoose}`);
             return configuration;
         }
@@ -81,7 +81,7 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                         pNameChoose = `${pChoose.label} ${pChoose.description}`;
                     }
                     resolve(pidChoose);
-                    //ÏÔÊ¾µ±Ç°Ñ¡ÖÐµÄ½ø³ÌÐÅÏ¢
+                    //show choose process info
                     vscode.window.showInformationMessage(`connect process ${pNameChoose}`);
                 }
                 else {
@@ -91,7 +91,7 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                             note = `${note}=== cannot find process match [${pName}]`;
                         }
                         else{
-                            //Èç¹ûÅäÖÃÁËpName,ÇÒ´æÔÚ¶à¸öÔò½öÏÔÊ¾Õâ²¿·ÖÊý¾Ý
+                            //exist more process match pName, only show it
                             items = items.filter(item => itemMatchNames.find(itemMatch => itemMatch == item.pid));
                             note = `${note}=== process match [${pName}]`;
                         }
@@ -110,7 +110,7 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                             {
                                 pNameChoose = `${item.label} ${item.description}`;
                             }
-                            //ÏÔÊ¾µ±Ç°Ñ¡ÖÐµÄ½ø³ÌÐÅÏ¢
+                            //show choose process info
                             vscode.window.showInformationMessage(`connect process ${pNameChoose}`);
                         } else {
                             reject();
