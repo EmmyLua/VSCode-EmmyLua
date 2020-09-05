@@ -31,7 +31,7 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                 encoding: 'buffer'
             };
             cp.exec(args.join(" "), options, (_err, stdout, _stderr) => {
-                const str = iconv.decode(stdout, 'gbk');
+                const str = iconv.decode(Buffer.from(stdout), 'gb2312');
                 const arr = str.split('\r\n');
                 const size = Math.floor(arr.length / 4);
                 const items: ProcessInfoItem[] = [];
