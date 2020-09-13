@@ -74,6 +74,12 @@ export interface IStack {
 export interface IBreakPoint {
     file: string;
     line: number;
+    /** An optional expression for conditional breakpoints. */
+    condition?: string;
+    /** An optional expression that controls how many hits of the breakpoint are ignored. The backend is expected to interpret the expression as needed. */
+    hitCondition?: string;
+    /** If this attribute exists and is non-empty, the backend must not 'break' (stop) but log the message instead. Expressions within {} are interpolated. */
+    logMessage?: string;
 }
 
 export interface IInitReq extends IMessage {

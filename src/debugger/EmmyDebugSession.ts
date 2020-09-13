@@ -294,7 +294,10 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 const bp = bps[i];
                 bpsProto.push({
                     file: path,
-                    line: bp.line
+                    line: bp.line,
+                    condition: bp.condition,
+                    hitCondition: bp.hitCondition,
+                    logMessage: bp.logMessage
                 });
 
                 const bpResp = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
