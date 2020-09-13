@@ -39,12 +39,6 @@ export class EmmyVariable implements IEmmyStackNode {
     ) {
         let value = this.data.value;
         switch (this.data.valueType) {
-            case proto.ValueType.TFUNCTION:
-                value = 'function';
-                break;
-            case proto.ValueType.TTABLE:
-                value = 'table';
-                break;
             case proto.ValueType.TSTRING:
                 value = `"${this.data.value}"`;
                 break;
