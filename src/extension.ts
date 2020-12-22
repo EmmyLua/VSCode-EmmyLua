@@ -100,7 +100,7 @@ async function validateJava() {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
     
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
             let regexp:RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {
