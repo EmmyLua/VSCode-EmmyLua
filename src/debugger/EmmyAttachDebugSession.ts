@@ -78,7 +78,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
             '-dll',
             'emmy_hook.dll'
         ];
-        return new Promise((r, c) => {
+        return new Promise<void>((r, c) => {
             cp.exec(args.join(" "), { cwd: cwd }, (err, stdout, stderr) => {
                 this.sendEvent(new OutputEvent(stdout));
             })
