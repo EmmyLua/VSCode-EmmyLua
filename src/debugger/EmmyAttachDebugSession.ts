@@ -4,7 +4,7 @@ import * as proto from "./EmmyDebugProto";
 import { EmmyDebugSession } from "./EmmyDebugSession";
 import { OutputEvent } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { close } from "fs";
+
 
 interface EmmyAttachDebugArguments extends DebugProtocol.AttachRequestArguments {
     extensionPath: string;
@@ -129,7 +129,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
                 })
                 .on('close', (code) => {
                     if (code === 0) {
-                        r(true);
+                        r();
                     }
                     else {
                         c(`Exit code = ${code}`);
