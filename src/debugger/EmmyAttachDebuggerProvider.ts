@@ -19,6 +19,9 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
         if (configuration.pid > 0) {
             return configuration;
         }
+        if(configuration.program){
+            return configuration;
+        }
         const pid = await this.pickPID();
         configuration.pid = pid;
         return configuration;
