@@ -101,11 +101,11 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
     }
 }
 
-async function validateJava() :Promise<boolean> {
+async function validateJava() :Promise<void> {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
     
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
             let regexp:RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {
@@ -115,7 +115,7 @@ async function validateJava() :Promise<boolean> {
                     let minor = parseInt(match[4]) || 0;
                     // java 1.8+
                     if (major > 1 || (major === 1 && minor >= 8)) {
-                        resolve(true);
+                        resolve();
                         return;
                     }
                     reject(`Unsupported Java version: ${match[1]}, please install Java 1.8 or above.`);
