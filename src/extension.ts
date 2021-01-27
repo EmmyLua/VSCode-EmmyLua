@@ -101,11 +101,11 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
     }
 }
 
-async function validateJava() {
+async function validateJava():Promise<boolean> {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
     
-    return new Promise((resolve, reject) => {
+    return new Promise<boolean>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
             let regexp:RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {

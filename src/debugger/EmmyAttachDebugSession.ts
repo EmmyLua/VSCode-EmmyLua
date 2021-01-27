@@ -67,7 +67,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
         });
     }
 
-    private async attach(): Promise<boolean> {
+    private async attach(): Promise<void> {
         const arch = await this.detectArch();
         const archName = arch === WinArch.X64 ? 'x64' : 'x86';
         const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
@@ -87,7 +87,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
                 })
                 .on('close', (code) => {
                     if (code === 0) {
-                        r(true);
+                        r();
                     }
                     else {
                         c(`Exit code = ${code}`);
