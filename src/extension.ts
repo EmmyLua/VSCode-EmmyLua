@@ -14,9 +14,10 @@ import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
+import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
 export let savedContext: vscode.ExtensionContext;
 let client: LanguageClient;
@@ -62,6 +63,10 @@ function registerDebuggers() {
     const emmyAttachProvider = new EmmyAttachDebuggerProvider('emmylua_attach', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_attach', emmyAttachProvider));
     savedContext.subscriptions.push(emmyAttachProvider);
+    const emmyLaunchProvider = new EmmyLaunchDebuggerProvider('emmylua_launch', savedContext);
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_launch', emmyLaunchProvider));
+    savedContext.subscriptions.push(emmyLaunchProvider);
+
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
@@ -110,7 +115,7 @@ async function validateJava() {
                     let minor = parseInt(match[4]) || 0;
                     // java 1.8+
                     if (major > 1 || (major === 1 && minor >= 8)) {
-                        resolve();
+                        resolve(true);
                         return;
                     }
                     reject(`Unsupported Java version: ${match[1]}, please install Java 1.8 or above.`);

@@ -1,26 +1,23 @@
-
-import {  DebugConfiguration } from 'vscode';
+import { DebugConfiguration } from 'vscode';
 
 interface DebugConfigurationBase extends DebugConfiguration {
     extensionPath: string;
     sourcePaths: string[];
+    ext: string[];
 }
 
-export interface AttachDebugConfiguration extends DebugConfigurationBase {
+export interface EmmyAttachDebugConfiguration extends DebugConfigurationBase {
     pid: number;
-    
-	program?: string;
-	arguments?: string[];
-    workingDir?: string;
-    ext: string[];
 }
 
 export interface EmmyDebugConfiguration extends DebugConfigurationBase {
     host: string;
     port: number;
-    ext: string[];
     ideConnectDebugger: boolean;
 }
 
-export interface EmmyAttachDebugConfiguration extends AttachDebugConfiguration {
+export interface EmmyLaunchDebugConfiguration extends DebugConfigurationBase {
+    program: string;
+    arguments: string[];
+    workingDir: string;
 }

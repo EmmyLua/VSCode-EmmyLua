@@ -15,6 +15,11 @@ interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
     port: number;
     ext: string[];
     ideConnectDebugger: boolean;
+
+    // for launch
+    program?: string;
+    arguments?: string[];
+    workingDir?: string;
 }
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {

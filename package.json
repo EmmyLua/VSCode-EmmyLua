@@ -110,6 +110,65 @@
                 ]
             },
             {
+                "type": "emmylua_launch",
+                "label": "EmmyLua Launch Debug",
+                "program": "./out/debugger/EmmyLaunchDebugAdapter.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program",
+                            "workingDir",
+                            "arguments"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "%debug.launch.program%",
+                                "default": ""
+                            },
+                            "workingDir": {
+                                "type": "string",
+                                "description": "%debug.launch.workingDir%",
+                                "default": ""
+                            },
+                            "arguments": {
+                                "type": "array",
+                                "description": "%debug.launch.arguments%",
+                                "default": []
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "emmylua_launch",
+                        "request": "launch",
+                        "name": "%debug.launch.name%",
+                        "program": "",
+                        "workingDir": "",
+                        "arguments": []
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "%debug.launch.label%",
+                        "description": "%debug.launch.desc%",
+                        "body": {
+                            "type": "emmylua_launch",
+                            "request": "launch",
+                            "name": "%debug.launch.name%",
+                            "program": "",
+                            "workingDir": "",
+                            "arguments": []
+                        }
+                    }
+                ],
+                "languages": [
+                    "lua"
+                ]
+            },
+            {
                 "type": "emmylua_new",
                 "label": "EmmyLua New Debugger",
                 "program": "./out/debugger/EmmyDebugAdapter.js",
