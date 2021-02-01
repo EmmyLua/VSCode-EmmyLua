@@ -49,7 +49,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
                 this.onConnect(client);
                 this.readClient(client);
                 this.sendMessage({ cmd: proto.MessageCMD.StartHookReq });
-                //TODO 延时的原因是等待hook api完成
+                //TODO 延时的原因是等待hook api完成,后续改成消息通知
                 setTimeout(() => {
                     this.childProcess?.stdin?.write("connected\n");
                 }, 300);
@@ -109,7 +109,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
                 this.sendEvent(new OutputEvent(message));
             });
             exe.stderr.on("data", buffer => {
-                this.sendEvent(new OutputEvent(buffer.toString()));
+                this.sendEvent(new OutputEvent("[ERROR]:"+buffer.toString()));
             })
 
             this.childProcess = exe;
