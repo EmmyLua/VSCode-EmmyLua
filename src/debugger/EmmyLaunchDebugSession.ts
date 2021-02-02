@@ -102,9 +102,10 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
                 cwd: cwd
             });
             exe.stdout.on("data", (buffer) => {
-                let message = buffer.toString();
-                if (message.startsWith("[PID]")) {
-                    return r(Number(message.substring(5)))
+                let message:string = buffer.toString();
+                let index = message.indexOf("[PID]")
+                if (index !== -1) {
+                    return r(Number(message.substring(index+5)))
                 }
                 this.sendEvent(new OutputEvent(message));
             });
