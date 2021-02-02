@@ -9,6 +9,7 @@
     "debug.attach.name": "通过进程ID附加",
     "debug.attach.target_pid": "目标进程ID",
     "debug.attach.desc": "附加进程调试",
+    "debug.attach.target_process": "通过名称过滤进程，如果目标唯一则直接附加",
 
     "debug.launch.label": "EmmyLua: 启动并附加程序",
     "debug.launch.name": "启动并附加程序",

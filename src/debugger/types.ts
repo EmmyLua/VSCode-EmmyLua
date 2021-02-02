@@ -8,6 +8,7 @@ interface DebugConfigurationBase extends DebugConfiguration {
 
 export interface EmmyAttachDebugConfiguration extends DebugConfigurationBase {
     pid: number;
+    processName: string;
 }
 
 export interface EmmyDebugConfiguration extends DebugConfigurationBase {

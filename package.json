@@ -81,6 +81,11 @@
                                 "type": "number",
                                 "description": "%debug.attach.target_pid%",
                                 "default": 0
+                            },
+                            "processName":{
+                                "type":"string",
+                                "description": "%debug.attach.target_process%",
+                                "default": ""
                             }
                         }
                     }
@@ -90,7 +95,8 @@
                         "type": "emmylua_attach",
                         "request": "attach",
                         "name": "%debug.attach.name%",
-                        "pid": 0
+                        "pid": 0,
+                        "processName": ""
                     }
                 ],
                 "configurationSnippets": [
