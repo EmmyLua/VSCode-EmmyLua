@@ -21,4 +21,5 @@ export interface EmmyLaunchDebugConfiguration extends DebugConfigurationBase {
     program: string;
     arguments: string[];
     workingDir: string;
+    blockOnExit: boolean;
 }

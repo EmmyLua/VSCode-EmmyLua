@@ -16,5 +16,6 @@
     "debug.launch.desc": "Launch program and debug with attach debugger",
     "debug.launch.program": "Launch program and debug executable file",
     "debug.launch.workingDir": "working directory",
-    "debug.launch.arguments": "arguments pass to executable file"
+    "debug.launch.arguments": "arguments pass to executable file",
+    "debug.launch.blockOnExit": "block process when exit,if false,process can be attached by other C++ debugger"
 }

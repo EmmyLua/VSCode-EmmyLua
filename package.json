@@ -142,6 +142,11 @@
                                 "type": "array",
                                 "description": "%debug.launch.arguments%",
                                 "default": []
+                            },
+                            "blockOnExit":{
+                                "type":"boolean",
+                                "description":"%debug.launch.blockOnExit%",
+                                "default": true
                             }
                         }
                     }
@@ -153,7 +158,8 @@
                         "name": "%debug.launch.name%",
                         "program": "",
                         "workingDir": "",
-                        "arguments": []
+                        "arguments": [],
+                        "blockOnExit": true
                     }
                 ],
                 "configurationSnippets": [
@@ -166,7 +172,8 @@
                             "name": "%debug.launch.name%",
                             "program": "",
                             "workingDir": "",
-                            "arguments": []
+                            "arguments": [],
+                            "blockOnExit": true
                         }
                     }
                 ],

@@ -11,6 +11,7 @@ interface EmmyLaunchDebugArguments extends DebugProtocol.LaunchRequestArguments 
     program?: string;
     arguments?: string[];
     workingDir?: string;
+    blockOnExit?: boolean;
     ext: string[];
 }
 
@@ -23,6 +24,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     private program: string = "";
     private workingDir: string = "";
     private arguments: string[] = [];
+    private blockOnExit: boolean = true;
     private childProcess?: cp.ChildProcess;
     private pid = 0;
 
@@ -40,7 +42,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         this.program = args.program ?? "";
         this.workingDir = args.workingDir ?? ""
         this.arguments = args.arguments ?? []
-
+        this.blockOnExit = args.blockOnExit ?? true;
         this.pid = await this.runAndAttach();
         const client = net.connect(this.getPort(this.pid), 'localhost')
             .on('connect', () => {
@@ -84,7 +86,6 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         const archName = arch === WinArch.X64 ? 'x64' : 'x86';
         const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
         const args = [
-
             "run_and_attach",
             "-dll",
             "emmy_hook.dll",
@@ -92,6 +93,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
             `"${cwd}"`,
             "-work",
             `"${this.workingDir}"`,
+            `${this.blockOnExit? "-blockOnExit" : ""}`,
             "-exe",
             `"${this.program}"`,
             "-args"
