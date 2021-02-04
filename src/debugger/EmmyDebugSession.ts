@@ -4,7 +4,7 @@ import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent, Event } from "vscode-debugadapter";
-import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
+import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext, EmmyStackENV } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 import { join, normalize } from "path";
 
@@ -222,11 +222,17 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         if (this.breakNotify) {
             const stackData = this.breakNotify.stacks[args.frameId];
             const stack = new EmmyStack(stackData);
+            const env = new EmmyStackENV(stackData);
             response.body = {
                 scopes: [
                     {
                         name: "Variables",
                         variablesReference: this.handles.create(stack),
+                        expensive: false
+                    },
+                    {
+                        name: "ENV",
+                        variablesReference: this.handles.create(env),
                         expensive: false
                     }
                 ]
@@ -236,7 +242,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 	}
 
 	protected async variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): Promise<void> {
-		if (this.breakNotify) {
+        if (this.breakNotify) {
             const node = this.handles.get(args.variablesReference);
             const children = await node.computeChildren(this);
             response.body = {

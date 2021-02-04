@@ -71,7 +71,6 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
             'arch_file',
             `${this.program}`
         ];
-
         return new Promise<WinArch>((r, c) => {
             cp.exec(args.join(" "), { cwd: cwd })
                 .on('close', (code) => {
@@ -100,6 +99,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         ];
         args.push(...(<string[]>this.arguments));
         return new Promise((r, c) => {
+            // this.sendEvent(new OutputEvent(`run attach`))
             let exe = cp.spawn(`emmy_tool.exe`, args, {
                 cwd: cwd
             });

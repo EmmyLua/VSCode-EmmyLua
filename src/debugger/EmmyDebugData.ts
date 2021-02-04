@@ -30,6 +30,31 @@ export class EmmyStack implements IEmmyStackNode {
     }
 }
 
+export class EmmyStackENV implements IEmmyStackNode {
+    constructor(
+        private data: proto.IStack
+    ) {
+    }
+
+    toVariable(ctx: IEmmyStackContext): DebugProtocol.Variable {
+        throw new Error('Method not implemented.');
+    }
+
+    async computeChildren(ctx: IEmmyStackContext): Promise<Array<IEmmyStackNode>> {
+        const variables = this.data.localVariables.concat(this.data.upvalueVariables);
+
+        let variable = variables.find(variable => variable.name = "_ENV");
+        if (!variable) {
+            variable = variables.find(variable => variable.name = "_G");
+        }
+        if (variable) {
+            const _ENV = new EmmyVariable(variable);
+            return await _ENV.computeChildren(ctx);
+        }
+        return [];
+    }
+}
+
 export class EmmyVariable implements IEmmyStackNode {
     private variable: DebugProtocol.Variable;
 
@@ -63,7 +88,7 @@ export class EmmyVariable implements IEmmyStackNode {
         }
         return this.variable;
     }
-    
+
     private getExpr(): string {
         let arr: proto.IVariable[] = [];
         let n: EmmyVariable | undefined = this;
@@ -92,7 +117,7 @@ export class EmmyVariable implements IEmmyStackNode {
             children = this.data.children;
         }
         else {
-            const evalResp = await ctx.eval(this.getExpr(),this.data.cacheId, 2);
+            const evalResp = await ctx.eval(this.getExpr(), this.data.cacheId, 2);
             if (evalResp.success) {
                 children = evalResp.value.children;
             }
