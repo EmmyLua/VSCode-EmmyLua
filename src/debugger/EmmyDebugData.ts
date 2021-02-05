@@ -44,12 +44,15 @@ export class EmmyStackENV implements IEmmyStackNode {
         const variables = this.data.localVariables.concat(this.data.upvalueVariables);
 
         let variable = variables.find(variable => variable.name == "_ENV");
-        if (!variable) {
-            variable = variables.find(variable => variable.name == "_G");
-        }
         if (variable) {
             const _ENV = new EmmyVariable(variable);
             return await _ENV.computeChildren(ctx);
+        } else {
+            const _GVariable = await ctx.eval("_G", 0, 1);
+            if (_GVariable.success) {
+                const _G = new EmmyVariable(_GVariable.value)
+                return await _G.computeChildren(ctx);
+            }
         }
         return [];
     }
