@@ -43,9 +43,9 @@ export class EmmyStackENV implements IEmmyStackNode {
     async computeChildren(ctx: IEmmyStackContext): Promise<Array<IEmmyStackNode>> {
         const variables = this.data.localVariables.concat(this.data.upvalueVariables);
 
-        let variable = variables.find(variable => variable.name = "_ENV");
+        let variable = variables.find(variable => variable.name == "_ENV");
         if (!variable) {
-            variable = variables.find(variable => variable.name = "_G");
+            variable = variables.find(variable => variable.name == "_G");
         }
         if (variable) {
             const _ENV = new EmmyVariable(variable);
