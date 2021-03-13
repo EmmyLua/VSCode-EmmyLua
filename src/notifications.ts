@@ -9,11 +9,18 @@ export enum AnnotatorType {
     Global,
     DocType,
     Upvalue,
+    Hint
 }
+
+export interface RenderRange{
+    range: vscode.Range;
+    hint: string;
+}
+
 
 export interface IAnnotator {
     uri: string;
-    ranges: vscode.Range[];
+    ranges: RenderRange[];
     type: AnnotatorType;
 }
 
