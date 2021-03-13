@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { AnnotatorType } from './notifications';
 import { LanguageClient } from 'vscode-languageclient';
 import * as notifications from "./notifications";
-import { create } from 'domain';
+
 
 let D_PARAM: vscode.TextEditorDecorationType;
 let D_GLOBAL: vscode.TextEditorDecorationType;
