@@ -95,21 +95,18 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             let vscodeRenderRanges: vscode.DecorationOptions[] = []
             renderRanges.forEach(renderRange => {
                 if (renderRange.hint && renderRange.hint !== "") {
-                    let render = {
+                    vscodeRenderRanges.push({
                         range: renderRange.range,
                         renderOptions: {
                             before: {
-                                contentText: `${renderRange.hint}: `,
-                                color: "gray",
-                                opacity: 0.2,
-                                backgroundColor: 'black',
-                                borderRadius: '5px',
-                                fontStyle: 'italic',
+                                contentText: `${renderRange.hint}:`,
+                                color: "#ACACAC",
+                                backgroundColor: '#161d22;border-radius: 5px;',
                                 fontWeight: '400; font-size: 12px; line-height: 1;'
                             }
                         }
-                    };
-                    vscodeRenderRanges.push(render);
+                    });
+            
                 }
             });
 
