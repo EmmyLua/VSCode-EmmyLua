@@ -10,6 +10,7 @@ let D_GLOBAL: vscode.TextEditorDecorationType;
 let D_DOC_TYPE: vscode.TextEditorDecorationType;
 let D_UPVALUE: vscode.TextEditorDecorationType;
 let D_PARAMHINT: vscode.TextEditorDecorationType;
+let D_LOCALHINT: vscode.TextEditorDecorationType;
 
 function createDecoration(key: string, config: vscode.DecorationRenderOptions | undefined = undefined): vscode.TextEditorDecorationType {
     let color = vscode.workspace.getConfiguration("emmylua").get(key);
@@ -26,7 +27,9 @@ function updateDecorations() {
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
     D_UPVALUE = createDecoration("", { textDecoration: "underline" });
-    D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
+    D_PARAMHINT = createDecoration("",{});
+    D_LOCALHINT = createDecoration("",{});
+
 }
 
 export function onDidChangeConfiguration(client: LanguageClient) {
@@ -54,7 +57,8 @@ function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient
         map.set(AnnotatorType.Param, []);
         map.set(AnnotatorType.Global, []);
         map.set(AnnotatorType.Upvalue, []);
-        map.set(AnnotatorType.Hint, []);
+        map.set(AnnotatorType.ParamHint, []);
+        map.set(AnnotatorType.LocalHint, []);
 
         list.forEach(data => {
             let uri = vscode.Uri.parse(data.uri);
@@ -90,7 +94,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             break;
         case AnnotatorType.Upvalue:
             editor.setDecorations(D_UPVALUE, renderRanges.map(e => e.range));
-        case AnnotatorType.Hint: {
+        case AnnotatorType.ParamHint: {
             
             let vscodeRenderRanges: vscode.DecorationOptions[] = []
             renderRanges.forEach(renderRange => {
@@ -112,6 +116,31 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
 
             editor.setDecorations(D_PARAMHINT, vscodeRenderRanges);
             break;
+        }
+        case AnnotatorType.LocalHint: {
+            let vscodeRenderRanges: vscode.DecorationOptions[] = []
+            renderRanges.forEach(renderRange => {
+                if (renderRange.hint && renderRange.hint !== "") {
+                    vscodeRenderRanges.push({
+                        range: renderRange.range,
+                        renderOptions: {
+                            after: {
+                                contentText: `:${renderRange.hint}`,
+                                color: "#ACACAC",
+                                backgroundColor: '#161d22;border-radius: 5px;',
+                                fontWeight: '400; font-size: 12px; line-height: 1;'
+                            }
+                        }
+                    });
+            
+                }
+            });
+
+            editor.setDecorations(D_LOCALHINT, vscodeRenderRanges);
+            break;
+
+
+
         }
     }
 }

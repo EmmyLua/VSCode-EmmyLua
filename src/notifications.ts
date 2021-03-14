@@ -9,7 +9,8 @@ export enum AnnotatorType {
     Global,
     DocType,
     Upvalue,
-    Hint
+    ParamHint,
+    LocalHint,
 }
 
 export interface RenderRange{
