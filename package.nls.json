@@ -4,6 +4,8 @@
     "emmylua.completion.caseSensitive": "Case sensitive completion",
     "emmylua.codeLens": "Show codeLens or not",
     "emmylua.debugger.defaultProgram": "The default program to luanch/debug, such as 'c:/lua/lua.exe'",
+    "emmylua.hint.paramHint" : "Enable param hint",
+    "emmylua.hint.localHint" : "Enable local hint",
 
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",

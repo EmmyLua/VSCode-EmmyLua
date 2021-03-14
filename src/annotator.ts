@@ -27,8 +27,8 @@ function updateDecorations() {
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
     D_UPVALUE = createDecoration("", { textDecoration: "underline" });
-    D_PARAMHINT = createDecoration("",{});
-    D_LOCALHINT = createDecoration("",{});
+    D_PARAMHINT = createDecoration("", {});
+    D_LOCALHINT = createDecoration("", {});
 
 }
 
@@ -95,7 +95,9 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
         case AnnotatorType.Upvalue:
             editor.setDecorations(D_UPVALUE, renderRanges.map(e => e.range));
         case AnnotatorType.ParamHint: {
-            
+            if (!vscode.workspace.getConfiguration("emmylua").get("hint.paramHint")) {
+                return;
+            }
             let vscodeRenderRanges: vscode.DecorationOptions[] = []
             renderRanges.forEach(renderRange => {
                 if (renderRange.hint && renderRange.hint !== "") {
@@ -110,7 +112,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                             }
                         }
                     });
-            
+
                 }
             });
 
@@ -118,6 +120,9 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             break;
         }
         case AnnotatorType.LocalHint: {
+            if (!vscode.workspace.getConfiguration("emmylua").get("hint.localHint")) {
+                return;
+            }
             let vscodeRenderRanges: vscode.DecorationOptions[] = []
             renderRanges.forEach(renderRange => {
                 if (renderRange.hint && renderRange.hint !== "") {
@@ -132,15 +137,12 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                             }
                         }
                     });
-            
+
                 }
             });
 
             editor.setDecorations(D_LOCALHINT, vscodeRenderRanges);
             break;
-
-
-
         }
     }
 }

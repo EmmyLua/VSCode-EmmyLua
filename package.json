@@ -302,6 +302,16 @@
                 "emmylua.colors.doc_type": {
                     "type": "string",
                     "default": "#66CCFF"
+                },
+                "emmylua.hint.paramHint": {
+                    "type" : "boolean",
+                    "default" : true,
+                    "description": "%emmylua.hint.paramHint%"
+                },
+                "emmylua.hint.localHint": {
+                    "type" : "boolean",
+                    "default" : false,
+                    "description": "%emmylua.hint.localHint%"
                 }
             }
         },
