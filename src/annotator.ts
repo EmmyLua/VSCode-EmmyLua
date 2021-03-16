@@ -9,6 +9,7 @@ let D_PARAM: vscode.TextEditorDecorationType;
 let D_GLOBAL: vscode.TextEditorDecorationType;
 let D_DOC_TYPE: vscode.TextEditorDecorationType;
 let D_UPVALUE: vscode.TextEditorDecorationType;
+let D_NOTUSE: vscode.TextEditorDecorationType;
 let D_PARAMHINT: vscode.TextEditorDecorationType;
 let D_LOCALHINT: vscode.TextEditorDecorationType;
 
@@ -26,10 +27,10 @@ function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
-    D_UPVALUE = createDecoration("", { textDecoration: "underline" });
-    D_PARAMHINT = createDecoration("", {});
-    D_LOCALHINT = createDecoration("", {});
-
+    D_UPVALUE = createDecoration("colors.", { textDecoration: "underline" });
+    D_NOTUSE = createDecoration("colors.not_use",{});
+    D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
+    D_LOCALHINT = vscode.window.createTextEditorDecorationType({});
 }
 
 export function onDidChangeConfiguration(client: LanguageClient) {
@@ -57,6 +58,7 @@ function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient
         map.set(AnnotatorType.Param, []);
         map.set(AnnotatorType.Global, []);
         map.set(AnnotatorType.Upvalue, []);
+        map.set(AnnotatorType.NotUse, []);
         map.set(AnnotatorType.ParamHint, []);
         map.set(AnnotatorType.LocalHint, []);
 
@@ -94,6 +96,10 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             break;
         case AnnotatorType.Upvalue:
             editor.setDecorations(D_UPVALUE, renderRanges.map(e => e.range));
+            break;
+        case AnnotatorType.NotUse:
+            editor.setDecorations(D_NOTUSE, renderRanges.map(e => e.range));
+            break;
         case AnnotatorType.ParamHint: {
             if (!vscode.workspace.getConfiguration("emmylua").get("hint.paramHint")) {
                 return;

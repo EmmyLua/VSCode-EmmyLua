@@ -303,6 +303,10 @@
                     "type": "string",
                     "default": "#66CCFF"
                 },
+                "emmylua.colors.not_use": {
+                    "type": "string",
+                    "default": "gray"
+                },
                 "emmylua.hint.paramHint": {
                     "type" : "boolean",
                     "default" : true,

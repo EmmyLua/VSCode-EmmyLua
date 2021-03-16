@@ -9,6 +9,7 @@ export enum AnnotatorType {
     Global,
     DocType,
     Upvalue,
+    NotUse,
     ParamHint,
     LocalHint,
 }
