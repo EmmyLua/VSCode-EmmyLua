@@ -110,11 +110,21 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                     vscodeRenderRanges.push({
                         range: renderRange.range,
                         renderOptions: {
-                            before: {
-                                contentText: `${renderRange.hint}:`,
-                                color: "#ACACAC",
-                                backgroundColor: '#161d22;border-radius: 5px;',
-                                fontWeight: '400; font-size: 12px; line-height: 1;'
+                            light:{
+                                before: {
+                                    contentText: `${renderRange.hint}:`,
+                                    color: "#888888",
+                                    backgroundColor: '#EEEEEE;border-radius: 5px;',
+                                    fontWeight: '400; font-size: 12px; line-height: 1;'
+                                }
+                            },
+                            dark:{
+                                before: {
+                                    contentText: `${renderRange.hint}:`,
+                                    color: "#888888",
+                                    backgroundColor: '#333333;border-radius: 5px;',
+                                    fontWeight: '400; font-size: 12px; line-height: 1;'
+                                }
                             }
                         }
                     });
@@ -135,11 +145,21 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                     vscodeRenderRanges.push({
                         range: renderRange.range,
                         renderOptions: {
-                            after: {
-                                contentText: `:${renderRange.hint}`,
-                                color: "#ACACAC",
-                                backgroundColor: '#161d22;border-radius: 5px;',
-                                fontWeight: '400; font-size: 12px; line-height: 1;'
+                            light:{
+                                after: {
+                                    contentText: `${renderRange.hint}:`,
+                                    color: "#888888",
+                                    backgroundColor: '#EEEEEE;border-radius: 5px;',
+                                    fontWeight: '400; font-size: 12px; line-height: 1;'
+                                }
+                            },
+                            dark:{
+                                after: {
+                                    contentText: `${renderRange.hint}:`,
+                                    color: "#888888",
+                                    backgroundColor: '#333333;border-radius: 5px;',
+                                    fontWeight: '400; font-size: 12px; line-height: 1;'
+                                }
                             }
                         }
                     });
