@@ -1,6 +1,6 @@
 exports.default = {
-    emmyDebuggerVersion: '1.0.15',
-    emmyDebuggerUrl: 'https://github.com/EmmyLua/EmmyLuaDebugger/releases/download',
-    lanServerVersion: "0.3.6",
-    lanServerUrl: 'https://github.com/EmmyLua/EmmyLua-LanguageServer/releases/download'
+    emmyDebuggerVersion: '1.0.17',
+    emmyDebuggerUrl: 'https://github.com/CppCXY/EmmyLuaDebugger/releases/download',
+    lanServerVersion: "0.3.7",
+    lanServerUrl: 'https://github.com/CppCXY/EmmyLua-LanguageServer/releases/download'
 }
