@@ -147,7 +147,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                         renderOptions: {
                             light:{
                                 after: {
-                                    contentText: `${renderRange.hint}:`,
+                                    contentText: `:${renderRange.hint}`,
                                     color: "#888888",
                                     backgroundColor: '#EEEEEE;border-radius: 5px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;'
@@ -155,7 +155,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                             },
                             dark:{
                                 after: {
-                                    contentText: `${renderRange.hint}:`,
+                                    contentText: `:${renderRange.hint}`,
                                     color: "#888888",
                                     backgroundColor: '#333333;border-radius: 5px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;'
