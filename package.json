@@ -316,6 +316,29 @@
                     "type" : "boolean",
                     "default" : false,
                     "description": "%emmylua.hint.localHint%"
+                },
+                "emmylua.format.lineWidth":{
+                    "type" : "number",
+                    "default": 80,
+                    "description": "line width"
+                },
+                "emmylua.format.indentCount":{
+                    "type" : "number",
+                    "default": 4,
+                    "description": "indent count"
+                },
+                "emmylua.format.useTabs":{
+                    "type" : "boolean",
+                    "default": false
+                },
+                "emmylua.format.linebreakMultipleAssignments":{
+                    "type" : "boolean",
+                    "default": false
+                },
+                "emmylua.format.quotemark":{
+                    "type" : "string",
+                    "default": "double",
+                    "description": "'single' | 'double'"
                 }
             }
         },

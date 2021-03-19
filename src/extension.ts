@@ -9,7 +9,7 @@ import * as notifications from "./notifications";
 import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
-import { formatText } from 'lua-fmt';
+import { formatText, UserOptions } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
@@ -42,6 +42,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     savedContext.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: "file", language: LANGUAGE_ID }, {
             provideDocumentFormattingEdits(document, position, token): vscode.ProviderResult<vscode.TextEdit[]> {
+                let options: UserOptions = {};
+                options.lineWidth = vscode.workspace.getConfiguration("emmylua").get("format.lineWidth");
+                options.indentCount = vscode.workspace.getConfiguration("emmylua").get("format.indentCount");
+                options.useTabs = vscode.workspace.getConfiguration("emmylua").get("format.useTabs");
+                options.linebreakMultipleAssignments = vscode.workspace.getConfiguration("emmylua").get("format.linebreakMultipleAssignments");
+                options.quotemark = vscode.workspace.getConfiguration("emmylua").get("format.quotemark");
                 return [new vscode.TextEdit(new vscode.Range(0, 0, document.lineCount, 0), formatText(document.getText()))];
             }
         }
