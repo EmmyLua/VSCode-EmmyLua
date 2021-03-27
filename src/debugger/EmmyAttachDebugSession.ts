@@ -51,7 +51,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
     }
 
     private async detectArch(): Promise<WinArch> {
-        const cwd = `"${this.extensionPath}/debugger/emmy/windows/x86"`;
+        const cwd = `${this.extensionPath}/debugger/emmy/windows/x86`;
         const args = [
             'emmy_tool.exe',
             'arch_pid',
