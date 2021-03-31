@@ -25,7 +25,7 @@ function createDecoration(key: string, config: vscode.DecorationRenderOptions | 
 
 function updateDecorations() {
     // 各种方式更新时之前的decoration没有dispose导致重复渲染
-    if(D_PARAM){
+    if (D_PARAM) {
         D_PARAM.dispose();
         D_GLOBAL.dispose();
         D_DOC_TYPE.dispose();
@@ -38,7 +38,9 @@ function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
-    D_UPVALUE = createDecoration("colors.", { textDecoration: "underline" });
+    D_UPVALUE = createDecoration("colors.", { 
+        border: "2px;border-style:  none  none solid none ;border-color: #a8c023;",       
+    });
     D_NOTUSE = createDecoration("colors.not_use", {});
     D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
     D_LOCALHINT = vscode.window.createTextEditorDecorationType({});
