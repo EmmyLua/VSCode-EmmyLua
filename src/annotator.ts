@@ -28,7 +28,7 @@ function updateDecorations() {
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
     D_UPVALUE = createDecoration("colors.", { textDecoration: "underline" });
-    D_NOTUSE = createDecoration("colors.not_use",{});
+    D_NOTUSE = createDecoration("colors.not_use", {});
     D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
     D_LOCALHINT = vscode.window.createTextEditorDecorationType({});
 }
@@ -64,8 +64,15 @@ function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient
 
         list.forEach(data => {
             let uri = vscode.Uri.parse(data.uri);
+            let uriSet = new Set<string>();
+            // 而vscode 在diff，分屏以及其他一些情况下可以获得多个相同的uri
             vscode.window.visibleTextEditors.forEach((editor) => {
                 let docUri = editor.document.uri;
+                if (uriSet.has(docUri.path)) {
+                    return;
+                }
+                uriSet.add(docUri.path)
+
                 if (uri.path.toLowerCase() === docUri.path.toLowerCase()) {
                     let list = map.get(data.type);
                     if (list === undefined) {
@@ -110,7 +117,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                     vscodeRenderRanges.push({
                         range: renderRange.range,
                         renderOptions: {
-                            light:{
+                            light: {
                                 before: {
                                     contentText: `${renderRange.hint}:`,
                                     color: "#888888",
@@ -118,7 +125,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                                     fontWeight: '400; font-size: 12px; line-height: 1;'
                                 }
                             },
-                            dark:{
+                            dark: {
                                 before: {
                                     contentText: `${renderRange.hint}:`,
                                     color: "#888888",
@@ -145,7 +152,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                     vscodeRenderRanges.push({
                         range: renderRange.range,
                         renderOptions: {
-                            light:{
+                            light: {
                                 after: {
                                     contentText: `:${renderRange.hint}`,
                                     color: "#888888",
@@ -153,7 +160,7 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                                     fontWeight: '400; font-size: 12px; line-height: 1;'
                                 }
                             },
-                            dark:{
+                            dark: {
                                 after: {
                                     contentText: `:${renderRange.hint}`,
                                     color: "#888888",
