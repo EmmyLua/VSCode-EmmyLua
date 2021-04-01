@@ -39,7 +39,7 @@ function updateDecorations() {
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
     D_UPVALUE = createDecoration("colors.", { 
-        border: "2px;border-style:  none  none solid none ;border-color: #a8c023;",       
+        textDecoration: "underline;text-decoration-color:#a8c023;"
     });
     D_NOTUSE = createDecoration("colors.not_use", {});
     D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
