@@ -23,7 +23,7 @@ export let savedContext: vscode.ExtensionContext;
 let client: LanguageClient;
 let activeEditor: vscode.TextEditor;
 let progressBar: vscode.StatusBarItem;
-let javaExecutablePath: string|null;
+let javaExecutablePath: string | null;
 let configWatcher: EmmyConfigWatcher;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -39,25 +39,13 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-
-    savedContext.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: "file", language: LANGUAGE_ID }, {
-            provideDocumentFormattingEdits(document, position, token): vscode.ProviderResult<vscode.TextEdit[]> {
-                let options: UserOptions = {};
-                options.lineWidth = vscode.workspace.getConfiguration("emmylua").get("format.lineWidth");
-                options.indentCount = vscode.workspace.getConfiguration("emmylua").get("format.indentCount");
-                options.useTabs = vscode.workspace.getConfiguration("emmylua").get("format.useTabs");
-                options.linebreakMultipleAssignments = vscode.workspace.getConfiguration("emmylua").get("format.linebreakMultipleAssignments");
-                options.quotemark = vscode.workspace.getConfiguration("emmylua").get("format.quotemark");
-                return [new vscode.TextEdit(new vscode.Range(0, 0, document.lineCount, 0), formatText(document.getText()))];
-            }
-        }
-    ));
+    
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
     configWatcher.onConfigUpdate(onConfigUpdate);
     savedContext.subscriptions.push(configWatcher);
-
+    
     startServer();
     registerDebuggers();
 }
@@ -107,13 +95,13 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
     }
 }
 
-async function validateJava() :Promise<void> {
+async function validateJava(): Promise<void> {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
-    
+
     return new Promise<void>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
-            let regexp:RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
+            let regexp: RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {
                 let match = regexp.exec(stderr);
                 if (match) {
@@ -140,22 +128,22 @@ async function startServer() {
         }
     } catch (error) {
         vscode.window.showErrorMessage(error, "Try again")
-        .then(startServer);
+            .then(startServer);
         return;
     }
     doStartServer().then(() => {
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    })
-    .catch(reson => {
-        vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
-        .then(startServer);
-    });
+        })
+        .catch(reson => {
+            vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
+                .then(startServer);
+        });
 }
 
 async function doStartServer() {
     const configFiles = await configWatcher.watch();
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
+        documentSelector: [{ scheme: 'file', language: LANGUAGE_ID }],
         synchronize: {
             configurationSection: ["emmylua", "files.associations"],
             fileEvents: [
@@ -164,7 +152,7 @@ async function doStartServer() {
         },
         initializationOptions: {
             stdFolder: vscode.Uri.file(path.resolve(savedContext.extensionPath, "res/std")).toString(),
-            apiFolders : [],
+            apiFolders: [],
             workspaceFolders: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.map(f => f.uri.toString()) : null,
             client: 'vsc',
             configFiles: configFiles
@@ -197,7 +185,7 @@ async function doStartServer() {
             args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseConcMarkSweepGC"]
         };
     }
-    
+
     client = new LanguageClient(LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     savedContext.subscriptions.push(client.start());
     await client.onReady();

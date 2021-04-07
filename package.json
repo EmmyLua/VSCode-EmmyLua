@@ -316,29 +316,6 @@
                     "type" : "boolean",
                     "default" : false,
                     "description": "%emmylua.hint.localHint%"
-                },
-                "emmylua.format.lineWidth":{
-                    "type" : "number",
-                    "default": 80,
-                    "description": "line width"
-                },
-                "emmylua.format.indentCount":{
-                    "type" : "number",
-                    "default": 4,
-                    "description": "indent count"
-                },
-                "emmylua.format.useTabs":{
-                    "type" : "boolean",
-                    "default": false
-                },
-                "emmylua.format.linebreakMultipleAssignments":{
-                    "type" : "boolean",
-                    "default": false
-                },
-                "emmylua.format.quotemark":{
-                    "type" : "string",
-                    "default": "double",
-                    "description": "'single' | 'double'"
                 }
             }
         },
@@ -378,7 +355,6 @@
         "vscode-languageclient": "5.1.0",
         "vscode-debugadapter": "1.31.0",
         "vscode-debugprotocol": "1.31.0",
-        "lua-fmt": "^2.6.0",
         "smart-buffer": "^4.0.1",
         "iconv-lite": "^0.5.0"
     }
