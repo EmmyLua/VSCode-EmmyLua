@@ -9,7 +9,6 @@ import * as notifications from "./notifications";
 import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
-import { formatText, UserOptions } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
@@ -98,7 +97,6 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
 async function validateJava(): Promise<void> {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
-
     return new Promise<void>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
             let regexp: RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
