@@ -38,13 +38,13 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-
+    
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
     configWatcher.onConfigUpdate(onConfigUpdate);
     savedContext.subscriptions.push(configWatcher);
-
+    
     startServer();
     registerDebuggers();
 }
@@ -97,7 +97,6 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
 async function validateJava(): Promise<void> {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
-
     return new Promise<void>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
             let regexp: RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
