@@ -6,6 +6,8 @@
     "emmylua.debugger.defaultProgram": "默认启动或调试的程序, 如 'c:/lua/lua.exe'",
     "emmylua.hint.paramHint" : "开启函数调用的参数提示",
     "emmylua.hint.localHint" : "开启local变量的类型提示",
+    "emmylua.constructor.names" : "构造函数名称列表",
+    "emmylua.requirelike.names": "设置类似require的函数名列表",
     
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",

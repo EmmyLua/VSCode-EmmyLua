@@ -331,6 +331,16 @@
                     "type" : "number",
                     "default": 1,
                     "description": "loop spacing"
+                },
+                "emmylua.constructorNames": {
+                    "type" : "string",
+                    "default": "new;get",
+                    "description": "%emmylua.constructor.names%"
+                },
+                "emmylua.requireLikeFunctions": {
+                    "type" : "string",
+                    "default": "require",
+                    "description": "%emmylua.requirelike.names%"
                 }
             }
         },
