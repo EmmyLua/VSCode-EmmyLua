@@ -38,13 +38,13 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-    
+
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
     configWatcher.onConfigUpdate(onConfigUpdate);
     savedContext.subscriptions.push(configWatcher);
-    
+
     startServer();
     registerDebuggers();
 }
@@ -60,6 +60,30 @@ function registerDebuggers() {
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_launch', emmyLaunchProvider));
     savedContext.subscriptions.push(emmyLaunchProvider);
 
+    savedContext.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
+
+        provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext): vscode.ProviderResult<vscode.InlineValue[]> {
+
+            const allValues: vscode.InlineValue[] = [];
+
+            for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
+                const line = document.lineAt(l);
+                // match local 变量
+                const regExp = /local\s+(\S+)/ig;
+                const m = regExp.exec(line.text);
+                if (m) {
+                    const varName = m[1];
+                    const varRange = new vscode.Range(l, m.index, l, m.index + varName.length);
+                    
+                    // value found via variable lookup
+                    allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
+
+                }
+            }
+
+            return allValues;
+        }
+    }));
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
