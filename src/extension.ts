@@ -61,24 +61,30 @@ function registerDebuggers() {
     savedContext.subscriptions.push(emmyLaunchProvider);
 
     savedContext.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
-
+        // 不知道是否应该发到ls上再做处理
+        // 先简单处理一下吧
         provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext): vscode.ProviderResult<vscode.InlineValue[]> {
 
             const allValues: vscode.InlineValue[] = [];
-
+            const regExps = [
+                /(?<=local\s+)[^\s,\<]+/,
+                /(?<=---@param\s+)\S+/
+            ]
+            
             for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
                 const line = document.lineAt(l);
-                // match local 变量
-                const regExp = /local\s+(\S+)/ig;
-                const m = regExp.exec(line.text);
-                if (m) {
-                    const varName = m[1];
-                    const varRange = new vscode.Range(l, m.index, l, m.index + varName.length);
-                    
-                    // value found via variable lookup
-                    allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
 
+                for (const regExp of regExps) {
+                    const match = regExp.exec(line.text);
+                    if (match) {
+                        const varName = match[0];
+                        const varRange = new vscode.Range(l, match.index, l, match.index + varName.length);
+                        // value found via variable lookup
+                        allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
+                        break;
+                    }
                 }
+
             }
 
             return allValues;
