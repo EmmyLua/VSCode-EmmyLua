@@ -6,9 +6,14 @@
     "emmylua.debugger.defaultProgram": "默认启动或调试的程序, 如 'c:/lua/lua.exe'",
     "emmylua.hint.paramHint" : "开启函数调用的参数提示",
     "emmylua.hint.localHint" : "开启local变量的类型提示",
+    "emmylua.hint.varargHint": "开启可变参数的hint",
     "emmylua.constructor.names" : "构造函数名称列表",
     "emmylua.requirelike.names": "设置类似require的函数名列表",
-    
+    "emmylua.format.indent": "缩进的空白数",
+    "emmylua.format.functionLineSpacing": "函数行间距",
+    "emmylua.format.loopLineSpacing": "循环语句与上文间距",
+    "emmylua.format.blankBeforeFirstArg": "函数第一个参数之前保持一个空格",
+
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",
     "debug.attach.target_pid": "目标进程ID",

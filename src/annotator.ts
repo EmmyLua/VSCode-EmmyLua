@@ -121,9 +121,6 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             editor.setDecorations(D_NOTUSE, renderRanges.map(e => e.range));
             break;
         case AnnotatorType.ParamHint: {
-            if (!vscode.workspace.getConfiguration("emmylua").get("hint.paramHint")) {
-                return;
-            }
             let vscodeRenderRanges: vscode.DecorationOptions[] = []
             renderRanges.forEach(renderRange => {
                 if (renderRange.hint && renderRange.hint !== "") {
@@ -156,9 +153,6 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             break;
         }
         case AnnotatorType.LocalHint: {
-            if (!vscode.workspace.getConfiguration("emmylua").get("hint.localHint")) {
-                return;
-            }
             let vscodeRenderRanges: vscode.DecorationOptions[] = []
             renderRanges.forEach(renderRange => {
                 if (renderRange.hint && renderRange.hint !== "") {

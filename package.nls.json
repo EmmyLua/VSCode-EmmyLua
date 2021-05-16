@@ -6,8 +6,13 @@
     "emmylua.debugger.defaultProgram": "The default program to luanch/debug, such as 'c:/lua/lua.exe'",
     "emmylua.hint.paramHint" : "Enable param hint",
     "emmylua.hint.localHint" : "Enable local hint",
+    "emmylua.hint.varargHint": "Variable parameter hint",
     "emmylua.constructor.names" : "constructor function names",
     "emmylua.requirelike.names": "set function names like require",
+    "emmylua.format.indent":"The number of blanks that are indented",
+    "emmylua.format.functionLineSpacing": "The line spacing of the function",
+    "emmylua.format.loopLineSpacing": "The line spacing of the Loop statement",
+    "emmylua.format.blankBeforeFirstArg": "A blank before the first argument of a function",
 
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",

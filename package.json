@@ -82,8 +82,8 @@
                                 "description": "%debug.attach.target_pid%",
                                 "default": 0
                             },
-                            "processName":{
-                                "type":"string",
+                            "processName": {
+                                "type": "string",
                                 "description": "%debug.attach.target_process%",
                                 "default": ""
                             }
@@ -143,9 +143,9 @@
                                 "description": "%debug.launch.arguments%",
                                 "default": []
                             },
-                            "blockOnExit":{
-                                "type":"boolean",
-                                "description":"%debug.launch.blockOnExit%",
+                            "blockOnExit": {
+                                "type": "boolean",
+                                "description": "%debug.launch.blockOnExit%",
                                 "default": true
                             }
                         }
@@ -308,37 +308,49 @@
                     "default": "gray"
                 },
                 "emmylua.hint.paramHint": {
-                    "type" : "boolean",
-                    "default" : true,
+                    "type": "boolean",
+                    "default": true,
                     "description": "%emmylua.hint.paramHint%"
                 },
                 "emmylua.hint.localHint": {
-                    "type" : "boolean",
-                    "default" : false,
+                    "type": "boolean",
+                    "default": false,
                     "description": "%emmylua.hint.localHint%"
                 },
-                "emmylua.format.indentCount":{
-                    "type" : "number",
+                "emmylua.hint.varargHint": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.hint.varargHint%"
+                },
+                "emmylua.format.indentCount": {
+                    "type": "number",
                     "default": 4,
-                    "description": "indent count"
+                    "description": "%emmylua.format.indent%"
                 },
-                "emmylua.format.functionSpacing":{
-                    "type" : "number",
+                "emmylua.format.functionLineSpacing": {
+                    "type": "number",
                     "default": 1,
-                    "description": "function spacing"
+                    "description": "%emmylua.format.functionLineSpacing%"
                 },
-                "emmylua.format.loopSpacing":{
-                    "type" : "number",
+                "emmylua.format.loopLineSpacing": {
+                    "type": "number",
                     "default": 1,
-                    "description": "loop spacing"
+                    "description": "%emmylua.format.loopLineSpacing%"
                 },
+                "emmylua.format.blankBeforeFirstArg": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.format.blankBeforeFirstArg%"
+                },
+
+
                 "emmylua.constructorNames": {
-                    "type" : "string",
+                    "type": "string",
                     "default": "new;get",
                     "description": "%emmylua.constructor.names%"
                 },
                 "emmylua.requireLikeFunctions": {
-                    "type" : "string",
+                    "type": "string",
                     "default": "require",
                     "description": "%emmylua.requirelike.names%"
                 }
@@ -368,19 +380,19 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "tslint": "^5.8.0",
-        "typescript": "^4.0.2",
-        "@types/vscode": "^1.56.0",
         "@types/mocha": "^7.0.2",
         "@types/node": "^13.11.1",
+        "@types/vscode": "^1.56.0",
         "download": "^7.1.0",
-        "filecopy": "^4.0.2"
+        "filecopy": "^4.0.2",
+        "tslint": "^5.8.0",
+        "typescript": "^4.0.2"
     },
     "dependencies": {
-        "vscode-languageclient": "5.1.0",
+        "iconv-lite": "^0.5.0",
+        "smart-buffer": "^4.0.1",
         "vscode-debugadapter": "1.31.0",
         "vscode-debugprotocol": "1.31.0",
-        "smart-buffer": "^4.0.1",
-        "iconv-lite": "^0.5.0"
+        "vscode-languageclient": "5.1.0"
     }
 }
