@@ -39,7 +39,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
         response.body = {
-            supportsEvaluateForHovers: true
+            supportsEvaluateForHovers: true,
+            supportTerminateDebuggee: true
         };
         this.sendResponse(response);
     }
@@ -128,7 +129,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             .on('error', err => this.onSocketClose());
     }
 
-    private onSocketClose() {
+    protected onSocketClose() {
         if (this.client) {
             this.client.removeAllListeners();
         }

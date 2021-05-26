@@ -22,4 +22,5 @@ export interface EmmyLaunchDebugConfiguration extends DebugConfigurationBase {
     arguments: string[];
     workingDir: string;
     blockOnExit: boolean;
+    useWindowsTerminal: boolean;
 }
