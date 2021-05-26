@@ -29,7 +29,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     private blockOnExit: boolean = true;
     private debugClient?: net.Socket;
     private pid = 0;
-    private useWindowsTerminal = true;
+
 
     private getPort(pid: number): number {
         let port = pid;
@@ -47,8 +47,6 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         this.arguments = args.arguments ?? []
         this.blockOnExit = args.blockOnExit ?? true;
 
-        // useWindowsTerminal 可能是null
-        this.useWindowsTerminal = args.useWindowsTerminal ? true : false;
 
         if (args.useWindowsTerminal) {
             this.pid = await this.runAndAttachUseWindowsTerminal();
