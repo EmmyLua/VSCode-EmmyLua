@@ -11,6 +11,7 @@ interface EmmyAttachDebugArguments extends DebugProtocol.AttachRequestArguments 
     sourcePaths: string[];
     ext: string[];
     pid: number;
+    captureLog?: boolean;
 }
 
 enum WinArch {
@@ -20,6 +21,7 @@ enum WinArch {
 export class EmmyAttachDebugSession extends EmmyDebugSession {
 
     private pid = 0;
+    private captureLog?: boolean;
 
     private getPort(pid: number): number {
         var port = pid;
@@ -32,8 +34,10 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
         this.extensionPath = args.extensionPath;
         this.ext = args.ext;
         this.pid = args.pid;
+        this.captureLog = args.captureLog;
 
         await this.attach();
+        
         // send resp
         const client = net.connect(this.getPort(args.pid), 'localhost')
             .on('connect', () => {
@@ -81,12 +85,27 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
             '-dll',
             'emmy_hook.dll'
         ];
+        if(this.captureLog){
+            args.push("-capture-log");
+        }
+
         return new Promise<void>((r, c) => {
             cp.exec(args.join(" "), { cwd: cwd }, (err, stdout, stderr) => {
                 this.sendEvent(new OutputEvent(stdout));
-                })
+            })
                 .on('close', (code) => {
                     if (code === 0) {
+                        if(this.captureLog){
+                            const captureArgs = [
+                                "emmy_tool.exe",
+                                "receive_log",
+                                "-p",
+                                `${this.pid}`,
+                            ] 
+                            cp.spawn(`wt`, captureArgs, {
+                                cwd: cwd
+                            });
+                        }
                         r();
                     }
                     else {

@@ -109,10 +109,10 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
             `"${cwd}"`,
             "-work",
             `"${this.workingDir}"`,
-            `${this.blockOnExit ? "-blockOnExit" : ""}`,
+            `${this.blockOnExit ? "-block-on-exit" : ""}`,
             "-exe",
             `"${this.program}"`,
-            "-debugPort",
+            "-debug-port",
             `${port}`,
             "-args",
         ];
@@ -146,17 +146,17 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
         const args = [
             "run_and_attach",
-            "-createNewWindow",
+            "-create-new-window",
             "-dll",
             "emmy_hook.dll",
             "-dir",
             `"${cwd}"`,
             "-work",
             `"${this.workingDir}"`,
-            `${this.blockOnExit ? "-blockOnExit" : ""}`,
+            `${this.blockOnExit ? "-block-on-exit" : ""}`,
             "-exe",
             `"${this.program}"`,
-            "-debugPort",
+            "-debug-port",
             `${port}`,
             "-args",
         ];

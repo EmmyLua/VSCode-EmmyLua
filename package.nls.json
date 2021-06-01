@@ -19,6 +19,7 @@
     "debug.attach.target_pid": "Target pid",
     "debug.attach.desc": "Attach process debugger",
     "debug.attach.target_process": "Attach process by name",
+    "debug.attach.captureLog": "Capture process log with Windows Terminal",
     
     "debug.launch.label": "EmmyLua: Attach by launch program",
     "debug.launch.name": "Attach by launch program",

@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.3.92",
+    "version": "0.3.94",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -86,6 +86,11 @@
                                 "type": "string",
                                 "description": "%debug.attach.target_process%",
                                 "default": ""
+                            },
+                            "captureLog": {
+                                "type": "boolean",
+                                "description": "%debug.attach.captureLog%",
+                                "default": false
                             }
                         }
                     }
@@ -96,7 +101,8 @@
                         "request": "attach",
                         "name": "%debug.attach.name%",
                         "pid": 0,
-                        "processName": ""
+                        "processName": "",
+                        "captureLog": false
                     }
                 ],
                 "configurationSnippets": [
@@ -107,7 +113,8 @@
                             "type": "emmylua_attach",
                             "request": "attach",
                             "name": "%debug.attach.name%",
-                            "pid": 0
+                            "pid": 0,
+                            "processName":""
                         }
                     }
                 ],
