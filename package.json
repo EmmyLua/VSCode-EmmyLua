@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.3.94",
+    "version": "0.3.95",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -114,7 +114,7 @@
                             "request": "attach",
                             "name": "%debug.attach.name%",
                             "pid": 0,
-                            "processName":""
+                            "processName": ""
                         }
                     }
                 ],
@@ -356,8 +356,16 @@
                     "default": false,
                     "description": "%emmylua.format.blankBeforeFirstArg%"
                 },
-
-
+                "emmylua.format.tableLineWidth": {
+                    "type": "number",
+                    "default": 80,
+                    "description": "%emmylua.format.tableLineLimit%"
+                },
+                "emmylua.format.callExprAlignToFirstArg": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.format.callExprAlignToFirstArg%"
+                },
                 "emmylua.constructorNames": {
                     "type": "string",
                     "default": "new;get",

@@ -13,6 +13,8 @@
     "emmylua.format.functionLineSpacing": "函数行间距",
     "emmylua.format.loopLineSpacing": "循环语句与上文间距",
     "emmylua.format.blankBeforeFirstArg": "函数第一个参数之前保持一个空格",
+    "emmylua.format.tableLineLimit" : "表表达式自动换行宽度限制",
+    "emmylua.format.callExprAlignToFirstArg": "调用表达式对齐到第一个参数",
 
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",
