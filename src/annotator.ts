@@ -129,20 +129,21 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                         renderOptions: {
                             light: {
                                 before: {
-                                    contentText: ` ${renderRange.hint}:`,
+                                    contentText: ` ${renderRange.hint}: `,
                                     color: "#888888",
-                                    backgroundColor: '#EEEEEE;border-radius: 3px;',
+                                    backgroundColor: '#EEEEEE;border-radius: 2px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;',
-                                    margin: "2px",
+                                    margin: "1px",
                                 }
                             },
                             dark: {
                                 before: {
-                                    contentText: ` ${renderRange.hint}:`,
+                                    contentText: ` ${renderRange.hint}: `,
                                     color: "#888888",
-                                    backgroundColor: '#333333;border-radius: 3px;',
+                                    backgroundColor: '#333333;border-radius: 2px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;',
-                                    margin: "2px",       
+                                    margin: "1px",  
+                                    
                                 }
                             }
                         }
@@ -163,20 +164,20 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                         renderOptions: {
                             light: {
                                 after: {
-                                    contentText: `:${renderRange.hint} `,
+                                    contentText: `:${renderRange.hint}`,
                                     color: "#888888",
-                                    backgroundColor: '#EEEEEE;border-radius: 3px;',
+                                    backgroundColor: '#EEEEEE;border-radius: 2px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;',
-                                    margin: "2px",
+                                    margin: "3px",
                                 }
                             },
                             dark: {
                                 after: {
-                                    contentText: `:${renderRange.hint} `,
+                                    contentText: `:${renderRange.hint}`,
                                     color: "#888888",
-                                    backgroundColor: '#333333;border-radius: 3px;',
+                                    backgroundColor: '#333333;border-radius: 2px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;',
-                                    margin: "2px",
+                                    margin: "3px",
                                 }
                             }
                         }
