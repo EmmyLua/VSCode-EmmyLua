@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.3.95",
+    "version": "0.3.99",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -375,6 +375,26 @@
                     "type": "string",
                     "default": "require",
                     "description": "%emmylua.requirelike.names%"
+                },
+                "emmylua.diagnostics.parameterValidation": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.parameterValidation%"
+                },
+                "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.anyTypeCanAssignToAnyDefineType%"
+                },
+                "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable%"
+                },
+                "emmylua.diagnostics.defineTypeCanReceiveNilType": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.defineTypeCanReceiveNilType%"
                 }
             }
         },

@@ -16,6 +16,7 @@
     "emmylua.format.tableLineLimit" : "table express line width limit",
     "emmylua.format.callExprAlignToFirstArg": "call expr align to first arg",
 
+
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",
     "debug.attach.target_pid": "Target pid",

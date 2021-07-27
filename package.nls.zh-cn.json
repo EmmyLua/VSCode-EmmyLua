@@ -15,6 +15,11 @@
     "emmylua.format.blankBeforeFirstArg": "函数第一个参数之前保持一个空格",
     "emmylua.format.tableLineLimit" : "表表达式自动换行宽度限制",
     "emmylua.format.callExprAlignToFirstArg": "调用表达式对齐到第一个参数",
+    "emmylua.diagnostics.parameterValidation": "开启参数类型诊断",
+    "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "定义类型能接受any 类型的赋值",
+    "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "定义类型为any可以接受任何参数",
+    "emmylua.diagnostics.defineTypeCanReceiveNilType": "任何参数类型能接受nil",
+
 
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",
@@ -31,4 +36,6 @@
     "debug.launch.arguments": "传递给可执行文件的参数",
     "debug.launch.blockOnExit": "进程结束时是否阻塞进程保持窗口开启",
     "debug.launch.useWindowsTerminal": "emmylua 使用windows terminal 打开进程"
+
+ 
 }
