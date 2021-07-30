@@ -15,6 +15,10 @@
     "emmylua.format.blankBeforeFirstArg": "A blank before the first argument of a function",
     "emmylua.format.tableLineLimit" : "table express line width limit",
     "emmylua.format.callExprAlignToFirstArg": "call expr align to first arg",
+    "emmylua.diagnostics.parameterValidation": "param type diagnostic",
+    "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "the type any can pass to any defined type param",
+    "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "the defined type any can receive any param",
+    "emmylua.diagnostics.defineTypeCanReceiveNilType": "the type nil can pass to any defined param type",
 
 
     "debug.attach.label": "EmmyLua: Attach by process id",
