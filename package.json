@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.3.99",
+    "version": "0.3.100",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -378,7 +378,7 @@
                 },
                 "emmylua.diagnostics.parameterValidation": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "%emmylua.diagnostics.parameterValidation%"
                 },
                 "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": {
