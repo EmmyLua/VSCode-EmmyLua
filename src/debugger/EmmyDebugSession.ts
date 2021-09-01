@@ -40,7 +40,10 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
         response.body = {
             supportsEvaluateForHovers: true,
-            supportTerminateDebuggee: true
+            supportTerminateDebuggee: true,
+            supportsLogPoints: true,
+            supportsHitConditionalBreakpoints: true,
+            
         };
         this.sendResponse(response);
     }
@@ -360,4 +363,5 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     protected stepOutRequest(response: DebugProtocol.StepOutResponse, args: DebugProtocol.StepOutArguments): void {
         this.sendDebugAction(response, proto.DebugAction.StepOut);
     }
+
 }
