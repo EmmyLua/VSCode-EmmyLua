@@ -43,7 +43,6 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             supportTerminateDebuggee: true,
             supportsLogPoints: true,
             supportsHitConditionalBreakpoints: true,
-            
         };
         this.sendResponse(response);
     }
@@ -126,8 +125,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         readline.createInterface({
             input: <NodeJS.ReadableStream>client,
             output: client
-        })
-            .on("line", line => this.onReceiveLine(line));
+        }).on("line", line => this.onReceiveLine(line));
+
         client.on('close', hadErr => this.onSocketClose())
             .on('error', err => this.onSocketClose());
     }

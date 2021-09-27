@@ -2,11 +2,11 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.3.102",
+    "version": "0.3.103",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
-        "vscode": "^1.56.0"
+        "vscode": "^1.60.0"
     },
     "categories": [
         "Programming Languages",
@@ -424,7 +424,7 @@
     "devDependencies": {
         "@types/mocha": "^7.0.2",
         "@types/node": "^13.11.1",
-        "@types/vscode": "^1.56.0",
+        "@types/vscode": "1.60.0",
         "download": "^7.1.0",
         "filecopy": "^4.0.2",
         "tslint": "^5.8.0",

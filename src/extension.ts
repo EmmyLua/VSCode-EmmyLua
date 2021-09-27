@@ -70,7 +70,7 @@ function registerDebuggers() {
                 /(?<=local\s+)[^\s,\<]+/,
                 /(?<=---@param\s+)\S+/
             ]
-            
+
             for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
                 const line = document.lineAt(l);
 
@@ -155,17 +155,17 @@ async function startServer() {
             await validateJava();
         }
     } catch (error) {
-        vscode.window.showErrorMessage(error, "Try again")
+        vscode.window.showErrorMessage(error as string, "Try again")
             .then(startServer);
         return;
     }
     doStartServer().then(() => {
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     })
-        .catch(reson => {
-            vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
-                .then(startServer);
-        });
+    .catch(reson => {
+        vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
+            .then(startServer);
+    });
 }
 
 async function doStartServer() {
