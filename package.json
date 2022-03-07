@@ -336,36 +336,6 @@
                     "default": true,
                     "description": "%emmylua.hint.varargHint%"
                 },
-                "emmylua.format.indentCount": {
-                    "type": "number",
-                    "default": 4,
-                    "description": "%emmylua.format.indent%"
-                },
-                "emmylua.format.functionLineSpacing": {
-                    "type": "number",
-                    "default": 1,
-                    "description": "%emmylua.format.functionLineSpacing%"
-                },
-                "emmylua.format.loopLineSpacing": {
-                    "type": "number",
-                    "default": 1,
-                    "description": "%emmylua.format.loopLineSpacing%"
-                },
-                "emmylua.format.blankBeforeFirstArg": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "%emmylua.format.blankBeforeFirstArg%"
-                },
-                "emmylua.format.tableLineWidth": {
-                    "type": "number",
-                    "default": 80,
-                    "description": "%emmylua.format.tableLineLimit%"
-                },
-                "emmylua.format.callExprAlignToFirstArg": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "%emmylua.format.callExprAlignToFirstArg%"
-                },
                 "emmylua.constructorNames": {
                     "type": "string",
                     "default": "new;get",
