@@ -11,6 +11,6 @@ build_script:
 
     node ./build/prepare.js
 
-    vsce package
+    vsce package -o VSCode-EmmyLua.vsix
 artifacts:
 - path: '*.vsix'
