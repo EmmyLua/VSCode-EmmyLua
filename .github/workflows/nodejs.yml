@@ -26,7 +26,7 @@ jobs:
         npm i vsce -g
         node ./build/prepare-version.js
         node ./build/prepare.js
-        npx vsce package --target VSCode-EmmyLua
+        npx vsce package -o VSCode-EmmyLua
     - name: Upload
       uses: actions/upload-artifact@v2
       with: 
