@@ -2,11 +2,11 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.3.103",
+    "version": "0.4.0",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
-        "vscode": "^1.60.0"
+        "vscode": "^1.62.0"
     },
     "categories": [
         "Programming Languages",
