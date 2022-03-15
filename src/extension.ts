@@ -279,7 +279,11 @@ async function insertEmmyDebugCode() {
         dllPath = path.join(savedContext.extensionPath, `debugger/emmy/windows/${arch}/?.dll`);
     }
     else if (isMac) {
-        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/mac/emmy_core.dylib`);
+        const arch = await vscode.window.showQuickPick(['x64', 'arm64']);
+        if (!arch) {
+            return;
+        }
+        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/mac/${arch}/emmy_core.dylib`);
     }
     else if (isLinux) {
         dllPath = path.join(savedContext.extensionPath, `debugger/emmy/linux/emmy_core.so`);
