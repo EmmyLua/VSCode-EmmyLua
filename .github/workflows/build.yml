@@ -1,4 +1,4 @@
-name: Node CI
+name: Build
 
 on: 
   push:
@@ -50,7 +50,7 @@ jobs:
           draft: false
           generate_release_notes: true
           files: |
-            VSCode-EmmyLua.vsix
+            VSCode-EmmyLua/VSCode-EmmyLua.vsix
           token: ${{ secrets.RELEASE }}
   publish:
     runs-on: ubuntu-latest
@@ -58,6 +58,6 @@ jobs:
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/download-artifact@v2
-      - run: npx vsce publish ${{ github.ref }} --packagePath $(find . -iname *.vsix)
+      - run: npx vsce publish ${{ github.ref }} --packagePath $(find VSCode-EmmyLua -iname *.vsix)
         env:
           VSCE_PAT: ${{ secrets.vsce_access_token }}
