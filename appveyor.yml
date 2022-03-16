@@ -1,6 +1,6 @@
-version: 0.3.{build}
+version: 0.4.{build}
 image: Ubuntu1804
-stack: node 12
+stack: node 14
 build_script:
 - sh: >-
     npm i
@@ -11,6 +11,6 @@ build_script:
 
     node ./build/prepare.js
 
-    vsce package
+    vsce package -o VSCode-EmmyLua.vsix
 artifacts:
 - path: '*.vsix'

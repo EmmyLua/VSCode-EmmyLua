@@ -4,17 +4,22 @@ import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
 import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent, Event } from "vscode-debugadapter";
-import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext } from "./EmmyDebugData";
+import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext, EmmyStackENV } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 import { join, normalize } from "path";
 
 interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
-	extensionPath: string;
+    extensionPath: string;
     sourcePaths: string[];
     host: string;
     port: number;
     ext: string[];
     ideConnectDebugger: boolean;
+
+    // for launch
+    program?: string;
+    arguments?: string[];
+    workingDir?: string;
 }
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
@@ -29,12 +34,15 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     private listenMode = false;
     private breakpoints: proto.IBreakPoint[] = [];
     protected extensionPath: string = '';
-    
+
     handles = new Handles<IEmmyStackNode>();
 
     protected initializeRequest(response: DebugProtocol.InitializeResponse, args: DebugProtocol.InitializeRequestArguments): void {
         response.body = {
-            
+            supportsEvaluateForHovers: true,
+            supportTerminateDebuggee: true,
+            supportsLogPoints: true,
+            supportsHitConditionalBreakpoints: true,
         };
         this.sendResponse(response);
     }
@@ -51,32 +59,32 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                 this.readClient(client);
                 this.sendEvent(new Event('onNewConnection'));
             })
-            .listen(args.port, args.host)
-            .on('listening', () => {
-                this.sendEvent(new OutputEvent(`Server(${args.host}:${args.port}) open successfully, wait for connection...\n`));
-            })
-            .on('error', err => {
-                this.sendEvent(new OutputEvent(`${err}`, 'stderr'));
-                response.success = false;
-                response.message = `${err}`;
-                this.sendResponse(response);
-            });
+                .listen(args.port, args.host)
+                .on('listening', () => {
+                    this.sendEvent(new OutputEvent(`Server(${args.host}:${args.port}) open successfully, wait for connection...\n`));
+                })
+                .on('error', err => {
+                    this.sendEvent(new OutputEvent(`${err}`, 'stderr'));
+                    response.success = false;
+                    response.message = `${err}`;
+                    this.sendResponse(response);
+                });
             this.socket = socket;
             this.sendEvent(new Event('showWaitConnection'));
         }
         else {
             // send resp
             const client = net.connect(args.port, args.host)
-            .on('connect', () => {
-                this.sendResponse(response);
-                this.onConnect(client);
-                this.readClient(client);
-            })
-            .on('error', err => {
-                response.success = false;
-                response.message = `${err}`;
-                this.sendResponse(response);
-            });
+                .on('connect', () => {
+                    this.sendResponse(response);
+                    this.onConnect(client);
+                    this.readClient(client);
+                })
+                .on('error', err => {
+                    response.success = false;
+                    response.message = `${err}`;
+                    this.sendResponse(response);
+                });
         }
     }
 
@@ -115,15 +123,15 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected readClient(client: net.Socket) {
         readline.createInterface({
-            input: <NodeJS.ReadableStream> client,
+            input: <NodeJS.ReadableStream>client,
             output: client
-        })
-        .on("line", line => this.onReceiveLine(line));
+        }).on("line", line => this.onReceiveLine(line));
+
         client.on('close', hadErr => this.onSocketClose())
-        .on('error', err => this.onSocketClose());
+            .on('error', err => this.onSocketClose());
     }
 
-    private onSocketClose() {
+    protected onSocketClose() {
         if (this.client) {
             this.client.removeAllListeners();
         }
@@ -134,7 +142,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             this.sendEvent(new TerminatedEvent());
         }
     }
-    
+
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
         this.sendDebugAction(response, proto.DebugAction.Stop);
         setTimeout(() => {
@@ -180,13 +188,13 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     }
 
     protected threadsRequest(response: DebugProtocol.ThreadsResponse): void {
-		response.body = {
-			threads: [
-				new Thread(1, "thread 1")
-			]
-		};
-		this.sendResponse(response);
-	}
+        response.body = {
+            threads: [
+                new Thread(1, "thread 1")
+            ]
+        };
+        this.sendResponse(response);
+    }
 
     protected async stackTraceRequest(response: DebugProtocol.StackTraceResponse, args: DebugProtocol.StackTraceArguments): Promise<void> {
         if (this.breakNotify) {
@@ -217,30 +225,36 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         if (this.breakNotify) {
             const stackData = this.breakNotify.stacks[args.frameId];
             const stack = new EmmyStack(stackData);
+            const env = new EmmyStackENV(stackData);
             response.body = {
                 scopes: [
                     {
                         name: "Variables",
                         variablesReference: this.handles.create(stack),
                         expensive: false
+                    },
+                    {
+                        name: "ENV",
+                        variablesReference: this.handles.create(env),
+                        expensive: false
                     }
                 ]
             };
         }
-		this.sendResponse(response);
-	}
+        this.sendResponse(response);
+    }
 
-	protected async variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): Promise<void> {
-		if (this.breakNotify) {
+    protected async variablesRequest(response: DebugProtocol.VariablesResponse, args: DebugProtocol.VariablesArguments): Promise<void> {
+        if (this.breakNotify) {
             const node = this.handles.get(args.variablesReference);
             const children = await node.computeChildren(this);
             response.body = {
                 variables: children.map(v => v.toVariable(this))
             };
-		}
+        }
         this.sendResponse(response);
     }
-    
+
     protected async evaluateRequest(response: DebugProtocol.EvaluateResponse, args: DebugProtocol.EvaluateArguments): Promise<void> {
         const evalResp = await this.eval(args.expression, 0);
         if (evalResp.success) {
@@ -300,7 +314,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
                     logMessage: bp.logMessage
                 });
 
-                const bpResp = <DebugProtocol.Breakpoint> new Breakpoint(true, bp.line);
+                const bpResp = <DebugProtocol.Breakpoint>new Breakpoint(true, bp.line);
                 bpResp.id = this.breakPointId++;
                 bpsResp.push(bpResp);
             }
@@ -348,4 +362,5 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
     protected stepOutRequest(response: DebugProtocol.StepOutResponse, args: DebugProtocol.StepOutArguments): void {
         this.sendDebugAction(response, proto.DebugAction.StepOut);
     }
+
 }

@@ -16,17 +16,19 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
         configuration.request = "attach";
         configuration.type = "emmylua_attach";
         configuration.ext = this.getExt();
+        configuration.processName = configuration.processName ?? ""
         if (configuration.pid > 0) {
             return configuration;
         }
-        const pid = await this.pickPID();
+
+        const pid = await this.pickPID(configuration.processName);
         configuration.pid = pid;
         return configuration;
     }
 
-    private async pickPID() {
+    private async pickPID(processName: string) {
         return new Promise<number>((resolve, reject) => {
-            const args = [`${this.context.extensionPath}/debugger/emmy/windows/x86/emmy_tool.exe`, "list_processes"];
+            const args = [`"${this.context.extensionPath}/debugger/emmy/windows/x86/emmy_tool.exe"`, "list_processes"];
             const options: cp.ExecOptionsWithBufferEncoding = {
                 encoding: 'buffer'
             };
@@ -46,20 +48,31 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                         description: title,
                         detail: path
                     };
-                    items.push(item);
+                    if (processName.length === 0
+                        || title.indexOf(processName) !== -1
+                        || name.indexOf(processName) !== -1) {
+                        items.push(item);
+                    }
+                }
+                if (items.length > 1) {
+                    vscode.window.showQuickPick(items, {
+                        matchOnDescription: true,
+                        matchOnDetail: true,
+                        placeHolder: "Select the process to attach"
+                    }).then((item: ProcessInfoItem | undefined) => {
+                        if (item) {
+                            resolve(item.pid);
+                        } else {
+                            reject();
+                        }
+                    });
+                }else if(items.length == 1){
+                    resolve(items[0].pid);
+                }else{
+                    vscode.window.showErrorMessage("No process for attach")
+                    reject();
                 }
                 
-                vscode.window.showQuickPick(items, {
-                    matchOnDescription: true,
-                    matchOnDetail: true,
-                    placeHolder: "Select the process to attach"
-                }).then((item: ProcessInfoItem | undefined) => {
-                    if (item) {
-                        resolve(item.pid);
-                    } else {
-                        reject();
-                    }
-                });
             }).on("error", error => reject);
         });
     }

@@ -2,11 +2,11 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.2.7",
+    "version": "0.4.0",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
-        "vscode": "^1.27.0"
+        "vscode": "^1.62.0"
     },
     "categories": [
         "Programming Languages",
@@ -53,13 +53,6 @@
                 "configuration": "./language-configuration.json"
             }
         ],
-        "grammars": [
-            {
-                "language": "lua",
-                "scopeName": "source.lua",
-                "path": "./syntaxes/lua.tmLanguage.json"
-            }
-        ],
         "breakpoints": [
             {
                 "language": "lua"
@@ -81,6 +74,16 @@
                                 "type": "number",
                                 "description": "%debug.attach.target_pid%",
                                 "default": 0
+                            },
+                            "processName": {
+                                "type": "string",
+                                "description": "%debug.attach.target_process%",
+                                "default": ""
+                            },
+                            "captureLog": {
+                                "type": "boolean",
+                                "description": "%debug.attach.captureLog%",
+                                "default": false
                             }
                         }
                     }
@@ -90,7 +93,9 @@
                         "type": "emmylua_attach",
                         "request": "attach",
                         "name": "%debug.attach.name%",
-                        "pid": 0
+                        "pid": 0,
+                        "processName": "",
+                        "captureLog": false
                     }
                 ],
                 "configurationSnippets": [
@@ -101,7 +106,81 @@
                             "type": "emmylua_attach",
                             "request": "attach",
                             "name": "%debug.attach.name%",
-                            "pid": 0
+                            "pid": 0,
+                            "processName": ""
+                        }
+                    }
+                ],
+                "languages": [
+                    "lua"
+                ]
+            },
+            {
+                "type": "emmylua_launch",
+                "label": "EmmyLua Launch Debug",
+                "program": "./out/debugger/EmmyLaunchDebugAdapter.js",
+                "runtime": "node",
+                "configurationAttributes": {
+                    "launch": {
+                        "required": [
+                            "program",
+                            "workingDir",
+                            "arguments",
+                            "useWindowsTerminal"
+                        ],
+                        "properties": {
+                            "program": {
+                                "type": "string",
+                                "description": "%debug.launch.program%",
+                                "default": ""
+                            },
+                            "workingDir": {
+                                "type": "string",
+                                "description": "%debug.launch.workingDir%",
+                                "default": ""
+                            },
+                            "arguments": {
+                                "type": "array",
+                                "description": "%debug.launch.arguments%",
+                                "default": []
+                            },
+                            "blockOnExit": {
+                                "type": "boolean",
+                                "description": "%debug.launch.blockOnExit%",
+                                "default": true
+                            },
+                            "useWindowsTerminal": {
+                                "type": "boolean",
+                                "description": "%debug.launch.useWindowsTerminal%",
+                                "default": true
+                            }
+                        }
+                    }
+                },
+                "initialConfigurations": [
+                    {
+                        "type": "emmylua_launch",
+                        "request": "launch",
+                        "name": "%debug.launch.name%",
+                        "program": "",
+                        "workingDir": "",
+                        "arguments": [],
+                        "blockOnExit": true,
+                        "useWindowsTerminal": true
+                    }
+                ],
+                "configurationSnippets": [
+                    {
+                        "label": "%debug.launch.label%",
+                        "description": "%debug.launch.desc%",
+                        "body": {
+                            "type": "emmylua_launch",
+                            "request": "launch",
+                            "name": "%debug.launch.name%",
+                            "program": "",
+                            "workingDir": "",
+                            "arguments": [],
+                            "blockOnExit": true
                         }
                     }
                 ],
@@ -230,6 +309,55 @@
                 "emmylua.colors.doc_type": {
                     "type": "string",
                     "default": "#66CCFF"
+                },
+                "emmylua.colors.not_use": {
+                    "type": "string",
+                    "default": "gray"
+                },
+                "emmylua.hint.paramHint": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.hint.paramHint%"
+                },
+                "emmylua.hint.localHint": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.hint.localHint%"
+                },
+                "emmylua.hint.varargHint": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.hint.varargHint%"
+                },
+                "emmylua.constructorNames": {
+                    "type": "string",
+                    "default": "new;get",
+                    "description": "%emmylua.constructor.names%"
+                },
+                "emmylua.requireLikeFunctions": {
+                    "type": "string",
+                    "default": "require",
+                    "description": "%emmylua.requirelike.names%"
+                },
+                "emmylua.diagnostics.parameterValidation": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.diagnostics.parameterValidation%"
+                },
+                "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.anyTypeCanAssignToAnyDefineType%"
+                },
+                "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable%"
+                },
+                "emmylua.diagnostics.defineTypeCanReceiveNilType": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%emmylua.diagnostics.defineTypeCanReceiveNilType%"
                 }
             }
         },
@@ -257,20 +385,19 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "tslint": "^5.8.0",
-        "typescript": "^4.0.2",
-        "@types/vscode": "^1.27.0",
         "@types/mocha": "^7.0.2",
         "@types/node": "^13.11.1",
+        "@types/vscode": "1.60.0",
         "download": "^7.1.0",
-        "filecopy": "^4.0.2"
+        "filecopy": "^4.0.2",
+        "tslint": "^5.8.0",
+        "typescript": "^4.0.2"
     },
     "dependencies": {
-        "vscode-languageclient": "5.1.0",
+        "iconv-lite": "^0.5.0",
+        "smart-buffer": "^4.0.1",
         "vscode-debugadapter": "1.31.0",
         "vscode-debugprotocol": "1.31.0",
-        "lua-fmt": "^2.6.0",
-        "smart-buffer": "^4.0.1",
-        "iconv-lite": "^0.5.0"
+        "vscode-languageclient": "5.1.0"
     }
 }

@@ -9,20 +9,20 @@ import * as notifications from "./notifications";
 import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient";
-import { formatText } from 'lua-fmt';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
+import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
 export let savedContext: vscode.ExtensionContext;
 let client: LanguageClient;
 let activeEditor: vscode.TextEditor;
 let progressBar: vscode.StatusBarItem;
-let javaExecutablePath: string|null;
+let javaExecutablePath: string | null;
 let configWatcher: EmmyConfigWatcher;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -39,12 +39,6 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
 
-    savedContext.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider({ scheme: "file", language: LANGUAGE_ID }, {
-            provideDocumentFormattingEdits(document, position, token): vscode.ProviderResult<vscode.TextEdit[]> {
-                return [new vscode.TextEdit(new vscode.Range(0, 0, document.lineCount, 0), formatText(document.getText()))];
-            }
-        }
-    ));
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
@@ -62,6 +56,40 @@ function registerDebuggers() {
     const emmyAttachProvider = new EmmyAttachDebuggerProvider('emmylua_attach', savedContext);
     savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_attach', emmyAttachProvider));
     savedContext.subscriptions.push(emmyAttachProvider);
+    const emmyLaunchProvider = new EmmyLaunchDebuggerProvider('emmylua_launch', savedContext);
+    savedContext.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_launch', emmyLaunchProvider));
+    savedContext.subscriptions.push(emmyLaunchProvider);
+
+    savedContext.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
+        // 不知道是否应该发到ls上再做处理
+        // 先简单处理一下吧
+        provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext): vscode.ProviderResult<vscode.InlineValue[]> {
+
+            const allValues: vscode.InlineValue[] = [];
+            const regExps = [
+                /(?<=local\s+)[^\s,\<]+/,
+                /(?<=---@param\s+)\S+/
+            ]
+
+            for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
+                const line = document.lineAt(l);
+
+                for (const regExp of regExps) {
+                    const match = regExp.exec(line.text);
+                    if (match) {
+                        const varName = match[0];
+                        const varRange = new vscode.Range(l, match.index, l, match.index + varName.length);
+                        // value found via variable lookup
+                        allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
+                        break;
+                    }
+                }
+
+            }
+
+            return allValues;
+        }
+    }));
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
@@ -96,13 +124,12 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
     }
 }
 
-async function validateJava() {
+async function validateJava(): Promise<void> {
     const exePath = javaExecutablePath || "java";
     console.log('exe path : ' + exePath);
-    
     return new Promise<void>((resolve, reject) => {
         cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
-            let regexp:RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
+            let regexp: RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
             if (stderr) {
                 let match = regexp.exec(stderr);
                 if (match) {
@@ -128,8 +155,8 @@ async function startServer() {
             await validateJava();
         }
     } catch (error) {
-        vscode.window.showErrorMessage(error, "Try again")
-        .then(startServer);
+        vscode.window.showErrorMessage(error as string, "Try again")
+            .then(startServer);
         return;
     }
     doStartServer().then(() => {
@@ -137,14 +164,14 @@ async function startServer() {
     })
     .catch(reson => {
         vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
-        .then(startServer);
+            .then(startServer);
     });
 }
 
 async function doStartServer() {
     const configFiles = await configWatcher.watch();
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [ { scheme: 'file', language: LANGUAGE_ID } ],
+        documentSelector: [{ scheme: 'file', language: LANGUAGE_ID }],
         synchronize: {
             configurationSection: ["emmylua", "files.associations"],
             fileEvents: [
@@ -153,7 +180,7 @@ async function doStartServer() {
         },
         initializationOptions: {
             stdFolder: vscode.Uri.file(path.resolve(savedContext.extensionPath, "res/std")).toString(),
-            apiFolders : [],
+            apiFolders: [],
             workspaceFolders: vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.map(f => f.uri.toString()) : null,
             client: 'vsc',
             configFiles: configFiles
@@ -183,10 +210,10 @@ async function doStartServer() {
         const exePath = javaExecutablePath || "java";
         serverOptions = {
             command: exePath,
-            args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseConcMarkSweepGC"]
+            args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseG1GC", "-XX:+UseStringDeduplication"]
         };
     }
-    
+
     client = new LanguageClient(LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
     savedContext.subscriptions.push(client.start());
     await client.onReady();
@@ -252,7 +279,11 @@ async function insertEmmyDebugCode() {
         dllPath = path.join(savedContext.extensionPath, `debugger/emmy/windows/${arch}/?.dll`);
     }
     else if (isMac) {
-        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/mac/emmy_core.dylib`);
+        const arch = await vscode.window.showQuickPick(['x64', 'arm64']);
+        if (!arch) {
+            return;
+        }
+        dllPath = path.join(savedContext.extensionPath, `debugger/emmy/mac/${arch}/emmy_core.dylib`);
     }
     else if (isLinux) {
         dllPath = path.join(savedContext.extensionPath, `debugger/emmy/linux/emmy_core.so`);

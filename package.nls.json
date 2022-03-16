@@ -4,13 +4,30 @@
     "emmylua.completion.caseSensitive": "Case sensitive completion",
     "emmylua.codeLens": "Show codeLens or not",
     "emmylua.debugger.defaultProgram": "The default program to luanch/debug, such as 'c:/lua/lua.exe'",
+    "emmylua.hint.paramHint" : "Enable param hint",
+    "emmylua.hint.localHint" : "Enable local hint",
+    "emmylua.hint.varargHint": "Variable parameter hint",
+    "emmylua.constructor.names" : "constructor function names",
+    "emmylua.requirelike.names": "set function names like require",
+    "emmylua.diagnostics.parameterValidation": "param type diagnostic",
+    "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "the type any can pass to any defined type param",
+    "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "the defined type any can receive any param",
+    "emmylua.diagnostics.defineTypeCanReceiveNilType": "the type nil can pass to any defined param type",
+
 
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",
     "debug.attach.target_pid": "Target pid",
     "debug.attach.desc": "Attach process debugger",
-
+    "debug.attach.target_process": "Attach process by name",
+    "debug.attach.captureLog": "Capture process log with Windows Terminal",
+    
     "debug.launch.label": "EmmyLua: Attach by launch program",
     "debug.launch.name": "Attach by launch program",
-    "debug.launch.desc": "Launch program and debug with attach debugger"
+    "debug.launch.desc": "Launch program and debug with attach debugger",
+    "debug.launch.program": "Launch program and debug executable file",
+    "debug.launch.workingDir": "working directory",
+    "debug.launch.arguments": "arguments pass to executable file",
+    "debug.launch.blockOnExit": "block process when exit",
+    "debug.launch.useWindowsTerminal": "emmylua use windows terminal open process "
 }

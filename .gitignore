@@ -7,7 +7,10 @@ node_modules
 .gradle
 .idea
 temp
-/debugger
+/debugger/Emmy.lua
+/debugger/emmy/linux
+/debugger/emmy/mac
+/debugger/emmy/windows
 /server
 /package-lock.json
 /temp
