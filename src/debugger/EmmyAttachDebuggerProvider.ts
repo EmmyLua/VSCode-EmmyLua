@@ -29,11 +29,8 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
     private async pickPID(processName: string) {
         return new Promise<number>((resolve, reject) => {
             const args = [`"${this.context.extensionPath}/debugger/emmy/windows/x86/emmy_tool.exe"`, "list_processes"];
-            const options: cp.ExecOptionsWithBufferEncoding = {
-                encoding: 'buffer'
-            };
-            cp.exec(args.join(" "), options, (_err, stdout, _stderr) => {
-                const str = iconv.decode(Buffer.from(stdout), 'gb2312');
+            cp.exec(args.join(" "), { encoding: 'buffer' }, (_err, stdout, _stderr) => {
+                const str = iconv.decode(Buffer.from(stdout), "cp936");
                 const arr = str.split('\r\n');
                 const size = Math.floor(arr.length / 4);
                 const items: ProcessInfoItem[] = [];
