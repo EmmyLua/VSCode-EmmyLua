@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.2
+`FIX` fix the bug that @private annotation does not work correctly
+
+`NEW` supports @deprecated annotations and related diagnostics
+
+`NEW` experimentally supports the string inline expression annotation `string<T>`. When the function parameter uses this annotation, the corresponding function call will prompt the field of the `T` class in the string, you can use string <_G> indicates the prompt global variable in the string 
+
 ## 0.4.1
 
 `FIX` fix a crash caused by using fixPath

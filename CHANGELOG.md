@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.2
+`FIX` 修复@private注解不能正确作用的bug
+
+`NEW` 支持@deprecated注解和相关的诊断
+
+`NEW` 实验性的支持字符串内联表达式注解`string<T>`, 当函数参数使用该注解时，对应的函数调用上，字符串内会提示`T`类的field，可使用string<_G>表示字符串内提示全局变量
+
 ## 0.4.1
 
 `FIX` 修复一个因为使用fixPath导致的崩溃
