@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.3
+
+`FIX` CodeLens error
+
 ## 0.4.2
 `FIX` 修复@private注解不能正确作用的bug
 

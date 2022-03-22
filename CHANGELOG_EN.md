@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.3
+
+`FIX` CodeLens error
+
 ## 0.4.2
 `FIX` fix the bug that @private annotation does not work correctly
 
