@@ -181,7 +181,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         });
     }
 
-    protected handleMessage(cmd: proto.MessageCMD, msg: any) {
+    protected handleDebugMessage(cmd: proto.MessageCMD, msg: any) {
         switch (cmd) {
             case proto.MessageCMD.AttachedNotify:
                 const n: number = msg.state;
@@ -191,7 +191,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
                 this.sendEvent(new OutputEvent(`${msg.message}\n`));
                 break;
         }
-        super.handleMessage(cmd, msg);
+        super.handleDebugMessage(cmd, msg);
     }
 
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments) {

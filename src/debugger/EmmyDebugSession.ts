@@ -163,12 +163,12 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         }
         else {
             const data = JSON.parse(line);
-            this.handleMessage(this.currentCmd, data);
+            this.handleDebugMessage(this.currentCmd, data);
         }
         this.readHeader = !this.readHeader;
     }
 
-    protected handleMessage(cmd: proto.MessageCMD, msg: any) {
+    protected handleDebugMessage(cmd: proto.MessageCMD, msg: any) {
         switch (cmd) {
             case proto.MessageCMD.BreakNotify:
                 this.breakNotify = msg;
