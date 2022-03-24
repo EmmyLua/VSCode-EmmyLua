@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -300,7 +300,7 @@
                 },
                 "emmylua.colors.parameter": {
                     "type": "string",
-                    "default": "#99FFCC"
+                    "default": "#9FFC"
                 },
                 "emmylua.colors.global": {
                     "type": "string",
@@ -313,6 +313,10 @@
                 "emmylua.colors.not_use": {
                     "type": "string",
                     "default": "gray"
+                },
+                "emmylua.colors.upvalue": {
+                    "type": "string",
+                    "default": "#a8c023"
                 },
                 "emmylua.hint.paramHint": {
                     "type": "boolean",
@@ -338,6 +342,11 @@
                     "type": "string",
                     "default": "require",
                     "description": "%emmylua.requirelike.names%"
+                },
+                "emmylua.diagnostics.fieldValidation":{
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.diagnostics.fieldValidation%"
                 },
                 "emmylua.diagnostics.parameterValidation": {
                     "type": "boolean",

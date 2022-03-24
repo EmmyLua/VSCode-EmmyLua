@@ -13,9 +13,11 @@ let D_NOTUSE: vscode.TextEditorDecorationType;
 let D_PARAMHINT: vscode.TextEditorDecorationType;
 let D_LOCALHINT: vscode.TextEditorDecorationType;
 
-function createDecoration(key: string, config: vscode.DecorationRenderOptions | undefined = undefined): vscode.TextEditorDecorationType {
+function createDecoration(key: string | undefined, config: vscode.DecorationRenderOptions = {}): vscode.TextEditorDecorationType {
+    if (key == undefined) {
+        return vscode.window.createTextEditorDecorationType(config);
+    }
     let color = vscode.workspace.getConfiguration("emmylua").get(key);
-    config = config || {};
     if (typeof (color) === 'string') {
         config.light = { color: color };
         config.dark = { color: color };
@@ -38,9 +40,17 @@ function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
     D_DOC_TYPE = createDecoration("colors.doc_type");
-    D_UPVALUE = createDecoration("colors.", { 
-        textDecoration: "underline;text-decoration-color:#a8c023;"
-    });
+
+    let upvalueColor = vscode.workspace.getConfiguration("emmylua").get("colors.upvalue");
+    if (upvalueColor && upvalueColor != "") {
+        D_UPVALUE = createDecoration(undefined, {
+            textDecoration: `underline;text-decoration-color:${upvalueColor};`
+        });
+    }
+    else {
+        D_UPVALUE = createDecoration(undefined);
+    }
+
     D_NOTUSE = createDecoration("colors.not_use", {});
     D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
     D_LOCALHINT = vscode.window.createTextEditorDecorationType({});
@@ -142,8 +152,8 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
                                     color: "#888888",
                                     backgroundColor: '#333333;border-radius: 2px;',
                                     fontWeight: '400; font-size: 12px; line-height: 1;',
-                                    margin: "1px",  
-                                    
+                                    margin: "1px",
+
                                 }
                             }
                         }

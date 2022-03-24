@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.4
+
+`NEW` upvalue的下划线颜色可配置，当配置内容为空的时候不显示下划线
+
+`NEW` deprecated注解对全局函数有效
+
+`NEW` 实验性的支持子域存在性检查
+
+`NEW` 在定义处使用ctrl跳转会跳转到用法
 ## 0.4.3
 
 `FIX` CodeLens error

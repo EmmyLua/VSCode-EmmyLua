@@ -13,7 +13,7 @@
     "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "定义类型能接受any 类型的赋值",
     "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "定义类型为any可以接受任何参数",
     "emmylua.diagnostics.defineTypeCanReceiveNilType": "任何参数类型能接受nil",
-
+    "emmylua.diagnostics.fieldValidation": "不存在子域检查",
 
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",

@@ -13,7 +13,7 @@
     "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "the type any can pass to any defined type param",
     "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "the defined type any can receive any param",
     "emmylua.diagnostics.defineTypeCanReceiveNilType": "the type nil can pass to any defined param type",
-
+    "emmylua.diagnostics.fieldValidation": "subfield check",
 
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",

@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.4
+
+The underline color of `NEW` upvalue can be configured. When the configuration content is empty, the underline will not be displayed.
+
+`NEW` deprecated annotation is valid for global functions
+
+`NEW` experimental support for subdomain existence check
+
+`NEW` Use ctrl jump at definition to jump to usage 
+
 ## 0.4.3
 
 `FIX` CodeLens error
