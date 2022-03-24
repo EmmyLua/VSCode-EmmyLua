@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.4.6",
+    "version": "0.4.7",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
