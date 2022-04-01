@@ -7,13 +7,22 @@
     "emmylua.hint.paramHint" : "开启函数调用的参数提示",
     "emmylua.hint.localHint" : "开启local变量的类型提示",
     "emmylua.hint.varargHint": "开启可变参数的hint",
+    "emmylua.hint.overrideHint": "方法覆盖夫类方法的override hint",
     "emmylua.constructor.names" : "构造函数名称列表",
     "emmylua.requirelike.names": "设置类似require的函数名列表",
-    "emmylua.diagnostics.parameterValidation": "开启参数类型诊断",
-    "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "定义类型能接受any 类型的赋值",
-    "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "定义类型为any可以接受任何参数",
-    "emmylua.diagnostics.defineTypeCanReceiveNilType": "任何参数类型能接受nil",
-    "emmylua.diagnostics.fieldValidation": "不存在子域检查",
+    
+    "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": "定义类型能接受any 类型的赋值",
+    "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": "定义类型为any可以接受任何参数",
+    "emmylua.typecheck.defineTypeCanReceiveNilType": "任何参数类型能接受nil",
+
+    "emmylua.inspections.level.none": "不开启",
+    "emmylua.inspections.level.warning": "视为警告",
+    "emmylua.inspections.level.error": "视为错误",
+
+    "emmylua.inspections.fieldValidation": "不存在子域检查",
+    "emmylua.inspections.parameterValidation": "开启参数类型诊断",
+    "emmylua.inspections.undeclaredVariable": "未声明变量检查",
+    "emmylua.inspections.assignValidation": "赋值安全检查",
 
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",

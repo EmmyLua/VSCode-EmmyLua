@@ -7,13 +7,22 @@
     "emmylua.hint.paramHint" : "Enable param hint",
     "emmylua.hint.localHint" : "Enable local hint",
     "emmylua.hint.varargHint": "Variable parameter hint",
+    "emmylua.hint.overrideHint": "method override hint",
     "emmylua.constructor.names" : "constructor function names",
     "emmylua.requirelike.names": "set function names like require",
-    "emmylua.diagnostics.parameterValidation": "param type diagnostic",
-    "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": "the type any can pass to any defined type param",
-    "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": "the defined type any can receive any param",
-    "emmylua.diagnostics.defineTypeCanReceiveNilType": "the type nil can pass to any defined param type",
-    "emmylua.diagnostics.fieldValidation": "subfield check",
+    
+    "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": "A custom defined type can accept assignments of type any",
+    "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": "A custom defined type can accept any parameter",
+    "emmylua.typecheck.defineTypeCanReceiveNilType": "Any parameter type can accept nil ",
+
+    "emmylua.inspections.level.none": "do nothing",
+    "emmylua.inspections.level.warning": "treated as a warning",
+    "emmylua.inspections.level.error": "treated as a error",
+
+    "emmylua.inspections.fieldValidation": "non-existing table field check ",
+    "emmylua.inspections.parameterValidation": "Parameter validity check",
+    "emmylua.inspections.undeclaredVariable": "Check for undeclared variables used",
+    "emmylua.inspections.assignValidation": "Assign Validation check",
 
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",

@@ -12,6 +12,7 @@ let D_UPVALUE: vscode.TextEditorDecorationType;
 let D_NOTUSE: vscode.TextEditorDecorationType;
 let D_PARAMHINT: vscode.TextEditorDecorationType;
 let D_LOCALHINT: vscode.TextEditorDecorationType;
+let D_OVERRIDEHINT: vscode.TextEditorDecorationType;
 
 function createDecoration(key: string | undefined, config: vscode.DecorationRenderOptions = {}): vscode.TextEditorDecorationType {
     if (key == undefined) {
@@ -54,6 +55,7 @@ function updateDecorations() {
     D_NOTUSE = createDecoration("colors.not_use", {});
     D_PARAMHINT = vscode.window.createTextEditorDecorationType({});
     D_LOCALHINT = vscode.window.createTextEditorDecorationType({});
+    D_OVERRIDEHINT = vscode.window.createTextEditorDecorationType({});
 }
 
 export function onDidChangeConfiguration(client: LanguageClient) {
@@ -197,6 +199,40 @@ function updateAnnotators(editor: vscode.TextEditor, type: AnnotatorType, render
             });
 
             editor.setDecorations(D_LOCALHINT, vscodeRenderRanges);
+            break;
+        }
+        case AnnotatorType.OverrideHint: {
+            let vscodeRenderRanges: vscode.DecorationOptions[] = []
+            renderRanges.forEach(renderRange => {
+
+                vscodeRenderRanges.push({
+                    range: renderRange.range,
+                    renderOptions: {
+                        light: {
+                            after: {
+                                contentText: "override",
+                                color: "#888888",
+                                backgroundColor: '#EEEEEE;border-radius: 2px;',
+                                fontWeight: '400; font-size: 12px; line-height: 1;',
+                                margin: "3px",
+                            }
+                        },
+                        dark: {
+                            after: {
+                                contentText: "override",
+                                color: "#888888",
+                                backgroundColor: '#333333;border-radius: 2px;',
+                                fontWeight: '400; font-size: 12px; line-height: 1;',
+                                margin: "3px",
+                            }
+                        }
+                    }
+                });
+
+
+            });
+
+            editor.setDecorations(D_OVERRIDEHINT, vscodeRenderRanges);
             break;
         }
     }

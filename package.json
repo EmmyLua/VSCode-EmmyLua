@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.4.7",
+    "version": "0.4.8",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -333,6 +333,11 @@
                     "default": true,
                     "description": "%emmylua.hint.varargHint%"
                 },
+                "emmylua.hint.overrideHint": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.hint.overrideHint%"
+                },
                 "emmylua.constructorNames": {
                     "type": "string",
                     "default": "new;get",
@@ -343,30 +348,64 @@
                     "default": "require",
                     "description": "%emmylua.requirelike.names%"
                 },
-                "emmylua.diagnostics.fieldValidation":{
-                    "type": "boolean",
-                    "default": false,
-                    "description": "%emmylua.diagnostics.fieldValidation%"
-                },
-                "emmylua.diagnostics.parameterValidation": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "%emmylua.diagnostics.parameterValidation%"
-                },
-                "emmylua.diagnostics.anyTypeCanAssignToAnyDefineType": {
+                "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": {
                     "type": "boolean",
                     "default": true,
-                    "description": "%emmylua.diagnostics.anyTypeCanAssignToAnyDefineType%"
+                    "description": "%emmylua.typecheck.anyTypeCanAssignToAnyDefineType%"
                 },
-                "emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable": {
+                "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "%emmylua.diagnostics.defineAnyTypeCanBeAssignedByAnyVariable%"
+                    "description": "%emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable%"
                 },
-                "emmylua.diagnostics.defineTypeCanReceiveNilType": {
+                "emmylua.typecheck.defineTypeCanReceiveNilType": {
                     "type": "boolean",
                     "default": true,
-                    "description": "%emmylua.diagnostics.defineTypeCanReceiveNilType%"
+                    "description": "%emmylua.typecheck.defineTypeCanReceiveNilType%"
+                },
+                "emmylua.inspections.undeclaredVariable":{
+                    "type": "string",
+                    "enum": ["None", "Warning", "Error"],
+                    "default": "None",
+                    "description": "%emmylua.inspections.undeclaredVariable%",
+                    "enumDescriptions": [
+                        "%emmylua.inspections.level.none%",
+                        "%emmylua.inspections.level.warning%",
+                        "%emmylua.inspections.level.error%"
+                    ]
+                },
+                "emmylua.inspections.fieldValidation":{
+                    "type": "string",
+                    "enum": ["None", "Warning", "Error"],
+                    "default": "None",
+                    "description": "%emmylua.inspections.fieldValidation%",
+                    "enumDescriptions": [
+                        "%emmylua.inspections.level.none%",
+                        "%emmylua.inspections.level.warning%",
+                        "%emmylua.inspections.level.error%"
+                    ]
+                },
+                "emmylua.inspections.parameterValidation": {
+                    "type": "string",
+                    "enum": ["None", "Warning", "Error"],
+                    "default": "None",
+                    "description": "%emmylua.inspections.parameterValidation%",
+                    "enumDescriptions": [
+                        "%emmylua.inspections.level.none%",
+                        "%emmylua.inspections.level.warning%",
+                        "%emmylua.inspections.level.error%"
+                    ]
+                },
+                "emmylua.inspections.assignValidation": {
+                    "type": "string",
+                    "enum": ["None", "Warning", "Error"],
+                    "default": "None",
+                    "description": "%emmylua.inspections.assignValidation%",
+                    "enumDescriptions": [
+                        "%emmylua.inspections.level.none%",
+                        "%emmylua.inspections.level.warning%",
+                        "%emmylua.inspections.level.error%"
+                    ]
                 }
             }
         },

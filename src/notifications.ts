@@ -12,6 +12,7 @@ export enum AnnotatorType {
     NotUse,
     ParamHint,
     LocalHint,
+    OverrideHint
 }
 
 export interface RenderRange{
