@@ -20,11 +20,14 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 FAQ:
 
 Q: 为什么报找不到格式化程序？
+
 A: 原先emmylua采用的luafmt格式化库，但是该算法基本上已经无人维护无法支持lua5.4，而且就issue来看问题也比较多，基于这样的考虑我移除了luafmt库，格式化交给EmmyLuaCodeStyle实现。
 
 Q: 为什么附加调试没有作用？
+
 A: 附加调试会试图获取进程内的lua符号，判断当前的lua版本，用于调试计算等。所以要求进程本身导出lua符号
 
 Q: Emmy New Debug为什么连不上目标
+
 A: 通常是由于插入代码require失败，或者`require("emmy_core")`返回true
 
