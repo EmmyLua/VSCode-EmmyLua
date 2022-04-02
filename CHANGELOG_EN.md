@@ -1,5 +1,30 @@
 # Change Log
 
+## 0.4.10
+
+`FIX` fixes performance issues due to diagnostics being moved to daemon thread execution. Code hints and associated rendering are available immediately after code parsing
+
+## 0.4.9
+
+`FIX` fix the problem that the parsing is too slow under the default option, temporarily remove the deprecated related diagnosis
+
+## 0.4.8
+
+`NEW` unrecognized tags no longer warn
+
+`NEW` experimentally supports a series of check configurations including `assignment safety check`, `subdomain existence check`, `undefined variable usage check`, `function parameter type safety`
+
+`NEW` supports hint when class method overrides the function of the same name of the parent class
+
+`NEW` other small details update
+
+## 0.4.7
+
+`FIX` jdk changed back to 8
+
+## 0.4.6
+
+`FIX` has many crashes due to changes in the compilation environment, and is now temporarily changed back 
 ## 0.4.4
 
 The underline color of `NEW` upvalue can be configured. When the configuration content is empty, the underline will not be displayed.
