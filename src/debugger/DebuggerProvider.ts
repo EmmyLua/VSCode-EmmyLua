@@ -63,6 +63,22 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     break;
                 }
             }
+            try 
+            {
+                if (results.length <= 0) {
+                    let root = vscode.workspace.workspaceFolders![0]!.uri;
+                    let filepath = root.with({ path: root.path + "/" + file });
+                    const stat = await vscode.workspace.fs.stat(filepath);
+                    if (stat !== null && stat !== undefined && stat.type === vscode.FileType.File ) {
+                        results.push(filepath);
+                    }
+                }
+            }
+            catch
+            {
+                
+            }
+           
             e.session.customRequest('findFileRsp', { files: results.map(it => it.fsPath), seq: seq });
         }
     }
