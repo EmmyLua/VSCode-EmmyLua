@@ -31,3 +31,18 @@ Q: Emmy New Debug为什么连不上目标
 
 A: 通常是由于插入代码require失败，或者`require("emmy_core")`返回true
 
+Q: 项目中有很多大文件并不想参与解析如何排除？
+
+A: 在项目根目录创建`emmy.config.json`然后如下填写:
+```json
+{
+    "source": [
+        {
+            "dir": "./",
+            "exclude": [
+                "csv/**.lua"
+            ]
+        }
+    ]
+}
+```
