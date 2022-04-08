@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.4.11",
+    "version": "0.4.12",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -360,7 +360,7 @@
                 },
                 "emmylua.typecheck.defineTypeCanReceiveNilType": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "%emmylua.typecheck.defineTypeCanReceiveNilType%"
                 },
                 "emmylua.inspections.undeclaredVariable":{

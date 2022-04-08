@@ -22,7 +22,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
     protected getSourceRoots(): string[] {
         const workspaceFolders = vscode.workspace.workspaceFolders || [];
         const list = workspaceFolders.map(f => { return f.uri.fsPath; });
-        const config = <Array<string>> vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
+        const config = <Array<string>>vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
         return list.concat(config.map(item => { return normalize(item); }));
     }
 
@@ -63,20 +63,15 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     break;
                 }
             }
-            
+
             if (results.length <= 0) {
-                try {
-                    if (vscode.workspace.workspaceFolders) {
-                        let root = vscode.workspace.workspaceFolders[0].uri;
-                        let filepath = root.with({ path: root.path + "/" + file });
-                        const stat = await vscode.workspace.fs.stat(filepath);
-                        if (stat !== null && stat !== undefined && stat.type === vscode.FileType.File) {
-                            results.push(filepath);
-                        }
+                if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length !== 0) {
+                    let root = vscode.workspace.workspaceFolders[0].uri;
+                    let filepath = root.with({ path: root.path + "/" + file });
+                    const stat = await vscode.workspace.fs.stat(filepath);
+                    if (stat?.type === vscode.FileType.File) {
+                        results.push(filepath);
                     }
-                }
-                catch (error) {
-                    vscode.window.showErrorMessage(error as string, "Ok");
                 }
             }
 
@@ -87,5 +82,5 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
     protected onTerminateDebugSession(session: vscode.DebugSession) {
     }
 
-    dispose() {}
+    dispose() { }
 }

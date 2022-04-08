@@ -43,6 +43,8 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             supportTerminateDebuggee: true,
             supportsLogPoints: true,
             supportsHitConditionalBreakpoints: true,
+            // supportsDelayedStackTraceLoading: true,
+            // supportsCompletionsRequest: true
         };
         this.sendResponse(response);
     }
@@ -326,6 +328,10 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendBreakpoints();
         this.sendResponse(response);
     }
+
+    // protected completionsRequest(response: DebugProtocol.CompletionsResponse, args: DebugProtocol.CompletionsArguments, request?: DebugProtocol.Request): void {
+        
+    // }
 
 
     private sendBreakpoints() {

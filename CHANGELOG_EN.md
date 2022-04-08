@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.4.12
+
+`FIX` fixes multithreading issues
+
+`FIX` correctly supports debugging under macos arm64 architecture
+
+`NEW` Added nullable descriptions on function parameters such as `---@param a? number`
+
+`NEW` The function parameter check will check whether the number of parameters is too small. If there are too few parameters and the subsequent parameters do not display the mark and can be empty, an error will be reported
+
+`NEW` When debugging, if the file cannot be found according to the chunkname, it will try to find it again with the currently open workspace as the root directory `contribute by @whitecostume`
+
+`NEW` other details update
+
+## 0.4.11
+
+`FIX` A bug that is not resolved when other extension suffixes are associated with lua
+
 ## 0.4.10
 
 `FIX` fixes performance issues due to diagnostics being moved to daemon thread execution. Code hints and associated rendering are available immediately after code parsing

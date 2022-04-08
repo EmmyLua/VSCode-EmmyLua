@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.4.12
+
+`FIX` 修复多线程问题
+
+`FIX` 正确支持macos arm64架构下的调试
+
+`NEW` 新增函数参数上的可空描述比如 `---@param a? number`
+
+`NEW` 函数参数检查将会检查参数数量是否过少，如果参数过少而后续参数没有显示标记可空则会报错
+
+`NEW` 调试时，如果不能根据chunkname找到文件会试图以以当前打开的工作区为根目录再找一次 `contribute by @whitecostume`
+
+`NEW` 其他细节更新
+
 ## 0.4.11
 
 `FIX` 将其他扩展后缀关联到lua时没有解析的BUG
