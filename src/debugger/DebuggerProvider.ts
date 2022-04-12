@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { normalize, join } from 'path';
-import { existsSync } from 'fs';
 
 export abstract class DebuggerProvider implements vscode.DebugConfigurationProvider, vscode.Disposable {
     constructor(
@@ -24,7 +22,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
         const workspaceFolders = vscode.workspace.workspaceFolders || [];
         const list = workspaceFolders.map(f => { return f.uri.fsPath; });
         const config = <Array<string>>vscode.workspace.getConfiguration("emmylua").get("source.roots") || [];
-        return list.concat(config.map(item => { return normalize(item); }));
+        return list.concat(config.map(item => { return path.normalize(item); }));
     }
 
     protected getExt(): string[] {
