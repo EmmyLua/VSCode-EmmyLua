@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { normalize } from 'path';
+import { normalize, join } from 'path';
+import { existsSync } from 'fs';
 
 export abstract class DebuggerProvider implements vscode.DebugConfigurationProvider, vscode.Disposable {
     constructor(
@@ -53,29 +54,30 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                 const e = ext[i];
                 fileNames.push(`${parsedPath.base}${e}`);
             }
-            let results: vscode.Uri[] = [];
+            let results: string[] = [];
             for (let i = 0; i < fileNames.length; i++) {
                 const fileName = fileNames[i];
                 let include = `**/${fileName}`;
                 const uris = await vscode.workspace.findFiles(include);
                 if (uris.length > 0) {
-                    results = uris;
+                    results = uris.map(it => it.fsPath);
                     break;
                 }
             }
 
-            if (results.length <= 0) {
+            if (results.length === 0) {
                 if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length !== 0) {
-                    let root = vscode.workspace.workspaceFolders[0].uri;
-                    let filepath = root.with({ path: root.path + "/" + file });
-                    const stat = await vscode.workspace.fs.stat(filepath);
-                    if (stat?.type === vscode.FileType.File) {
-                        results.push(filepath);
+                    for(let rootUri of vscode.workspace.workspaceFolders){
+                        let workspacePath = rootUri.uri.fsPath
+                        const filePath = join(workspacePath, file)
+                        if (existsSync(filePath)) {
+                            results.push(filePath);
+                        }
                     }
                 }
             }
 
-            e.session.customRequest('findFileRsp', { files: results.map(it => it.fsPath), seq: seq });
+            e.session.customRequest('findFileRsp', { files: results, seq: seq });
         }
     }
 
