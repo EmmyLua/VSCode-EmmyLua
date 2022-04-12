@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.14
+
+`FIX` Fix the problem of suspended animation caused by the last PR
+
+`NEW` emmylua debugger compilation standard raised to C++11
+
 ## 0.4.12
 
 `FIX` fixes multithreading issues
