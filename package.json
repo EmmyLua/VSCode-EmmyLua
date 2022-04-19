@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.4.14",
+    "version": "0.4.15",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -406,6 +406,11 @@
                         "%emmylua.inspections.level.warning%",
                         "%emmylua.inspections.level.error%"
                     ]
+                },
+                "emmylua.inspections.deprecated": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "%emmylua.inspections.deprecated%"
                 }
             }
         },

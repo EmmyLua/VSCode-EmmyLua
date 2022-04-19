@@ -23,6 +23,7 @@
     "emmylua.inspections.parameterValidation": "开启参数类型诊断",
     "emmylua.inspections.undeclaredVariable": "未声明变量检查",
     "emmylua.inspections.assignValidation": "赋值安全检查",
+    "emmylua.inspections.deprecated": "开始弃用检查",
 
     "debug.attach.label": "EmmyLua: 通过进程ID附加",
     "debug.attach.name": "通过进程ID附加",

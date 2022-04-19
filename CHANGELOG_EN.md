@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.15
+
+`NEW` When the variable itself has only one definition, the variable is treated as a constant. If the variable is treated as a constant and is a string or numeric type, the constant is displayed when the code completion and hover prompts the variable.
+
+`NEW` restarts deprecated rendering, but only when the corresponding configuration is checked
+
 ## 0.4.14
 
 `FIX` Fix the problem of suspended animation caused by the last PR
