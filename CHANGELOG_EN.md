@@ -1,4 +1,35 @@
 # Change Log
+## 0.4.16
+
+`NEW` Experimental support feature `interface` This feature has the following characteristics:
+
+`Feature 1` interface has the following written form:
+```lua
+---@interface A
+---@field a number
+---@field b number
+```
+
+`Feature 2` interfaces can be inherited:
+```lua
+---A is the interface A above
+---@class C : A
+```
+When inheriting an interface, the diagnostic checks if the class implements the members of the interface
+
+`Feature 3` When an interface is used as a parameter type, after the function parameter verification feature is enabled, it will check whether the incoming parameter conforms to the interface. If the incoming parameter is not inherited from the interface or is a table expression, then Will check each member of the interface definition for conformity
+
+`Restriction` interface cannot inherit from other classes or other interfaces
+
+
+`NEW` Multiple interface inheritance, type declarations can now multiple inherit interfaces in the following form
+```lua
+---@interface b
+---@interface c
+
+---@class a: b, c
+```
+`Restriction`: In the case of multiple inheritance, only one class is allowed to inherit, the rest can only be interfaces, and the class is only allowed to appear in the first inheritance bit
 
 ## 0.4.15
 
