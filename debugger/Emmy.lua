@@ -74,7 +74,6 @@ function xluaDebugger.GetValueAsText(ty, obj, depth, typeNameOverride, displayAs
     end
 end
 
-
 local cocosLuaDebugger = {}
 function cocosLuaDebugger.GetValueAsText(ty, obj, depth, typeNameOverride, displayAsKey)
     if ty == 'userdata' then
@@ -103,11 +102,11 @@ end
 local emmy = {}
 
 if tolua then
-	if tolua.gettag then
-		emmy = toluaDebugger
-	else
-		emmy = cocosLuaDebugger
-	end
+    if tolua.gettag then
+        emmy = toluaDebugger
+    else
+        emmy = cocosLuaDebugger
+    end
 elseif xlua then
     emmy = xluaDebugger
 end

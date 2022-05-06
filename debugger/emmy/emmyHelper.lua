@@ -83,7 +83,7 @@ local xluaDebugger = {
             local CSType = obj:GetType()
             if CSType then
                 variable.valueTypeName = 'C#'
-                variable.value = tostring(obj)--CSType.FullName
+                variable.value = tostring(obj) --CSType.FullName
 
                 if depth > 1 then
                     local Type = CS.System.Type

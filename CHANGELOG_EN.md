@@ -1,4 +1,52 @@
 # Change Log
+
+## 0.4.18
+
+`NEW` `@field` annotation now supports numeric field descriptions:
+```lua
+---@field[1]number
+---@field[2] string
+```
+Index descriptions of numbers or strings are also supported:
+```lua
+---@field [number] string
+---@field [string] string
+```
+Several ways can coexist in a class definition.
+
+`NEW` supports emitter style overloading:
+```lua
+
+---@overload fun(a: "data", data)
+---@overload fun(a: "listen", aa, bb, cc)
+---@param a string
+local function f(a, bbb)
+end
+```
+
+`NEW` enumeration can mark inherited classes:
+```lua
+---@enum aaaa: number
+```
+After an enumeration inherits from a class, parameter type checking checks whether the parameter conforms to the parent class.
+
+`NEW` supports enum based overloading:
+```lua
+---@enum IO: number
+io = {
+     Input = 1,
+     Output = 2
+}
+
+---@overload fun(type: "IO.Input", in)
+---@overload fun(type: "IO.Output", writeHandle)
+---@param type IO
+local function f(type, ...)
+end
+```
+
+`NOTE` The new overloading style above must be `enum/string` in the first parameter of the function
+
 ## 0.4.16
 
 `NEW` Experimental support feature `interface` This feature has the following characteristics:

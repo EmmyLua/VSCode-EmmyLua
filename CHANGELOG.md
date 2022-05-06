@@ -1,5 +1,53 @@
 # Change Log
 
+## 0.4.18
+
+`NEW` `@field`注解现在支持数字field描述:
+```lua
+---@field [1] number
+---@field [2] string
+```
+也支持数字或者字符串的索引描述:
+```lua
+---@field [number] string
+---@field [string] string
+```
+几种方式可以共存于类定义。
+
+`NEW` 支持emitter风格重载：
+```lua
+
+---@overload fun(a: "data", data)
+---@overload fun(a: "listen", aa, bb, cc)
+---@param a string
+local function f(a, bbb)
+end
+```
+
+`NEW` 枚举可以标记继承类:
+```lua
+---@enum aaaa: number
+```
+枚举继承自某类之后参数类型检查会检查参数是否符合父类。
+
+`NEW` 支持基于枚举的重载：
+```lua
+---@enum IO: number
+IO = {
+    Input = 1,
+    Output = 2
+}
+
+---@overload fun(type: "IO.Input", in)
+---@overload fun(type: "IO.Output", writeHandle)
+---@param type IO
+local function f(type, ...)
+end
+```
+
+`NOTE` 上面新增的重载风格必须是`枚举/字符串`处于函数第一个参数
+
+
 ## 0.4.17
 
 `FIX` 修复参数诊断时提示的文本错误
