@@ -2,9 +2,9 @@
 
 ## 0.4.19
 
-`FIX` 修复在某些框架下, 因为计算元表导致的栈混乱进而导致的进程崩溃。thanks `@浪迹天涯` 提供的复现工程
+`FIX` Fixed process crash caused by stack confusion caused by computing metatables in some frameworks. Thanks for the reproduction project provided by `@Wandering Tianya`
 
-`NEW` emitter风格重载扩展支持到主签名的第一个参数是number时可以这样写：
+The `NEW` emitter-style overload extends support to the main signature when the first parameter is number can be written like this:
 ```lua
 
 ---@overload fun(level: "ngx.INFO", info)
