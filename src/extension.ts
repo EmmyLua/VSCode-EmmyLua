@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-
+    
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();

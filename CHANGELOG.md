@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.4.19
+
+`FIX` 修复在某些框架下, 因为计算元表导致的栈混乱进而导致的进程崩溃。thanks `@浪迹天涯` 提供的复现工程
+
+`NEW` emitter风格重载扩展支持到主签名的第一个参数是number时可以这样写：
+```lua
+
+---@overload fun(level: "ngx.INFO", info)
+---@overload fun(level: "ngx.WARN", msg)
+---@param level number
+function ngx.log(level, ...) end
+```
+
 ## 0.4.18
 
 `NEW` `@field`注解现在支持数字field描述:
