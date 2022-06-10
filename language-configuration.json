@@ -29,6 +29,6 @@
 	},
 	"indentationRules": {
 		"increaseIndentPattern": "\\b(do|else|then|repeat|function)\\b((?!end).)*$",
-		"decreaseIndentPattern": "\\b(end|else|elseif|until)\\b"
+		// "decreaseIndentPattern": "\\b(end|else|elseif|until)\\b"
 	}
 }

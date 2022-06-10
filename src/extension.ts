@@ -215,18 +215,18 @@ async function doStartServer() {
     }
 
     client = new LanguageClient(LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
-    savedContext.subscriptions.push(client.start());
-    await client.onReady();
-    console.log("client ready");
-    client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
-        progressBar.show();
-        progressBar.text = d.text;
-        if (d.percent >= 1) {
-            setTimeout(() => {
-                progressBar.hide();
-            }, 3000);
-        }
-    });
+    client.start().then(() => {
+        console.log("client ready");
+        client.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
+            progressBar.show();
+            progressBar.text = d.text;
+            if (d.percent >= 1) {
+                setTimeout(() => {
+                    progressBar.hide();
+                }, 3000);
+            }
+        });
+    })
 }
 
 function restartServer() {
