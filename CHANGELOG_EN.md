@@ -1,8 +1,14 @@
 # Change Log
 
+## 0.5.0
+
+`CHANGE` Code Diagnostics, inlayHint, Code Completion updated to language server protocol 3.17
+
+`CHANGE` optimizes for many points of detail
+
 ## 0.4.19
 
-`FIX` Fixed process crash caused by stack confusion caused by computing metatables in some frameworks. Thanks for the reproduction project provided by `@Wandering Tianya`
+`FIX` Fixed process crash caused by stack confusion caused by computing metatables in some frameworks. Thanks for the reproduction project provided by `@浪迹天涯`
 
 The `NEW` emitter-style overload extends support to the main signature when the first parameter is number can be written like this:
 ```lua
