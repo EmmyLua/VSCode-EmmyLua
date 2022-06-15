@@ -44,38 +44,36 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
     protected async onDebugCustomEvent(e: vscode.DebugSessionCustomEvent) {
         if (e.event === 'findFileReq') {
             const file: string = e.body.file;
-            const ext: string[] = e.body.ext;
+            const exts: string[] = e.body.ext;
             const seq = e.body.seq;
-            const parsedPath = path.parse(file);
-            let fileNames = [parsedPath.base];
-            for (let i = 0; i < ext.length; i++) {
-                const e = ext[i];
-                fileNames.push(`${parsedPath.base}${e}`);
+
+            let fileNames = [];
+            for (const ext of exts) {
+                if (file.endsWith(ext)) {
+                    fileNames.push(file);
+                    break;
+                }
             }
+            if (fileNames.length === 0) {
+                fileNames = exts.map(it => `${file}${it}`);
+            }
+            
             let results: string[] = [];
-            for (let i = 0; i < fileNames.length; i++) {
-                const fileName = fileNames[i];
+
+            for (const fileName of fileNames) {
+                if (path.isAbsolute(fileName)) {
+                    results = [fileName];
+                    break;
+                }
+
                 let include = `**/${fileName}`;
-                const uris = await vscode.workspace.findFiles(include);
-                if (uris.length > 0) {
+                const uris = await vscode.workspace.findFiles(include, null, 1);
+                if (uris.length !== 0) {
                     results = uris.map(it => it.fsPath);
                     break;
                 }
             }
             
-            // 暂时回滚
-            // if (results.length === 0) {
-            //     if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length !== 0) {
-            //         for(let rootUri of vscode.workspace.workspaceFolders){
-            //             let workspacePath = rootUri.uri.fsPath
-            //             const filePath = join(workspacePath, file)
-            //             if (existsSync(filePath)) {
-            //                 results.push(filePath);
-            //             }
-            //         }
-            //     }
-            // }
-
             e.session.customRequest('findFileRsp', { files: results, seq: seq });
         }
     }
