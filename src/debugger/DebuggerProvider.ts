@@ -55,6 +55,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                 }
             }
             if (fileNames.length === 0) {
+
                 fileNames = exts.map(it => `${file}${it}`);
             }
             
@@ -66,7 +67,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     break;
                 }
 
-                let include = `**/${fileName}`;
+                let include = path.join("**", fileName);
                 const uris = await vscode.workspace.findFiles(include, null, 1);
                 if (uris.length !== 0) {
                     results = uris.map(it => it.fsPath);
