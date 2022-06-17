@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.1
+
+`CHANGE` modifies how files are hit when debugging.
+
+`FIX` fixes possible performance issues with workspace diagnostics
+
 ## 0.5.0
 
 `CHANGE` Code Diagnostics, inlayHint, Code Completion updated to language server protocol 3.17
