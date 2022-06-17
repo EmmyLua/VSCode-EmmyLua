@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.2
+
+`FIX` 修复inlayhint的错乱
+
 ## 0.5.1
 
 `CHANGE` 修改调试时命中文件的方式。
