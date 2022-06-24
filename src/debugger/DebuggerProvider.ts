@@ -67,8 +67,23 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     break;
                 }
 
-                let include = path.join("**", fileName);
-                const uris = await vscode.workspace.findFiles(include, null, 1);
+                // 在当前工作区下？
+                let uris = await vscode.workspace.findFiles(path.join("**", fileName),  null, 1);
+                
+                // 在当前工作区的子目录下？
+                if (uris.length === 0){
+                    uris = await vscode.workspace.findFiles(path.join("**/*", fileName));
+                }
+
+                // chunkname长度超过当前工作区
+                if (uris.length === 0){
+                    const parts = fileName.split(/\\|\//);
+                    if(parts.length >= 2){
+                        const matchFile = path.join("**", ...parts.slice(1))
+                        uris = await vscode.workspace.findFiles(matchFile, null, 1);
+                    }
+                }
+
                 if (uris.length !== 0) {
                     results = uris.map(it => it.fsPath);
                     break;
