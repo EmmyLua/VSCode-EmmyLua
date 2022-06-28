@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.5.4
+
+`FIX` 修复调试找不到路径的bug
+
+`FIX` 修复重命名无效的bug 
+
+## 0.5.3
+
+`FIX` 修复override hint不可跳转的BUG
+
 ## 0.5.2
 
 `FIX` 修复inlayhint的错乱
