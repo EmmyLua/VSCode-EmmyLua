@@ -38,15 +38,19 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     savedContext.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-    
+
     savedContext.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
     configWatcher.onConfigUpdate(onConfigUpdate);
     savedContext.subscriptions.push(configWatcher);
-
     startServer();
     registerDebuggers();
+    return {
+        reportAPIDoc: (classDoc: any) => {
+            client.sendRequest("emmy/reportAPI", classDoc);
+        }
+    }
 }
 
 function registerDebuggers() {
@@ -161,11 +165,10 @@ async function startServer() {
     }
     doStartServer().then(() => {
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    })
-    .catch(reson => {
-        vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
-            .then(startServer);
-    });
+    }).catch(reson => {
+            vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
+                .then(startServer);
+        });
 }
 
 async function doStartServer() {
