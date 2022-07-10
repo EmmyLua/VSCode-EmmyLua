@@ -1,12 +1,16 @@
 # Change Log
 
+## 0.5.5
+
+`FIX` 修复跳转定位错误
+
 ## 0.5.4
 
 `CHANGE` 修改各种提示细节
 
 `NEW` 插件支持被外部插件扩展api。
 
-`NEW` emmylua-unity插件已经上架插件商店
+`NEW` 新的emmylua-unity插件已经上架插件商店
 
 ## 0.5.3
 
