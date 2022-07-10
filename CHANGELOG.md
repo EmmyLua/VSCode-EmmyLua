@@ -2,11 +2,17 @@
 
 ## 0.5.4
 
+`CHANGE` 修改各种提示细节
+
+`NEW` 插件支持被外部插件扩展api。
+
+`NEW` emmylua-unity插件已经上架插件商店
+
+## 0.5.3
+
 `FIX` 修复调试找不到路径的bug
 
 `FIX` 修复重命名无效的bug 
-
-## 0.5.3
 
 `FIX` 修复override hint不可跳转的BUG
 
