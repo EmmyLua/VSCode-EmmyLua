@@ -1,5 +1,33 @@
 # Change Log
 
+## 0.5.6
+
+`FIX` attempts to fix card loading issues
+
+## 0.5.5
+
+`FIX` fix jump positioning error
+
+## 0.5.4
+
+`CHANGE` Modify various prompt details
+
+The `NEW` plugin supports APIs that are extended by external plugins.
+
+`NEW` The new emmmylua-unity plugin has been added to the plugin store
+
+## 0.5.3
+
+`FIX` fix bug that debug can't find path
+
+`FIX` fix rename invalid bug
+
+`FIX` fix the bug that the override hint cannot be jumped
+
+## 0.5.2
+
+`FIX` fix inlayhint's confusion
+
 ## 0.5.1
 
 `CHANGE` modifies how files are hit when debugging.
