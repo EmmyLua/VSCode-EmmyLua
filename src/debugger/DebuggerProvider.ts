@@ -46,7 +46,6 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
             const file: string = e.body.file;
             const exts: string[] = e.body.ext;
             const seq = e.body.seq;
-
             let fileNames = [];
             for (const ext of exts) {
                 if (file.endsWith(ext)) {
@@ -55,7 +54,6 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                 }
             }
             if (fileNames.length === 0) {
-
                 fileNames = exts.map(it => `${file}${it}`);
             }
             
@@ -68,7 +66,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                 }
 
                 // 在当前工作区下？
-                let uris = await vscode.workspace.findFiles(path.join("**", fileName),  null, 1);
+                let uris = await vscode.workspace.findFiles(fileName);
                 
                 // 在当前工作区的子目录下？
                 if (uris.length === 0){
@@ -77,10 +75,14 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
 
                 // chunkname长度超过当前工作区
                 if (uris.length === 0){
-                    const parts = fileName.split(/\\|\//);
-                    if(parts.length >= 2){
-                        const matchFile = path.join("**", ...parts.slice(1))
+                    let parts = fileName.split(/\\|\//);
+                    while (parts.length >= 2) {
+                        parts = parts.slice(1); 
+                        const matchFile = path.join("**", ...parts)
                         uris = await vscode.workspace.findFiles(matchFile, null, 1);
+                        if (uris.length !== 0) {
+                            break;
+                        }
                     }
                 }
 
