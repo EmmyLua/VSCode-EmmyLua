@@ -21,7 +21,8 @@ FAQ:
 
 Q: 为什么报找不到格式化程序？
 
-A: 原先emmylua采用的luafmt格式化库，但是该算法基本上已经无人维护无法支持lua5.4，而且就issue来看问题也比较多，基于这样的考虑我移除了luafmt库，格式化交给EmmyLuaCodeStyle实现。
+A: 原先emmylua采用的luafmt格式化库，但是该库基本上已经无人维护无法支持lua5.4，而且就issue来看问题也比较多，基于这样的考虑我移除了luafmt库，重新实现了一套格式化工具
+[EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle)
 
 Q: 为什么附加调试没有作用？
 
@@ -29,7 +30,7 @@ A: 附加调试会试图获取进程内的lua符号，判断当前的lua版本�
 
 Q: Emmy New Debug为什么连不上目标
 
-A: 通常是由于插入代码require失败，或者`require("emmy_core")`返回true
+A: 通常是由于插入代码require执行失败，或者`require("emmy_core")`返回true，这表明可执行文件没有导出lua符号
 
 Q: 项目中有很多大文件并不想参与解析如何排除？
 
@@ -46,13 +47,3 @@ A: 在项目根目录创建`emmy.config.json`然后如下填写:
     ]
 }
 ```
-
-## 画饼(next-version)
-
-1. 试图实现泛型类
-
-2. 修改enum语法
-
-3. 完善部分类型检查
-
-4. 修改调试器的json库

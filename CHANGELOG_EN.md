@@ -1,5 +1,19 @@
 # Change Log
 
+
+## next
+
+1. Emmmylua will only have bug fixes for a period of time
+2. A new language server is under development
+
+## 0.5.8
+
+`CHANGE` disables workspace diagnostics, general diagnostics run on the main thread instead
+
+## 0.5.7
+
+`FIX` Fix the problem of path search when the chunkname is much longer than the open workspace when debugging
+
 ## 0.5.6
 
 `FIX` attempts to fix card loading issues
