@@ -6,6 +6,16 @@
 1. Emmmylua will only have bug fixes for a period of time
 2. A new language server is under development
 
+##0.5.9
+
+`UPDATE` debugger is upgraded to version 1.4.0, the main change is to deprecate rapidjson and replace it with nlohmann/json
+
+`CHANGE` re-enables workspace diagnostics
+
+`UPDATE` language service client upgraded to 8.0.2
+
+`UPDATE` The minimum vscode dependency version is changed to 1.70.0
+
 ## 0.5.8
 
 `CHANGE` disables workspace diagnostics, general diagnostics run on the main thread instead

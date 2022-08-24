@@ -2,11 +2,11 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.5.8",
+    "version": "0.5.9",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
-        "vscode": "^1.68.0"
+        "vscode": "^1.70.0"
     },
     "categories": [
         "Programming Languages",
@@ -363,9 +363,13 @@
                     "default": false,
                     "description": "%emmylua.typecheck.defineTypeCanReceiveNilType%"
                 },
-                "emmylua.inspections.undeclaredVariable":{
+                "emmylua.inspections.undeclaredVariable": {
                     "type": "string",
-                    "enum": ["None", "Warning", "Error"],
+                    "enum": [
+                        "None",
+                        "Warning",
+                        "Error"
+                    ],
                     "default": "None",
                     "description": "%emmylua.inspections.undeclaredVariable%",
                     "enumDescriptions": [
@@ -374,9 +378,13 @@
                         "%emmylua.inspections.level.error%"
                     ]
                 },
-                "emmylua.inspections.fieldValidation":{
+                "emmylua.inspections.fieldValidation": {
                     "type": "string",
-                    "enum": ["None", "Warning", "Error"],
+                    "enum": [
+                        "None",
+                        "Warning",
+                        "Error"
+                    ],
                     "default": "None",
                     "description": "%emmylua.inspections.fieldValidation%",
                     "enumDescriptions": [
@@ -387,7 +395,11 @@
                 },
                 "emmylua.inspections.parameterValidation": {
                     "type": "string",
-                    "enum": ["None", "Warning", "Error"],
+                    "enum": [
+                        "None",
+                        "Warning",
+                        "Error"
+                    ],
                     "default": "None",
                     "description": "%emmylua.inspections.parameterValidation%",
                     "enumDescriptions": [
@@ -398,7 +410,11 @@
                 },
                 "emmylua.inspections.assignValidation": {
                     "type": "string",
-                    "enum": ["None", "Warning", "Error"],
+                    "enum": [
+                        "None",
+                        "Warning",
+                        "Error"
+                    ],
                     "default": "None",
                     "description": "%emmylua.inspections.assignValidation%",
                     "enumDescriptions": [
@@ -451,6 +467,6 @@
         "smart-buffer": "^4.0.1",
         "vscode-debugadapter": "1.51.0",
         "vscode-debugprotocol": "1.51.0",
-        "vscode-languageclient": "8.0.2-next.3"
+        "vscode-languageclient": "8.0.2"
     }
 }

@@ -5,6 +5,16 @@
 1. 一段时间内emmylua将只有BUG修复
 2. 全新的语言服务正在开发中
 
+## 0.5.9
+
+`UPDATE` 调试器升级到1.4.0版本，主要变更是弃用rapidjson改为nlohmann/json
+
+`CHANGE` 重新启用工作区诊断
+
+`UPDATE` 语言服务客户端升级到8.0.2 
+
+`UPDATE` 最低vscode依赖版本改为1.70.0
+
 ## 0.5.8
 
 `CHANGE` 停用工作区诊断，一般诊断改为在主线程运行
