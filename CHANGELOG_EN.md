@@ -6,7 +6,7 @@
 1. Emmmylua will only have bug fixes for a period of time
 2. A new language server is under development
 
-##0.5.9
+## 0.5.9
 
 `UPDATE` debugger is upgraded to version 1.4.0, the main change is to deprecate rapidjson and replace it with nlohmann/json
 
