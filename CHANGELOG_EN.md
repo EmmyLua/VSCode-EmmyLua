@@ -6,6 +6,16 @@
 1. Emmmylua will only have bug fixes for a period of time
 2. A new language server is under development
 
+## 0.5.11
+
+`FIX` now supports opening a single file, fix the error when opening a single file language service
+
+`FIX` returns empty when function signature is not found
+
+`CHANGE` cancels workspace diagnostics
+
+`CHANGE` code diagnosis is divided into two parts, one is syntax real-time checking, and the other is semantic checking. The semantic checking is only triggered when the file is opened or saved.
+
 ## 0.5.9
 
 `UPDATE` debugger is upgraded to version 1.4.0, the main change is to deprecate rapidjson and replace it with nlohmann/json
