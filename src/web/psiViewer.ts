@@ -136,11 +136,11 @@ export function requestPsi(editor: vscode.TextEditor, client: LanguageClient) {
 
 function requestPsiImpl(editor: vscode.TextEditor, client: LanguageClient) {
     let params: any = { uri: editor.document.uri.toString() };
-    client.sendRequest<{ data: string }>("emmy/view_syntax_tree", params).then(result => {
+    client.sendRequest<{ data: any }>("emmy/view_syntax_tree", params).then(result => {
         if (result) {
             PsiViewer.currentPanel?.post({
                 type: "psi",
-                value: result.data
+                value: [result.data]
             });
         }
     });
