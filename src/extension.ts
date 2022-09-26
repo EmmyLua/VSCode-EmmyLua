@@ -14,6 +14,7 @@ import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
+import * as psi from './web/psiViewer';
 
 const LANGUAGE_ID = 'lua'; //EmmyLua
 var DEBUG_MODE = true;
@@ -46,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
     savedContext.subscriptions.push(configWatcher);
     startServer();
     registerDebuggers();
+    psi.activate(context);
     return {
         reportAPIDoc: (classDoc: any) => {
             client.sendRequest("emmy/reportAPI", classDoc);
@@ -99,6 +101,9 @@ function registerDebuggers() {
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
     if (activeEditor && activeEditor.document === event.document && activeEditor.document.languageId === LANGUAGE_ID) {
         Annotator.requestAnnotators(activeEditor, client);
+        if (DEBUG_MODE) {
+            psi.requestPsi(activeEditor, client);
+        }
     }
 }
 
@@ -106,6 +111,9 @@ function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined) {
     if (editor && editor.document.languageId === LANGUAGE_ID) {
         activeEditor = editor as vscode.TextEditor;
         Annotator.requestAnnotators(activeEditor, client);
+        if (DEBUG_MODE) {
+            psi.requestPsi(activeEditor, client);
+        }
     }
 }
 

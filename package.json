@@ -33,6 +33,10 @@
             {
                 "command": "emmy.insertEmmyDebugCode",
                 "title": "EmmyLua: Insert Emmy Debugger Code"
+            },
+            {
+                "command": "lua.psi.view",
+                "title": "Lua Psi Viewer"
             }
         ],
         "snippets": [

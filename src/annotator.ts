@@ -86,6 +86,9 @@ function requestAnnotatorsImpl(editor: vscode.TextEditor, client: LanguageClient
         map.set(AnnotatorType.NotUse, []);
         map.set(AnnotatorType.ParamHint, []);
         map.set(AnnotatorType.LocalHint, []);
+        if (!list) {
+            return;
+        }
 
         list.forEach(data => {
             let uri = vscode.Uri.parse(data.uri);
