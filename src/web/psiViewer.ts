@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { LanguageClient } from 'vscode-languageclient/node';
+import { LuaContext } from '../luaContext';
 
 /**
  * Manages webview panels
@@ -20,8 +20,10 @@ class PsiViewer {
     private readonly extensionPath: string;
     private readonly builtAppFolder: string;
     private disposables: vscode.Disposable[] = [];
+    private timeoutToReqAnn?: NodeJS.Timer;
 
-    public static createOrShow(extensionPath: string) {
+    public static createOrShow(luaContext: LuaContext) {
+        const context = luaContext.extensionContext;
         const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
 
         // If we already have a panel, show it.
@@ -29,13 +31,14 @@ class PsiViewer {
         if (PsiViewer.currentPanel) {
             PsiViewer.currentPanel.panel.reveal(column);
         } else {
-            PsiViewer.currentPanel = new PsiViewer(extensionPath, column || vscode.ViewColumn.One);
+            PsiViewer.currentPanel = new PsiViewer(luaContext, column || vscode.ViewColumn.One);
+            PsiViewer.currentPanel.active(context);
         }
         return PsiViewer.currentPanel;
     }
 
-    private constructor(extensionPath: string, column: vscode.ViewColumn) {
-        this.extensionPath = extensionPath;
+    private constructor(private luaContext: LuaContext, column: vscode.ViewColumn) {
+        this.extensionPath = luaContext.extensionContext.extensionPath;
         this.builtAppFolder = PsiViewer.distDirectory;
 
         // Create and show a new webview panel
@@ -55,17 +58,17 @@ class PsiViewer {
         this.panel.onDidDispose(() => this.dispose(), null, this.disposables);
 
         // Handle messages from the webview
-        this.panel.webview.onDidReceiveMessage(
-            (message: any) => {
-                switch (message.command) {
-                    case 'alert':
-                        vscode.window.showErrorMessage(message.text);
-                        return;
-                }
-            },
-            null,
-            this.disposables
-        );
+        // this.panel.webview.onDidReceiveMessage(
+        //     (message: any) => {
+        //         switch (message.command) {
+        //             case 'alert':
+        //                 vscode.window.showErrorMessage(message.text);
+        //                 return;
+        //         }
+        //     },
+        //     null,
+        //     this.disposables
+        // );
     }
 
     public dispose() {
@@ -108,40 +111,81 @@ class PsiViewer {
 
         return indexHtml;
     }
-}
 
-/**
- * Activates extension
- * @param context vscode extension context
- */
-export function activate(context: vscode.ExtensionContext) {
-    context.subscriptions.push(
-        vscode.commands.registerCommand('lua.psi.view', () => {
-            PsiViewer.createOrShow(context.extensionPath);
-        })
-    );
-}
+    private active(context: vscode.ExtensionContext) {
+        context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(PsiViewer.onDidChangeTextDocument, null, context.subscriptions));
+        context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(PsiViewer.onDidChangeActiveTextEditor, null, context.subscriptions));
+        context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(PsiViewer.onDidChangeSelection, null, context.subscriptions));
+    }
 
-let timeoutToReqAnn: NodeJS.Timer;
-
-export function requestPsi(editor: vscode.TextEditor, client: LanguageClient) {
-    if (PsiViewer.currentPanel !== undefined) {
-        clearTimeout(timeoutToReqAnn);
-        timeoutToReqAnn = setTimeout(() => {
-            requestPsiImpl(editor, client);
+    private requestPsi(editor: vscode.TextEditor) {
+        if (this.timeoutToReqAnn) {
+            clearTimeout(this.timeoutToReqAnn);
+        }
+        this.timeoutToReqAnn = setTimeout(() => {
+            this.requestPsiImpl(editor);
         }, 150);
+    }
+
+    private requestPsiImpl(editor: vscode.TextEditor) {
+        const client = this.luaContext.client;
+        let params: any = { uri: editor.document.uri.toString() };
+        client?.sendRequest<{ data: any }>("emmy/view_syntax_tree", params).then(result => {
+            if (result) {
+                this.post({
+                    type: "psi",
+                    value: [result.data]
+                });
+            }
+        });
+    }
+
+    private requestPsiSelect(position: vscode.Position, uri: vscode.Uri) {
+        const client = this.luaContext.client;
+        let params: any = { uri: uri.toString(), position };
+        client?.sendRequest<{ data: any }>("emmy/view_psi_select", params).then(result => {
+            if (result) {
+                this.post({
+                    type: "psi_select",
+                    value: result.data
+                });
+            }
+        });
+    }
+
+    private static onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
+        const activeEditor = vscode.window.activeTextEditor;
+        const viewer = PsiViewer.currentPanel;
+        if (activeEditor
+            && activeEditor.document === event.document
+            && activeEditor.document.languageId === viewer?.luaContext.LANGUAGE_ID) {
+            viewer.requestPsi(activeEditor);
+        }
+    }
+
+    private static onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined) {
+        const viewer = PsiViewer.currentPanel;
+        if (editor
+            && editor.document.languageId === viewer?.luaContext.LANGUAGE_ID) {
+            viewer.requestPsi(editor);
+        }
+    }
+
+    private static onDidChangeSelection(e: vscode.TextEditorSelectionChangeEvent) {
+        if (e.kind == vscode.TextEditorSelectionChangeKind.Mouse) {
+            const viewer = PsiViewer.currentPanel;
+            if (viewer) {
+                viewer.requestPsiSelect(e.selections[0].start, e.textEditor.document.uri)
+            }
+        }
     }
 }
 
-
-function requestPsiImpl(editor: vscode.TextEditor, client: LanguageClient) {
-    let params: any = { uri: editor.document.uri.toString() };
-    client.sendRequest<{ data: any }>("emmy/view_syntax_tree", params).then(result => {
-        if (result) {
-            PsiViewer.currentPanel?.post({
-                type: "psi",
-                value: [result.data]
-            });
-        }
-    });
+export function registerCommand(luaContext: LuaContext) {
+    const context = luaContext.extensionContext;
+    context.subscriptions.push(
+        vscode.commands.registerCommand('lua.psi.view', () => {
+            PsiViewer.createOrShow(luaContext);
+        })
+    );
 }
