@@ -17,7 +17,7 @@ import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvide
 import * as psi from './web/psiViewer';
 import { LuaContext } from './luaContext';
 
-let luaContext: LuaContext;
+export let luaContext: LuaContext;
 let activeEditor: vscode.TextEditor;
 let progressBar: vscode.StatusBarItem;
 let javaExecutablePath: string | null;
