@@ -24,14 +24,14 @@ class PsiViewer {
 
     public static createOrShow(luaContext: LuaContext) {
         const context = luaContext.extensionContext;
-        const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
+        // const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
 
         // If we already have a panel, show it.
         // Otherwise, create angular panel.
         if (PsiViewer.currentPanel) {
-            PsiViewer.currentPanel.panel.reveal(column);
+            PsiViewer.currentPanel.panel.reveal(vscode.ViewColumn.Two);
         } else {
-            PsiViewer.currentPanel = new PsiViewer(luaContext, column || vscode.ViewColumn.One);
+            PsiViewer.currentPanel = new PsiViewer(luaContext, vscode.ViewColumn.Two);
             PsiViewer.currentPanel.active(context);
         }
         return PsiViewer.currentPanel;
