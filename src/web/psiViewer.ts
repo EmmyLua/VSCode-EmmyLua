@@ -172,7 +172,8 @@ class PsiViewer {
     }
 
     private static onDidChangeSelection(e: vscode.TextEditorSelectionChangeEvent) {
-        if (e.kind == vscode.TextEditorSelectionChangeKind.Mouse) {
+        if (e.kind == vscode.TextEditorSelectionChangeKind.Mouse
+            || e.kind == vscode.TextEditorSelectionChangeKind.Keyboard) {
             const viewer = PsiViewer.currentPanel;
             if (viewer) {
                 viewer.requestPsiSelect(e.selections[0].start, e.textEditor.document.uri)
