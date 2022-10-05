@@ -1,6 +1,6 @@
 import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import * as path from 'path';
+//import * as path from 'path';
 
 export abstract class DebugSession extends LoggingDebugSession {
     constructor() {
@@ -32,9 +32,9 @@ export abstract class DebugSession extends LoggingDebugSession {
     }
 
     async findFile(file: string): Promise<string> {
-        if (path.isAbsolute(file)) {
-            return file;
-		}
+        //if (path.isAbsolute(file)) {
+        //    return file;
+		//}
         const r = this._fileCache.get(file);
         if (r) {
             return r;
