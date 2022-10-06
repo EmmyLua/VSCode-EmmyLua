@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-var isWin = process.platform === "win32";
+const isWin = process.platform === "win32";
 
-function IsAbsolutePath(strPath: string): boolean {
+function isAbsolutePath(strPath: string): boolean {
     if (isWin && strPath.length >= 1)
     {
-        if ((strPath.charAt(0) == '\\' || strPath.charAt(0) == '/') && !(strPath.length >= 2 && strPath.charAt(0) == strPath.charAt(1)))
+        if ((strPath.charAt(0) == '\\' || strPath.charAt(0) == '/') && !(strPath.startsWith("\\\\") || strPath.startsWith("//")))
             strPath = strPath.substr(1);
     }
     return path.isAbsolute(strPath);
@@ -71,7 +71,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
             let results: string[] = [];
 
             for (const fileName of fileNames) {
-                if (IsAbsolutePath(fileName)) {
+                if (isAbsolutePath(fileName)) {
                     results = [fileName];
                     break;
                 }
