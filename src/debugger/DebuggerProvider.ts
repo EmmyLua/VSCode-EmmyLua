@@ -4,9 +4,9 @@ import * as path from 'path';
 const isWin = process.platform === "win32";
 
 function isAbsolutePath(strPath: string): boolean {
-    if (isWin && strPath.length >= 1)
+    if (isWin)
     {
-        if ((strPath.charAt(0) == '\\' || strPath.charAt(0) == '/') && !(strPath.startsWith("\\\\") || strPath.startsWith("//")))
+        if ((strPath.startsWith("\\") && !strPath.startsWith("\\\\")) || (strPath.startsWith("/") && !strPath.startsWith("//")))
             strPath = strPath.substr(1);
     }
     return path.isAbsolute(strPath);
