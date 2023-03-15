@@ -14,16 +14,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v2
-    - name: npm install
-      run: npm i
+    - name: Set node 16.x
+      uses: actions/setup-node@v3
+      with:
+          node-version: 16.x
+    - name: Install
+      uses: borales/actions-yarn@v4
+      with: 
+        cmd: install
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       npm_config_arch: ${{ matrix.npm_config_arch }}
     - name: build
       run: |
-        npm i
-        npm i vsce -g
         node ./build/prepare-version.js
         node ./build/prepare.js
         npx vsce package -o VSCode-EmmyLua.vsix
