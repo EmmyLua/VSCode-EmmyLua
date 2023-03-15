@@ -3,8 +3,17 @@
 
 ## next
 
-1. Emmmylua will only have bug fixes for a period of time
-2. A new language server is under development
+1. A new language server is under development
+
+## 0.5.12
+
+`NEW` hasn't changed it in a long time
+
+`NEW` the debugger was upgraded to 1.5.0
+
+`NEW` fixes emmylua-unity related jump issues
+
+`NEW` here reports the progress of language service development, no progress over.
 
 ## 0.5.11
 
