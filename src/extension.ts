@@ -14,7 +14,6 @@ import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
-import * as psi from './web/psiViewer';
 import { LuaContext } from './luaContext';
 
 export let luaContext: LuaContext;
@@ -43,7 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(configWatcher);
     startServer();
     registerDebuggers();
-    psi.registerCommand(luaContext);
     return {
         reportAPIDoc: (classDoc: any) => {
             luaContext?.client?.sendRequest("emmy/reportAPI", classDoc);

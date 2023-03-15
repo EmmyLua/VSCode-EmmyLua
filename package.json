@@ -33,21 +33,8 @@
             {
                 "command": "emmy.insertEmmyDebugCode",
                 "title": "EmmyLua: Insert Emmy Debugger Code"
-            },
-            {
-                "command": "lua.psi.view",
-                "title": "Lua Psi Viewer"
             }
         ],
-        "menus": {
-            "editor/context": [
-                {
-                    "when": "resourceLangId == lua",
-                    "command": "lua.psi.view",
-                    "group": "z_commands"
-                }
-            ]
-        },
         "snippets": [
             {
                 "language": "lua",
