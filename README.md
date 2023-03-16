@@ -18,11 +18,9 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 [CHANGELOG](CHANGELOG_EN.md)
 
 FAQ:
+Q: vscode-emmylua全家桶还有哪些?
 
-Q: 为什么报找不到格式化程序？
-
-A: 原先emmylua采用的luafmt格式化库，但是该库基本上已经无人维护无法支持lua5.4，而且就issue来看问题也比较多，基于这样的考虑我移除了luafmt库，重新实现了一套格式化工具
-[EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle)
+A: [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle), [EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)
 
 Q: 为什么附加调试没有作用？
 
@@ -49,4 +47,4 @@ A: 在项目根目录创建`emmy.config.json`然后如下填写:
 ```
 Q: 全新的语言服务何时上线?
 
-A: 不知道
+A: 不知道, 但是你可以访问[这里](https://github.com/CppCXY/EmmyLua-LanguageServer2)关注一下进度 
