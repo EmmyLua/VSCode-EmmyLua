@@ -14,6 +14,7 @@
     ],
     "activationEvents": [
         "onLanguage:lua",
+        "onView:emmylua.syntax.tree",
         "onDebug"
     ],
     "repository": {
@@ -33,6 +34,10 @@
             {
                 "command": "emmy.insertEmmyDebugCode",
                 "title": "EmmyLua: Insert Emmy Debugger Code"
+            },
+            {
+                "command": "emmlua.syntax.view",
+                "title": "EmmyLua: View Syntax Tree"
             }
         ],
         "snippets": [
@@ -445,7 +450,15 @@
                 "url": "./syntaxes/emmy.config.schema.json"
             }
         ],
-        "colors": []
+        "colors": [],
+        "views": {
+            "explorer": [
+                {
+                    "id": "emmylua.syntax.tree",
+                    "name": "Syntax Tree"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "node ./build/prepare-version && npm run compile",

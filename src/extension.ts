@@ -15,6 +15,7 @@ import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
 import { LuaContext } from './luaContext';
+import { active } from './tree_view/treeView';
 
 export let luaContext: LuaContext;
 let activeEditor: vscode.TextEditor;
@@ -42,6 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(configWatcher);
     startServer();
     registerDebuggers();
+    registerTreeView();
     return {
         reportAPIDoc: (classDoc: any) => {
             luaContext?.client?.sendRequest("emmy/reportAPI", classDoc);
@@ -91,6 +93,10 @@ function registerDebuggers() {
             return allValues;
         }
     }));
+}
+
+function registerTreeView() {
+    active(luaContext)
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
