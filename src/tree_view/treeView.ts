@@ -8,11 +8,10 @@ class SyntaxNodeOrToken extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly index: number,
         private range: string
     ) {
         super(label, collapsibleState);
-        this.tooltip = this.index.toString();
+        // this.tooltip = this.index.toString();
         this.description = this.range;
     }
 
@@ -22,27 +21,39 @@ class SyntaxNodeOrToken extends vscode.TreeItem {
     // };
 }
 
-export class EmmyLuaSyntaxTreeProvider implements vscode.TreeDataProvider<SyntaxNodeOrToken> {
+interface PsiViewAttr {
+    simple_view: string
+}
+
+interface PsiViewNode {
+    name: string;
+    attr?: PsiViewAttr;
+    children?: PsiViewNode[];
+}
+
+export class EmmyLuaSyntaxTreeProvider implements vscode.TreeDataProvider<PsiViewNode> {
     constructor(private luaContext: LuaContext) { }
 
-    getTreeItem(element: SyntaxNodeOrToken): vscode.TreeItem {
-        return element;
+    getTreeItem(element: PsiViewNode): vscode.TreeItem {
+        return new SyntaxNodeOrToken(
+            element.name,
+            element.children ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
+            element.attr?.simple_view ?? ""
+        );
     }
 
-    getChildren(element?: SyntaxNodeOrToken): Thenable<SyntaxNodeOrToken[]> {
+    getChildren(element?: PsiViewNode): Thenable<PsiViewNode[]> {
         return new Promise((resolve, reject) => {
             const activeEditor = vscode.window.activeTextEditor;
-            const params = { uri: activeEditor?.document.uri.toString(), index: element ? element.index : 1 }
-            this.luaContext.client?.sendRequest<any[]>("$/syntaxTree/nodes", params).then(data => {
-                resolve(data.map(it => {
-                    return new SyntaxNodeOrToken(
-                        it.label,
-                        it.isNode ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
-                        it.index,
-                        it.range
-                    );
-                }))
-            })
+            if (!element) {
+                const params = { uri: activeEditor?.document.uri.toString() }
+                this.luaContext.client?.sendRequest<{ data: PsiViewNode }>("$/syntaxTree/nodes", params).then(psi => {
+                    resolve([psi.data])
+                })
+            }
+            else {
+                resolve(element.children ?? [])
+            }
         })
     }
 
@@ -50,8 +61,8 @@ export class EmmyLuaSyntaxTreeProvider implements vscode.TreeDataProvider<Syntax
         this._onDidChangeTreeData.fire();
     }
 
-    private _onDidChangeTreeData: vscode.EventEmitter<SyntaxNodeOrToken | undefined | null | void> = new vscode.EventEmitter<SyntaxNodeOrToken | undefined | null | void>();
-    readonly onDidChangeTreeData: vscode.Event<SyntaxNodeOrToken | undefined | null | void> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: vscode.EventEmitter<PsiViewNode | undefined | null | void> = new vscode.EventEmitter<PsiViewNode | undefined | null | void>();
+    readonly onDidChangeTreeData: vscode.Event<PsiViewNode | undefined | null | void> = this._onDidChangeTreeData.event;
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
@@ -78,7 +89,7 @@ export function active(luaContext: LuaContext) {
             vscode.window.createTreeView('emmylua.syntax.tree', {
                 treeDataProvider: provider!
             });
-            
+
             context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
             context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
         })
