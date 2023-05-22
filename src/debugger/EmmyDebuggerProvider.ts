@@ -2,14 +2,14 @@
 
 import * as vscode from 'vscode';
 import { EmmyDebugConfiguration } from './types';
-import { luaContext } from '../extension';
+import { ctx } from '../extension';
 import { DebuggerProvider } from './DebuggerProvider';
 
 export class EmmyDebuggerProvider extends DebuggerProvider {
     private showWaitConnectionToken = new vscode.CancellationTokenSource();
     
     resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: EmmyDebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
-        debugConfiguration.extensionPath = luaContext.extensionContext.extensionPath;
+        debugConfiguration.extensionPath = ctx.extensionContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
         if (!debugConfiguration.request) {
             debugConfiguration.request = "launch";

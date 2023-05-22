@@ -1,8 +1,8 @@
 
 import * as vscode from 'vscode';
-import { AnnotatorType } from './notifications';
+import { AnnotatorType } from './lspExt';
 import { LanguageClient } from 'vscode-languageclient/node';
-import * as notifications from "./notifications";
+import * as notifications from "./lspExt";
 
 
 let D_PARAM: vscode.TextEditorDecorationType;

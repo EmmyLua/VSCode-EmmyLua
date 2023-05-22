@@ -5,7 +5,6 @@ import * as path from "path";
 import * as net from "net";
 import * as process from "process";
 import * as Annotator from "./annotator";
-import * as notifications from "./notifications";
 import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient/node";
@@ -14,19 +13,20 @@ import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
-import { LuaContext } from './luaContext';
+import { EmmyCtx } from './emmyCtx';
 import { active } from './tree_view/treeView';
 
-export let luaContext: LuaContext;
+export let ctx: EmmyCtx;
 let activeEditor: vscode.TextEditor;
-let progressBar: vscode.StatusBarItem;
 let javaExecutablePath: string | null;
 let configWatcher: EmmyConfigWatcher;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
-    luaContext = new LuaContext(process.env['EMMY_DEV'] === "true", context);
-    progressBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+    ctx = new EmmyCtx(
+        process.env['EMMY_DEV'] === "true",
+        context
+    );
     javaExecutablePath = findJava();
 
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
@@ -35,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
     context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
 
     context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
@@ -46,13 +47,17 @@ export function activate(context: vscode.ExtensionContext) {
     registerTreeView();
     return {
         reportAPIDoc: (classDoc: any) => {
-            luaContext?.client?.sendRequest("emmy/reportAPI", classDoc);
+            ctx?.client?.sendRequest("emmy/reportAPI", classDoc);
         }
     }
 }
 
+export function deactivate() {
+    ctx.dispose();
+}
+
 function registerDebuggers() {
-    const context = luaContext.extensionContext;
+    const context = ctx.extensionContext;
     const emmyProvider = new EmmyDebuggerProvider('emmylua_new', context);
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
     context.subscriptions.push(emmyProvider);
@@ -96,29 +101,25 @@ function registerDebuggers() {
 }
 
 function registerTreeView() {
-    active(luaContext)
+    active(ctx)
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
     if (activeEditor && activeEditor.document === event.document
-        && activeEditor.document.languageId === luaContext.LANGUAGE_ID
-        && luaContext.client != undefined
-        ) {
-        Annotator.requestAnnotators(activeEditor, luaContext.client);
+        && activeEditor.document.languageId === ctx.LANGUAGE_ID
+        && ctx.client != undefined
+    ) {
+        Annotator.requestAnnotators(activeEditor, ctx.client);
     }
 }
 
 function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined) {
     if (editor
-        && editor.document.languageId === luaContext.LANGUAGE_ID
-        && luaContext.client != undefined) {
+        && editor.document.languageId === ctx.LANGUAGE_ID
+        && ctx.client != undefined) {
         activeEditor = editor as vscode.TextEditor;
-        Annotator.requestAnnotators(activeEditor, luaContext.client);
+        Annotator.requestAnnotators(activeEditor, ctx.client);
     }
-}
-
-export function deactivate() {
-    stopServer();
 }
 
 function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
@@ -129,8 +130,8 @@ function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
         shouldRestart = true;
     }
 
-    if (luaContext.client !== undefined) {
-        Annotator.onDidChangeConfiguration(luaContext.client);
+    if (ctx.client !== undefined) {
+        Annotator.onDidChangeConfiguration(ctx.client);
     }
 
     if (shouldRestart) {
@@ -165,27 +166,33 @@ async function validateJava(): Promise<void> {
 
 async function startServer() {
     try {
-        if (!luaContext.debugMode) {
+        if (!ctx.debugMode) {
             await validateJava();
         }
     } catch (error) {
-        vscode.window.showErrorMessage(error as string, "Try again")
-            .then(startServer);
+        ctx.setServerStatus({
+            health: "error",
+            message: error as string,
+            command: "emmy.restartServer"
+        })
         return;
     }
     doStartServer().then(() => {
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    }).catch(reson => {
-            vscode.window.showErrorMessage(`Failed to start "EmmyLua" language server!\n${reson}`, "Try again")
-                .then(startServer);
-        });
+    }).catch(reason => {
+        ctx.setServerStatus({
+            health: "error",
+            message: `Failed to start "EmmyLua" language server!\n${reason}`,
+            command: "emmy.restartServer"
+        })
+    });
 }
 
 async function doStartServer() {
     const configFiles = await configWatcher.watch();
-    const context = luaContext.extensionContext;
+    const context = ctx.extensionContext;
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: luaContext.LANGUAGE_ID }],
+        documentSelector: [{ scheme: 'file', language: ctx.LANGUAGE_ID }],
         synchronize: {
             configurationSection: ["emmylua", "files.associations"],
             fileEvents: [
@@ -201,7 +208,7 @@ async function doStartServer() {
     };
 
     let serverOptions: ServerOptions;
-    if (luaContext.debugMode) {
+    if (ctx.debugMode) {
         // The server is a started as a separate app and listens on port 5007
         const connectionInfo = {
             port: 5007
@@ -227,23 +234,15 @@ async function doStartServer() {
         };
     }
 
-    luaContext.client = new LanguageClient(luaContext.LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
-    luaContext.client.start().then(() => {
+    ctx.client = new LanguageClient(ctx.LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
+    ctx.registerProtocol();
+    ctx.client.start().then(() => {
         console.log("client ready");
-        luaContext.client?.onNotification("emmy/progressReport", (d: notifications.IProgressReport) => {
-            progressBar.show();
-            progressBar.text = d.text;
-            if (d.percent >= 1) {
-                setTimeout(() => {
-                    progressBar.hide();
-                }, 3000);
-            }
-        });
     })
 }
 
 function restartServer() {
-    const client = luaContext.client;
+    const client = ctx.client;
     if (!client) {
         startServer();
     } else {
@@ -259,22 +258,19 @@ function showReferences(uri: string, pos: vscode.Position) {
     });
 }
 
-function stopServer() {
-    const client = luaContext.client;
-    if (client) {
-        client.stop();
-    }
-}
-
 function onConfigUpdate(e: IEmmyConfigUpdate) {
-    const client = luaContext.client;
+    const client = ctx.client;
     if (client) {
         client.sendRequest('emmy/updateConfig', e);
     }
 }
 
+function stopServer() {
+    ctx.stopServer();
+}
+
 async function insertEmmyDebugCode() {
-    const context = luaContext.extensionContext;
+    const context = ctx.extensionContext;
     const activeEditor = vscode.window.activeTextEditor;
     if (!activeEditor) {
         return;

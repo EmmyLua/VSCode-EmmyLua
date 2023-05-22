@@ -3,7 +3,23 @@
 
 ## next
 
-1. A new language server is under development
+A completely new language service is under development, and the project is rewritten using Rust.
+
+## 0.5.14
+
+`FIX` fixes debugging issues and upgrades the debugger to 1.5.1
+
+`FIX` fixes the recursive explosion stack caused by alias when code completion
+
+`NEW` adds an item bar that shows the running status of emmylua
+
+`CHANGE` removes the display in the lower right corner when Java is not found
+
+`CHANGE` allows deactivation of the emmylua language service
+
+## 0.5.13
+
+`FIX` fixes an issue where when using emmylua-unity, the unity class cannot be hinted after inheriting
 
 ## 0.5.12
 

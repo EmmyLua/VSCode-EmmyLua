@@ -9,17 +9,13 @@ export enum AnnotatorType {
     Global,
     DocType,
     Upvalue,
-    NotUse,
-    ParamHint,
-    LocalHint,
-    OverrideHint
+    NotUse
 }
 
 export interface RenderRange{
     range: vscode.Range;
     hint: string;
 }
-
 
 export interface IAnnotator {
     uri: string;
@@ -30,4 +26,11 @@ export interface IAnnotator {
 export interface IProgressReport {
     text: string;
     percent: number;
+}
+
+export interface ServerStatusParams {
+    health: string;
+    message?: string;
+    loading?: boolean;
+    command?: string;
 }

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { LuaContext } from '../luaContext';
+import { EmmyCtx } from '../emmyCtx';
 import { LanguageClient } from 'vscode-languageclient/node';
 
 let LANGUAGE_ID = "lua"
@@ -39,7 +39,7 @@ interface PsiViewNode {
 }
 
 export class EmmyLuaSyntaxTreeProvider implements vscode.TreeDataProvider<PsiViewNode> {
-    constructor(private luaContext: LuaContext) { }
+    constructor(private luaContext: EmmyCtx) { }
 
     getTreeItem(element: PsiViewNode): vscode.TreeItem {
         return new SyntaxNodeOrToken(
@@ -141,7 +141,7 @@ function onDidChangeSelection(e: vscode.TextEditorSelectionChangeEvent, client: 
     }
 }
 
-export function active(luaContext: LuaContext) {
+export function active(luaContext: EmmyCtx) {
     const provider = new EmmyLuaSyntaxTreeProvider(luaContext)
     const context = luaContext.extensionContext;
     context.subscriptions.push(

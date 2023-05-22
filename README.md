@@ -47,4 +47,4 @@ A: 在项目根目录创建`emmy.config.json`然后如下填写:
 ```
 Q: 全新的语言服务何时上线?
 
-A: 不知道, 但是你可以访问[这里](https://github.com/CppCXY/EmmyLua-LanguageServer2)关注一下进度 
+A: 不知道

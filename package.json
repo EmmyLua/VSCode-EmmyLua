@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.5.13",
+    "version": "0.5.14",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -38,6 +38,10 @@
             {
                 "command": "emmlua.syntax.view",
                 "title": "EmmyLua: View Syntax Tree"
+            },
+            {
+                "command": "emmlua.stopServer",
+                "title": "EmmyLua: Stop EmmyLua Language Server"
             }
         ],
         "snippets": [
