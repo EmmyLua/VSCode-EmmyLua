@@ -1,11 +1,11 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { EmmyDebugConfiguration } from './types';
-import { ctx } from '../extension';
-import { DebuggerProvider } from './DebuggerProvider';
+import { EmmyDebugConfiguration } from '../base/types';
+import { ctx } from '../../extension';
+import { DebuggerProvider } from '../base/DebuggerProvider';
 
-export class EmmyDebuggerProvider extends DebuggerProvider {
+export class EmmyNewDebuggerProvider extends DebuggerProvider {
     private showWaitConnectionToken = new vscode.CancellationTokenSource();
     
     resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: EmmyDebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {

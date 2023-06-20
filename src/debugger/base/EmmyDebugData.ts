@@ -79,7 +79,7 @@ export class EmmyVariable implements IEmmyStackNode {
                 name = `[${name}]`;
                 break;
         }
-        this.variable = { name: name, value: value, variablesReference: 0 };
+        this.variable = { name, value, variablesReference: 0 };
     }
 
     toVariable(ctx: IEmmyStackContext): DebugProtocol.Variable {

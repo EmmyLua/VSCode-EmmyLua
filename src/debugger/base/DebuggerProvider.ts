@@ -4,10 +4,9 @@ import * as path from 'path';
 const isWin = process.platform === "win32";
 
 function isAbsolutePath(strPath: string): boolean {
-    if (isWin)
-    {
+    if (isWin) {
         if ((strPath.startsWith("\\") && !strPath.startsWith("\\\\")) || (strPath.startsWith("/") && !strPath.startsWith("//")))
-            strPath = strPath.substr(1);
+            strPath = strPath.substring(1);
     }
     return path.isAbsolute(strPath);
 }
@@ -67,7 +66,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
             if (fileNames.length === 0) {
                 fileNames = exts.map(it => `${file}${it}`);
             }
-            
+
             let results: string[] = [];
 
             for (const fileName of fileNames) {
@@ -78,17 +77,17 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
 
                 // 在当前工作区下？
                 let uris = await vscode.workspace.findFiles(fileName);
-                
+
                 // 在当前工作区的子目录下？
-                if (uris.length === 0){
+                if (uris.length === 0) {
                     uris = await vscode.workspace.findFiles(path.join("**/*", fileName));
                 }
 
                 // chunkname长度超过当前工作区
-                if (uris.length === 0){
+                if (uris.length === 0) {
                     let parts = fileName.split(/\\|\//);
                     while (parts.length >= 2) {
-                        parts = parts.slice(1); 
+                        parts = parts.slice(1);
                         const matchFile = path.join("**", ...parts)
                         uris = await vscode.workspace.findFiles(matchFile, null, 1);
                         if (uris.length !== 0) {
@@ -102,7 +101,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     break;
                 }
             }
-            
+
             e.session.customRequest('findFileRsp', { files: results, seq: seq });
         }
     }

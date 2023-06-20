@@ -1,6 +1,6 @@
 import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-//import * as path from 'path';
+import * as net from "net";
 
 export abstract class DebugSession extends LoggingDebugSession {
     constructor() {
@@ -11,10 +11,10 @@ export abstract class DebugSession extends LoggingDebugSession {
     private _findFileSeq = 0;
     private _fileCache = new Map<string, string>();
 
-	log(obj: any) {
-		this.sendEvent(new Event("log", obj));
+    log(obj: any) {
+        this.sendEvent(new Event("log", obj));
     }
-    
+
     printConsole(msg: string, newLine: boolean = true) {
         if (newLine) {
             msg += "\n";
@@ -32,9 +32,6 @@ export abstract class DebugSession extends LoggingDebugSession {
     }
 
     async findFile(file: string): Promise<string> {
-        //if (path.isAbsolute(file)) {
-        //    return file;
-		//}
         const r = this._fileCache.get(file);
         if (r) {
             return r;

@@ -71,7 +71,7 @@
             {
                 "type": "emmylua_attach",
                 "label": "EmmyLua Attach Debug",
-                "program": "./out/debugger/EmmyAttachDebugAdapter.js",
+                "program": "./out/debugger/attach/EmmyAttachDebugAdapter.js",
                 "runtime": "node",
                 "configurationAttributes": {
                     "attach": {
@@ -127,7 +127,7 @@
             {
                 "type": "emmylua_launch",
                 "label": "EmmyLua Launch Debug",
-                "program": "./out/debugger/EmmyLaunchDebugAdapter.js",
+                "program": "./out/debugger/launch/EmmyLaunchDebugAdapter.js",
                 "runtime": "node",
                 "configurationAttributes": {
                     "launch": {
@@ -200,7 +200,7 @@
             {
                 "type": "emmylua_new",
                 "label": "EmmyLua New Debugger",
-                "program": "./out/debugger/EmmyDebugAdapter.js",
+                "program": "./out/debugger/new_debugger/EmmyNewDebugAdapter.js",
                 "runtime": "node",
                 "configurationAttributes": {
                     "launch": {

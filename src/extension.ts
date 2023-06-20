@@ -9,12 +9,13 @@ import * as cp from "child_process";
 import findJava from "./findJava";
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient/node";
 import { LuaLanguageConfiguration } from './languageConfiguration';
-import { EmmyDebuggerProvider } from './debugger/EmmyDebuggerProvider';
 import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
-import { EmmyAttachDebuggerProvider } from './debugger/EmmyAttachDebuggerProvider';
-import { EmmyLaunchDebuggerProvider } from './debugger/EmmyLaunchDebuggerProvider';
+import { EmmyNewDebuggerProvider } from './debugger/new_debugger/EmmyNewDebuggerProvider';
+import { EmmyAttachDebuggerProvider } from './debugger/attach/EmmyAttachDebuggerProvider';
+import { EmmyLaunchDebuggerProvider } from './debugger/launch/EmmyLaunchDebuggerProvider';
 import { EmmyCtx } from './emmyCtx';
 import { active } from './tree_view/treeView';
+import { InlineDebugAdapterFactory} from './debugger/DebugFactory'
 
 export let ctx: EmmyCtx;
 let activeEditor: vscode.TextEditor;
@@ -36,7 +37,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
     context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
-
     context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
@@ -58,7 +58,7 @@ export function deactivate() {
 
 function registerDebuggers() {
     const context = ctx.extensionContext;
-    const emmyProvider = new EmmyDebuggerProvider('emmylua_new', context);
+    const emmyProvider = new EmmyNewDebuggerProvider('emmylua_new', context);
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
     context.subscriptions.push(emmyProvider);
     const emmyAttachProvider = new EmmyAttachDebuggerProvider('emmylua_attach', context);
@@ -67,7 +67,12 @@ function registerDebuggers() {
     const emmyLaunchProvider = new EmmyLaunchDebuggerProvider('emmylua_launch', context);
     context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_launch', emmyLaunchProvider));
     context.subscriptions.push(emmyLaunchProvider);
-
+    if (ctx.debugMode) {
+        const factory = new InlineDebugAdapterFactory();
+        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_new', factory));
+        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_attach', factory));
+        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_launch', factory));
+    }
     context.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
         // 不知道是否应该发到ls上再做处理
         // 先简单处理一下吧

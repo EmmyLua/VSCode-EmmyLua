@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { EmmyLaunchDebugConfiguration } from "./types";
-import { DebuggerProvider } from "./DebuggerProvider";
+import { EmmyLaunchDebugConfiguration } from "../base/types";
+import { DebuggerProvider } from "../base/DebuggerProvider";
 
 export class EmmyLaunchDebuggerProvider extends DebuggerProvider {
     async resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, configuration: EmmyLaunchDebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {

@@ -3,35 +3,21 @@ import * as readline from 'readline';
 import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent, Event } from "vscode-debugadapter";
+import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent } from "vscode-debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext, EmmyStackENV } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 import { join, normalize } from "path";
 
-interface EmmyDebugArguments extends DebugProtocol.AttachRequestArguments {
-    extensionPath: string;
-    sourcePaths: string[];
-    host: string;
-    port: number;
-    ext: string[];
-    ideConnectDebugger: boolean;
 
-    // for launch
-    program?: string;
-    arguments?: string[];
-    workingDir?: string;
-}
 
 export class EmmyDebugSession extends DebugSession implements IEmmyStackContext {
-    private socket: net.Server | undefined;
-    protected client: net.Socket | undefined;
+    protected client?: net.Socket;
     private readHeader = true;
     private currentCmd: proto.MessageCMD = proto.MessageCMD.Unknown;
-    private breakNotify: proto.IBreakNotify | undefined;
+    private breakNotify?: proto.IBreakNotify;
     private currentFrameId = 0;
     private breakPointId = 0;
     private evalIdCount = 0;
-    private listenMode = false;
     private breakpoints: proto.IBreakPoint[] = [];
     protected extensionPath: string = '';
 
@@ -47,47 +33,6 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             // supportsCompletionsRequest: true
         };
         this.sendResponse(response);
-    }
-
-    protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
-        this.ext = args.ext;
-        this.extensionPath = args.extensionPath;
-        if (!args.ideConnectDebugger) {
-            this.listenMode = true;
-            const socket = net.createServer(client => {
-                this.client = client;
-                this.sendResponse(response);
-                this.onConnect(this.client);
-                this.readClient(client);
-                this.sendEvent(new Event('onNewConnection'));
-            })
-                .listen(args.port, args.host)
-                .on('listening', () => {
-                    this.sendEvent(new OutputEvent(`Server(${args.host}:${args.port}) open successfully, wait for connection...\n`));
-                })
-                .on('error', err => {
-                    this.sendEvent(new OutputEvent(`${err}`, 'stderr'));
-                    response.success = false;
-                    response.message = `${err}`;
-                    this.sendResponse(response);
-                });
-            this.socket = socket;
-            this.sendEvent(new Event('showWaitConnection'));
-        }
-        else {
-            // send resp
-            const client = net.connect(args.port, args.host)
-                .on('connect', () => {
-                    this.sendResponse(response);
-                    this.onConnect(client);
-                    this.readClient(client);
-                })
-                .on('error', err => {
-                    response.success = false;
-                    response.message = `${err}`;
-                    this.sendResponse(response);
-                });
-        }
     }
 
     protected customRequest(command: string, response: DebugProtocol.Response, args: any): void {
@@ -138,25 +83,11 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             this.client.removeAllListeners();
         }
         this.sendEvent(new OutputEvent('Disconnected.\n'));
-        if (this.listenMode) {
-            this.client = undefined;
-        } else {
-            this.sendEvent(new TerminatedEvent());
-        }
+        this.sendEvent(new TerminatedEvent());
     }
 
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
         this.sendDebugAction(response, proto.DebugAction.Stop);
-        setTimeout(() => {
-            if (this.socket) {
-                this.socket.close();
-                this.socket = undefined;
-            }
-            if (this.client) {
-                this.client.end();
-                this.client = undefined;
-            }
-        }, 1000);
     }
 
     private onReceiveLine(line: string) {

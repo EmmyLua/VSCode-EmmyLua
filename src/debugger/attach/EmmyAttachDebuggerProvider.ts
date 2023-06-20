@@ -2,8 +2,8 @@ import { basename } from 'path';
 import * as vscode from 'vscode';
 import * as cp from "child_process";
 import * as iconv from 'iconv-lite';
-import { EmmyAttachDebugConfiguration } from "./types";
-import { DebuggerProvider } from "./DebuggerProvider";
+import { EmmyAttachDebugConfiguration } from "../base/types";
+import { DebuggerProvider } from "../base/DebuggerProvider";
 
 interface ProcessInfoItem extends vscode.QuickPickItem {
     pid: number;
