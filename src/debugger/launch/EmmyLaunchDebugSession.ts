@@ -9,9 +9,9 @@ import { DebugProtocol } from "vscode-debugprotocol";
 interface EmmyLaunchDebugArguments extends DebugProtocol.LaunchRequestArguments {
     extensionPath: string;
     sourcePaths: string[];
-    program?: string;
-    arguments?: string[];
-    workingDir?: string;
+    program: string;
+    arguments: string[];
+    workingDir: string;
     blockOnExit?: boolean;
     useWindowsTerminal?: boolean;
     ext: string[];
@@ -139,8 +139,6 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     private async runAndAttachUseCmd(): Promise<number> {
         const selfPid = process.pid;
         const port = this.getPort(selfPid);
-
-
         const arch = await this.detectArch();
         const archName = arch === WinArch.X64 ? 'x64' : 'x86';
         const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;

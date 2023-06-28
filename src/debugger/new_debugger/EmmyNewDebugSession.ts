@@ -2,13 +2,21 @@ import * as net from "net";
 import { EmmyDebugSession } from "../base/EmmyDebugSession";
 import { Event, OutputEvent, TerminatedEvent } from "vscode-debugadapter";
 import { DebugProtocol } from "vscode-debugprotocol";
-import { EmmyDebugArguments } from "../base/types";
+
+export interface EmmyNewDebugArguments extends DebugProtocol.AttachRequestArguments {
+    extensionPath: string;
+    sourcePaths: string[];
+    host: string;
+    port: number;
+    ext: string[];
+    ideConnectDebugger: boolean;
+}
 
 export class EmmyNewDebugSession extends EmmyDebugSession {
     private listenMode = false;
     private socket: net.Server | undefined;
 
-    protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyDebugArguments): void {
+    protected launchRequest(response: DebugProtocol.LaunchResponse, args: EmmyNewDebugArguments): void {
         this.ext = args.ext;
         this.extensionPath = args.extensionPath;
         if (!args.ideConnectDebugger) {

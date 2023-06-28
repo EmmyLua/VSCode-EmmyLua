@@ -1,6 +1,15 @@
 import * as vscode from 'vscode';
-import { EmmyLaunchDebugConfiguration } from "../base/types";
+import { DebugConfigurationBase } from "../base/DebugConfigurationBase";
 import { DebuggerProvider } from "../base/DebuggerProvider";
+
+export interface EmmyLaunchDebugConfiguration extends DebugConfigurationBase {
+    program: string;
+    arguments: string[];
+    workingDir: string;
+    blockOnExit: boolean;
+    useWindowsTerminal: boolean;
+}
+
 
 export class EmmyLaunchDebuggerProvider extends DebuggerProvider {
     async resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, configuration: EmmyLaunchDebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration> {

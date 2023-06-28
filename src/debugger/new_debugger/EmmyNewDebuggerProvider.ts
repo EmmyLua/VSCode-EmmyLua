@@ -1,9 +1,15 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { EmmyDebugConfiguration } from '../base/types';
+import { DebugConfigurationBase } from '../base/DebugConfigurationBase';
 import { ctx } from '../../extension';
 import { DebuggerProvider } from '../base/DebuggerProvider';
+
+export interface EmmyDebugConfiguration extends DebugConfigurationBase {
+    host: string;
+    port: number;
+    ideConnectDebugger: boolean;
+}
 
 export class EmmyNewDebuggerProvider extends DebuggerProvider {
     private showWaitConnectionToken = new vscode.CancellationTokenSource();
