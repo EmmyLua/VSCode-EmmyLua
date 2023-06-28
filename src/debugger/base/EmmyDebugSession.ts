@@ -2,8 +2,8 @@ import * as net from "net";
 import * as readline from 'readline';
 import * as proto from "./EmmyDebugProto";
 import { DebugSession } from "./DebugSession";
-import { DebugProtocol } from "vscode-debugprotocol";
-import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent } from "vscode-debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
+import { StoppedEvent, StackFrame, Thread, Source, Handles, TerminatedEvent, InitializedEvent, Breakpoint, OutputEvent } from "@vscode/debugadapter";
 import { EmmyStack, IEmmyStackNode, EmmyVariable, IEmmyStackContext, EmmyStackENV } from "./EmmyDebugData";
 import { readFileSync } from "fs";
 import { join, normalize } from "path";
@@ -29,6 +29,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             supportTerminateDebuggee: true,
             supportsLogPoints: true,
             supportsHitConditionalBreakpoints: true,
+            // supports: true,
             // supportsDelayedStackTraceLoading: true,
             // supportsCompletionsRequest: true
         };

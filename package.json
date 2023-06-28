@@ -2,19 +2,17 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.5.14",
+    "version": "0.5.15",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
-        "vscode": "^1.70.0"
+        "vscode": "^1.79.0"
     },
     "categories": [
         "Programming Languages",
         "Debuggers"
     ],
     "activationEvents": [
-        "onLanguage:lua",
-        "onView:emmylua.syntax.tree",
         "onDebug"
     ],
     "repository": {
@@ -473,17 +471,17 @@
     "devDependencies": {
         "@types/mocha": "^9.1.0",
         "@types/node": "^17.0.21",
-        "@types/vscode": "1.68.0",
+        "@types/vscode": "1.79.0",
         "download": "^7.1.0",
         "eslint": "^8.11.0",
         "filecopy": "^4.0.2",
         "typescript": "^4.0.2"
     },
     "dependencies": {
+        "@vscode/debugadapter": "^1.61.0",
+        "@vscode/debugprotocol": "^1.61.0",
         "iconv-lite": "^0.6.3",
         "smart-buffer": "^4.0.1",
-        "vscode-debugadapter": "1.51.0",
-        "vscode-debugprotocol": "1.51.0",
         "vscode-languageclient": "8.0.2"
     }
 }

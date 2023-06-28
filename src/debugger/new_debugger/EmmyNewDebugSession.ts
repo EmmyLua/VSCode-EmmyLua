@@ -1,7 +1,7 @@
 import * as net from "net";
 import { EmmyDebugSession } from "../base/EmmyDebugSession";
-import { Event, OutputEvent, TerminatedEvent } from "vscode-debugadapter";
-import { DebugProtocol } from "vscode-debugprotocol";
+import { Event, OutputEvent, TerminatedEvent } from "@vscode/debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
 
 export interface EmmyNewDebugArguments extends DebugProtocol.AttachRequestArguments {
     extensionPath: string;

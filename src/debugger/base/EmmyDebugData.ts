@@ -1,6 +1,6 @@
 import * as proto from "./EmmyDebugProto";
-import { DebugProtocol } from "vscode-debugprotocol";
-import { Handles } from "vscode-debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
+import { Handles } from "@vscode/debugadapter";
 
 export interface IEmmyStackContext {
     handles: Handles<IEmmyStackNode>;
@@ -65,20 +65,39 @@ export class EmmyVariable implements IEmmyStackNode {
         private parent?: EmmyVariable,
     ) {
         let value = this.data.value;
+        let presentationHint: DebugProtocol.VariablePresentationHint = {
+            kind: 'property',
+            attributes: []
+        };
         switch (this.data.valueType) {
             case proto.ValueType.TSTRING:
                 value = `"${this.data.value}"`;
+                presentationHint.attributes?.push('rawString');
+                break;
+            case proto.ValueType.TFUNCTION:
+                presentationHint.kind = 'method';
                 break;
         }
         let name = this.data.name;
         switch (this.data.nameType) {
             case proto.ValueType.TSTRING:
+                if (name.startsWith("_")) {
+                    presentationHint.attributes?.push('private');
+                }
+                else {
+                    presentationHint.attributes?.push('public');
+                }
+
+                break;
+            case proto.ValueType.TNUMBER:
+                name = `[${name}]`;
+                presentationHint.kind = 'data'
                 break;
             default:
                 name = `[${name}]`;
                 break;
         }
-        this.variable = { name, value, variablesReference: 0 };
+        this.variable = { name, value, variablesReference: 0, presentationHint };
     }
 
     toVariable(ctx: IEmmyStackContext): DebugProtocol.Variable {

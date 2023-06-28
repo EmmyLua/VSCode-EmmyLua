@@ -2,8 +2,8 @@ import * as net from "net";
 import * as cp from "child_process";
 import * as proto from "../base/EmmyDebugProto";
 import { EmmyDebugSession } from "../base/EmmyDebugSession";
-import { OutputEvent } from "vscode-debugadapter";
-import { DebugProtocol } from "vscode-debugprotocol";
+import { OutputEvent } from "@vscode/debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
 
 
 interface EmmyAttachDebugArguments extends DebugProtocol.AttachRequestArguments {

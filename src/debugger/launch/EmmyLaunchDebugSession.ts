@@ -3,8 +3,8 @@ import * as cp from "child_process";
 import * as process from "process";
 import * as proto from "../base/EmmyDebugProto";
 import { EmmyDebugSession } from "../base/EmmyDebugSession";
-import { OutputEvent } from "vscode-debugadapter";
-import { DebugProtocol } from "vscode-debugprotocol";
+import { OutputEvent } from "@vscode/debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
 
 interface EmmyLaunchDebugArguments extends DebugProtocol.LaunchRequestArguments {
     extensionPath: string;

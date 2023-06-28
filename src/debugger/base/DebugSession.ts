@@ -1,5 +1,5 @@
-import { LoggingDebugSession, Event, OutputEvent } from "vscode-debugadapter";
-import { DebugProtocol } from "vscode-debugprotocol";
+import { LoggingDebugSession, Event, OutputEvent } from "@vscode/debugadapter";
+import { DebugProtocol } from "@vscode/debugprotocol";
 
 export abstract class DebugSession extends LoggingDebugSession {
     constructor() {
