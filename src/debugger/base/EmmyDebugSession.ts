@@ -29,7 +29,7 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
             supportTerminateDebuggee: true,
             supportsLogPoints: true,
             supportsHitConditionalBreakpoints: true,
-            // supports: true,
+            supportsSetExpression: true,
             // supportsDelayedStackTraceLoading: true,
             // supportsCompletionsRequest: true
         };
@@ -232,6 +232,29 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         });
     }
 
+    async setEval(expr: string, value: string, cacheId: number, depth: number = 1, stackLevel = -1): Promise<proto.IEvalRsp> {
+        const req: proto.IEvalReq = {
+            cmd: proto.MessageCMD.EvalReq,
+            seq: this.evalIdCount++,
+            stackLevel: stackLevel >= 0 ? stackLevel : this.currentFrameId,
+            expr,
+            depth,
+            cacheId,
+            value,
+            setValue: true,
+        };
+        this.sendMessage(req);
+        return new Promise<proto.IEvalRsp>((resolve, reject) => {
+            const listener = (msg: proto.IEvalRsp) => {
+                if (msg.seq === req.seq) {
+                    this.removeListener('onEvalRsp', listener);
+                    resolve(msg);
+                }
+            };
+            this.on('onEvalRsp', listener);
+        });
+    }
+
     protected setBreakPointsRequest(response: DebugProtocol.SetBreakpointsResponse, args: DebugProtocol.SetBreakpointsArguments): void {
         const source = args.source;
         const bpsProto: proto.IBreakPoint[] = [];
@@ -262,6 +285,26 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
         this.sendResponse(response);
     }
 
+    protected async setExpressionRequest(response: DebugProtocol.SetExpressionResponse, args: DebugProtocol.SetExpressionArguments, request?: DebugProtocol.Request): Promise<void> {
+        const evalResp = await this.setEval(args.expression, args.value,0, 1, args.frameId);
+        if (evalResp.success) {
+            const emmyVar = new EmmyVariable(evalResp.value);
+            const variable = emmyVar.toVariable(this);
+            response.body = {
+                value: variable.value,
+                type: variable.type,
+                variablesReference: variable.variablesReference
+            };
+        }
+        else {
+            response.body = {
+                value: evalResp.error,
+                type: 'string',
+                variablesReference: 0
+            };
+        }
+        this.sendResponse(response);
+    }
     // protected completionsRequest(response: DebugProtocol.CompletionsResponse, args: DebugProtocol.CompletionsArguments, request?: DebugProtocol.Request): void {
         
     // }

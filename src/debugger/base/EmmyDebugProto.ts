@@ -132,6 +132,8 @@ export interface IEvalReq extends IMessage {
     stackLevel: number;
     depth: number;
     cacheId: number;
+    value?: string;
+    setValue?: boolean;
 }
 
 export interface IEvalRsp {

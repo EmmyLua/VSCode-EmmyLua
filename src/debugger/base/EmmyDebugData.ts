@@ -65,39 +65,41 @@ export class EmmyVariable implements IEmmyStackNode {
         private parent?: EmmyVariable,
     ) {
         let value = this.data.value;
-        let presentationHint: DebugProtocol.VariablePresentationHint = {
-            kind: 'property',
-            attributes: []
-        };
+        // vscode not implement this feature
+        // let presentationHint: DebugProtocol.VariablePresentationHint = {
+        //     kind: 'property',
+        //     attributes: []
+        // };
         switch (this.data.valueType) {
             case proto.ValueType.TSTRING:
                 value = `"${this.data.value}"`;
-                presentationHint.attributes?.push('rawString');
                 break;
-            case proto.ValueType.TFUNCTION:
-                presentationHint.kind = 'method';
-                break;
+            //     presentationHint.attributes?.push('rawString');
+            //     break;
+            // case proto.ValueType.TFUNCTION:
+            //     presentationHint.kind = 'method';
+            //     break;
         }
         let name = this.data.name;
         switch (this.data.nameType) {
             case proto.ValueType.TSTRING:
-                if (name.startsWith("_")) {
-                    presentationHint.attributes?.push('private');
-                }
-                else {
-                    presentationHint.attributes?.push('public');
-                }
+                // if (name.startsWith("_")) {
+                //     presentationHint.attributes?.push('private');
+                // }
+                // else {
+                //     presentationHint.attributes?.push('public');
+                // }
 
                 break;
             case proto.ValueType.TNUMBER:
                 name = `[${name}]`;
-                presentationHint.kind = 'data'
+                // presentationHint.kind = 'data'
                 break;
             default:
                 name = `[${name}]`;
                 break;
         }
-        this.variable = { name, value, variablesReference: 0, presentationHint };
+        this.variable = { name, value, variablesReference: 0 };
     }
 
     toVariable(ctx: IEmmyStackContext): DebugProtocol.Variable {
