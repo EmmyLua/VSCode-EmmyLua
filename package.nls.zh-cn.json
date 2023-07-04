@@ -39,7 +39,5 @@
     "debug.launch.workingDir": "设置工作区",
     "debug.launch.arguments": "传递给可执行文件的参数",
     "debug.launch.blockOnExit": "进程结束时是否阻塞进程保持窗口开启",
-    "debug.launch.useWindowsTerminal": "emmylua 使用windows terminal 打开进程"
-
- 
+    "debug.launch.newWindow": "emmylua会创建一个新窗口展示这个进程"
 }

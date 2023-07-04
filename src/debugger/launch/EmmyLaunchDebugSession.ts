@@ -1,9 +1,8 @@
 import * as net from "net";
 import * as cp from "child_process";
-import * as process from "process";
 import * as proto from "../base/EmmyDebugProto";
 import { EmmyDebugSession } from "../base/EmmyDebugSession";
-import { OutputEvent } from "@vscode/debugadapter";
+import { ExitedEvent, OutputEvent, TerminatedEvent } from "@vscode/debugadapter";
 import { DebugProtocol } from "@vscode/debugprotocol";
 
 interface EmmyLaunchDebugArguments extends DebugProtocol.LaunchRequestArguments {
@@ -13,7 +12,7 @@ interface EmmyLaunchDebugArguments extends DebugProtocol.LaunchRequestArguments 
     arguments: string[];
     workingDir: string;
     blockOnExit?: boolean;
-    useWindowsTerminal?: boolean;
+    newWindow?: boolean;
     ext: string[];
 }
 
@@ -26,8 +25,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     private program: string = "";
     private workingDir: string = "";
     private arguments: string[] = [];
-    private blockOnExit: boolean = true;
-    private debugClient?: net.Socket;
+    private toolProcess?: cp.ChildProcess;
     private pid = 0;
 
 
@@ -45,14 +43,11 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         this.program = args.program ?? "";
         this.workingDir = args.workingDir ?? ""
         this.arguments = args.arguments ?? []
-        this.blockOnExit = args.blockOnExit ?? true;
-
-
-        if (args.useWindowsTerminal) {
-            this.pid = await this.runAndAttachUseWindowsTerminal();
+        if (args.newWindow) {
+            this.pid = await this.launchWithWindow();
         }
         else {
-            this.pid = await this.runAndAttachUseCmd();
+            this.pid = await this.launchDebug();
         }
         const client = net.connect(this.getPort(this.pid), 'localhost')
             .on('connect', () => {
@@ -63,8 +58,8 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
                 this.sendMessage({ cmd: proto.MessageCMD.StartHookReq });
                 //TODO 延时的原因是等待hook api完成,后续改成消息通知
                 setTimeout(() => {
-                    this.debugClient?.write("connected\n");
-                }, 300);
+                    this.toolProcess?.stdin?.write("connected\n");
+                }, 500);
             })
             .on('error', err => {
                 response.success = false;
@@ -75,7 +70,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     }
 
     private async detectArch(): Promise<WinArch> {
-        const cwd = `${this.extensionPath}/debugger/emmy/windows/x86`;
+        const cwd = `${this.extensionPath}/debugger/emmy/windows/x64`;
         const args = [
             'emmy_tool.exe',
             'arch_file',
@@ -90,60 +85,17 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         });
     }
 
-    private async runAndAttachUseWindowsTerminal(): Promise<number> {
-        const selfPid = process.pid;
-        const port = this.getPort(selfPid);
-
-        const arch = await this.detectArch();
-        const archName = arch === WinArch.X64 ? 'x64' : 'x86';
-        const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
-        const mc = this.program.match(/[^/\\]+$/);
-        const args = [
-            "--title",
-            `${mc ? mc[0] : this.program}`,
-            "emmy_tool.exe",
-            "run_and_attach",
-            "-dll",
-            "emmy_hook.dll",
-            "-dir",
-            `"${cwd}"`,
-            "-work",
-            `"${this.workingDir}"`,
-            `${this.blockOnExit ? "-block-on-exit" : ""}`,
-            "-exe",
-            `"${this.program}"`,
-            "-debug-port",
-            `${port}`,
-            "-args",
-        ];
-
-        args.push(...(<string[]>this.arguments));
-        return new Promise((r, c) => {
-            // this.sendEvent(new OutputEvent(`run attach`))
-            net.createServer(client => {
-                this.debugClient = client.on("data", (buffer) => {
-                    r(Number(buffer.toString()));
-                }).on("close", () => {
-                    console.log("close");
-                }).on("error", (e) => {
-                    console.log(e);
-                });
-            }).listen(port, "localhost");
-
-            cp.spawn(`wt`, args, {
-                cwd: cwd
-            });
-        });
+    protected onDisconnect(): void {
+        this.toolProcess?.stdin?.write("close");
     }
 
-    private async runAndAttachUseCmd(): Promise<number> {
-        const selfPid = process.pid;
-        const port = this.getPort(selfPid);
+    private async launchWithWindow(): Promise<number> {
         const arch = await this.detectArch();
         const archName = arch === WinArch.X64 ? 'x64' : 'x86';
         const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
+        // const mc = this.program.match(/[^/\\]+$/);
         const args = [
-            "run_and_attach",
+            "launch",
             "-create-new-window",
             "-dll",
             "emmy_hook.dll",
@@ -151,31 +103,84 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
             `"${cwd}"`,
             "-work",
             `"${this.workingDir}"`,
-            `${this.blockOnExit ? "-block-on-exit" : ""}`,
             "-exe",
             `"${this.program}"`,
-            "-debug-port",
-            `${port}`,
+            "-args"
+        ];
+
+        args.push(...(<string[]>this.arguments));
+        return new Promise((r, c) => {
+            const childProcess = cp.spawn(`emmy_tool.exe`, args, {
+                cwd: cwd,
+                windowsHide: false
+            });
+            childProcess.stderr.on("data", (e) => {
+                const s = e.toString();
+                this.sendEvent(new OutputEvent(s));
+            });
+            let forOut = false;
+            childProcess.stdout.on("data", (e) => {
+                if (!forOut) {
+                    forOut = true;
+                    r(Number(e.toString()));
+                }
+                else {
+                    this.sendEvent(new OutputEvent(e.toString()));
+                }
+            });
+
+            childProcess.on("exit", code => {
+                this.sendEvent(new TerminatedEvent());
+                this.toolProcess = undefined;
+            });
+            this.toolProcess = childProcess;
+        });
+    }
+
+    private async launchDebug(): Promise<number> {
+        const arch = await this.detectArch();
+        const archName = arch === WinArch.X64 ? 'x64' : 'x86';
+        const cwd = `${this.extensionPath}/debugger/emmy/windows/${archName}`;
+        const args = [
+            "launch",
+            "-dll",
+            "emmy_hook.dll",
+            "-dir",
+            `"${cwd}"`,
+            "-work",
+            `"${this.workingDir}"`,
+            "-exe",
+            `"${this.program}"`,
             "-args",
         ];
 
         args.push(...(<string[]>this.arguments));
         return new Promise((r, c) => {
-            // this.sendEvent(new OutputEvent(`run attach`))
-            net.createServer(client => {
-                this.debugClient = client.on("data", (buffer) => {
-                    r(Number(buffer.toString()));
-                }).on("close", () => {
-                    console.log("close");
-                }).on("error", (e) => {
-                    console.log(e);
-                });
-            }).listen(port, "localhost");
-
-            cp.spawn(`emmy_tool.exe`, args, {
+            const childProcess = cp.spawn(`emmy_tool.exe`, args, {
                 cwd: cwd,
                 windowsHide: false
             });
+            childProcess.stderr.on("data", (e) => {
+                const s = e.toString();
+                this.sendEvent(new OutputEvent(s));
+            });
+            let forOut = false;
+            childProcess.stdout.on("data", (e) => {
+                if (!forOut) {
+                    forOut = true;
+                    r(Number(e.toString()));
+                }
+                else {
+                    this.sendEvent(new OutputEvent(e.toString()));
+                }
+            });
+
+            childProcess.on("exit", code => {
+                this.sendEvent(new TerminatedEvent());
+                this.toolProcess = undefined;
+            });
+
+            this.toolProcess = childProcess;
         });
     }
 
@@ -195,7 +200,7 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments) {
         super.disconnectRequest(response, args);
         if (args.terminateDebuggee) {
-            this.debugClient?.write("close");
+            this.toolProcess?.stdin?.write("close");
         }
     }
 

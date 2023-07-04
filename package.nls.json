@@ -39,5 +39,5 @@
     "debug.launch.workingDir": "working directory",
     "debug.launch.arguments": "arguments pass to executable file",
     "debug.launch.blockOnExit": "block process when exit",
-    "debug.launch.useWindowsTerminal": "emmylua use windows terminal open process "
+    "debug.launch.newWindow": "create new windows"
 }

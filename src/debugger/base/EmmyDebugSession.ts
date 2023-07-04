@@ -89,6 +89,10 @@ export class EmmyDebugSession extends DebugSession implements IEmmyStackContext 
 
     protected disconnectRequest(response: DebugProtocol.DisconnectResponse, args: DebugProtocol.DisconnectArguments): void {
         this.sendDebugAction(response, proto.DebugAction.Stop);
+        this.onDisconnect();
+    }
+
+    protected onDisconnect() {
     }
 
     private onReceiveLine(line: string) {

@@ -133,7 +133,7 @@
                             "program",
                             "workingDir",
                             "arguments",
-                            "useWindowsTerminal"
+                            "newWindow"
                         ],
                         "properties": {
                             "program": {
@@ -151,15 +151,10 @@
                                 "description": "%debug.launch.arguments%",
                                 "default": []
                             },
-                            "blockOnExit": {
+                            "newWindow": {
                                 "type": "boolean",
-                                "description": "%debug.launch.blockOnExit%",
-                                "default": true
-                            },
-                            "useWindowsTerminal": {
-                                "type": "boolean",
-                                "description": "%debug.launch.useWindowsTerminal%",
-                                "default": true
+                                "description": "%debug.launch.newWindow%",
+                                "default": false
                             }
                         }
                     }
@@ -172,8 +167,7 @@
                         "program": "",
                         "workingDir": "",
                         "arguments": [],
-                        "blockOnExit": true,
-                        "useWindowsTerminal": true
+                        "newWindow": false
                     }
                 ],
                 "configurationSnippets": [
@@ -187,7 +181,7 @@
                             "program": "",
                             "workingDir": "",
                             "arguments": [],
-                            "blockOnExit": true
+                            "newWindow": false
                         }
                     }
                 ],
