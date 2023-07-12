@@ -1,8 +1,14 @@
 # Change Log
 
+[English Change Log](CHANGELOG_EN.md)
+
 ## next
 
 全新的语言服务正在开发中, 项目使用rust重写.
+
+## 0.5.17
+
+`FIX` 修复一个调试崩溃问题
 
 ## 0.5.16
 

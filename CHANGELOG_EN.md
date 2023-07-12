@@ -5,6 +5,29 @@
 
 A completely new language service is under development, and the project is rewritten using Rust.
 
+## 0.5.17
+
+`FIX` Fixed a debugging crash issue.
+
+## 0.5.16
+
+`REFACTOR` Refactored launch debugging to support displaying prints in the debug window of vscode, or choosing to open a new console window for prints.
+
+`FIX` Fixed an issue introduced by language service 0.5.15 where the workspace was not loading.
+
+`NOTE` Minimum required vscode version is `1.79`.
+
+
+## 0.5.15
+
+`REFACTOR` Reorganized debugger adapter code structure to allow debugging in the same process as the plugin when in development mode.
+
+`REFACTOR` Refactored debugger protocol code.
+
+`NEW` Added support for runtime setting expressions (not effective for local variables, requires future modifications).
+
+`REFACTOR` Refactored multithreading aspects of the language service.
+
 ## 0.5.14
 
 `FIX` fixes debugging issues and upgrades the debugger to 1.5.1
