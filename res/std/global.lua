@@ -17,10 +17,11 @@
 --- **false**); otherwise, returns all its arguments. In case of error,
 --- `message` is the error object; when absent, it defaults to "assertion
 --- failed!"
----@overload fun(v:any):any
----@param v any
+---@overload fun(v:T):T
+---@generic T
+---@param v T
 ---@param message string
----@return any
+---@return T
 function assert(v, message) end
 
 ---
