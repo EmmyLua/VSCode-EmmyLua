@@ -69,13 +69,13 @@ export class EmmyAttachDebuggerProvider extends DebuggerProvider {
                             reject();
                         }
                     });
-                }else if(items.length == 1){
+                } else if (items.length == 1) {
                     resolve(items[0].pid);
-                }else{
+                } else {
                     vscode.window.showErrorMessage("No process for attach")
                     reject();
                 }
-                
+
             }).on("error", error => reject);
         });
     }

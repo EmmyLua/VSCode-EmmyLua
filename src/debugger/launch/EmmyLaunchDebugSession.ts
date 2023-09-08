@@ -49,7 +49,11 @@ export class EmmyLaunchDebugSession extends EmmyDebugSession {
         else {
             this.pid = await this.launchDebug();
         }
-        const client = net.connect(this.getPort(this.pid), 'localhost')
+        const client = net.connect({
+            port: this.getPort(this.pid),
+            host: "localhost",
+            family: 4
+        })
             .on('connect', () => {
 
                 this.sendResponse(response);
