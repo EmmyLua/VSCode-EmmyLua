@@ -3,7 +3,11 @@
 
 ## next
 
-A completely new language service is under development, and the project is rewritten using Rust.
+A completely new language service is under development, and the project is rewritten using C#.
+
+## 0.5.18
+
+`FIX` Due to updates in vscode, the net module of nodejs has issues with resolving localhost, causing the debugger to be unable to connect to the target process.
 
 ## 0.5.17
 
