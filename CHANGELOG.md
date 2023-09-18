@@ -6,6 +6,10 @@
 
 全新的语言服务正在开发中, 项目使用C#重写.
 
+## 0.5.19
+
+`NEW` 调试器支持IPV6地址, 所有dns会优先解析为IPV6, 例如localhost将会被解析为IPV6地址
+
 ## 0.5.18
 
 `FIX` 因为vscode的更新使得nodejs的net模块对localhost解析出现问题, 导致调试器无法连接到目标进程

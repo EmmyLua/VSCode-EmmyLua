@@ -37,13 +37,9 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
         this.captureLog = args.captureLog;
 
         await this.attach();
-        
+
         // send resp
-        const client = net.connect({
-            port: this.getPort(this.pid),
-            host: "localhost",
-            family: 4
-        })
+        const client = net.connect(this.getPort(this.pid), "localhost")
             .on('connect', () => {
                 this.sendResponse(response);
                 this.onConnect(client);
@@ -89,7 +85,7 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
             '-dll',
             'emmy_hook.dll'
         ];
-        if(this.captureLog){
+        if (this.captureLog) {
             args.push("-capture-log");
         }
 
@@ -99,13 +95,13 @@ export class EmmyAttachDebugSession extends EmmyDebugSession {
             })
                 .on('close', (code) => {
                     if (code === 0) {
-                        if(this.captureLog){
+                        if (this.captureLog) {
                             const captureArgs = [
                                 "emmy_tool.exe",
                                 "receive_log",
                                 "-p",
                                 `${this.pid}`,
-                            ] 
+                            ]
                             cp.spawn(`wt`, captureArgs, {
                                 cwd: cwd
                             });

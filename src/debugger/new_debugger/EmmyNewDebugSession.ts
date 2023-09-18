@@ -43,11 +43,7 @@ export class EmmyNewDebugSession extends EmmyDebugSession {
         }
         else {
             // send resp
-            const client = net.connect({
-                port: args.port,
-                host: args.host,
-                family: 4
-            })
+            const client = net.connect(args.port, args.host)
                 .on('connect', () => {
                     this.sendResponse(response);
                     this.onConnect(client);
