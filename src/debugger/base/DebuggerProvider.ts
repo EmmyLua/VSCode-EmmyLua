@@ -89,7 +89,7 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     while (parts.length >= 2) {
                         parts = parts.slice(1);
                         const matchFile = path.join("**", ...parts)
-                        uris = await vscode.workspace.findFiles(matchFile, null, 1);
+                        uris = await vscode.workspace.findFiles(matchFile, null, 10);
                         if (uris.length !== 0) {
                             break;
                         }
@@ -100,6 +100,10 @@ export abstract class DebuggerProvider implements vscode.DebugConfigurationProvi
                     results = uris.map(it => it.fsPath);
                     break;
                 }
+            }
+            
+            if (results.length !== 0) {
+                results = results.sort((a, b) => a.length - b.length)
             }
 
             e.session.customRequest('findFileRsp', { files: results, seq: seq });
