@@ -13,30 +13,34 @@ import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyNewDebuggerProvider } from './debugger/new_debugger/EmmyNewDebuggerProvider';
 import { EmmyAttachDebuggerProvider } from './debugger/attach/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/launch/EmmyLaunchDebuggerProvider';
-import { EmmyCtx } from './emmyCtx';
-import { active } from './tree_view/treeView';
-import { InlineDebugAdapterFactory} from './debugger/DebugFactory'
+import { EmmyContext } from './emmyContext';
+import { InlineDebugAdapterFactory } from './debugger/DebugFactory'
+import * as os from 'os';
+import * as fs from 'fs';
 
-export let ctx: EmmyCtx;
+export let ctx: EmmyContext;
 let activeEditor: vscode.TextEditor;
 let javaExecutablePath: string | null;
 let configWatcher: EmmyConfigWatcher;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
-    ctx = new EmmyCtx(
+    ctx = new EmmyContext(
         process.env['EMMY_DEV'] === "true",
-        context
+        context,
+        vscode.workspace.getConfiguration("emmylua").get("new.languageServer") as boolean
     );
-    javaExecutablePath = findJava();
+    if (!ctx.newLanguageServer) {
+        javaExecutablePath = findJava();
+        context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
+        context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
+        context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
+        context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
+        context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
+        context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
+        context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
+    }
 
-    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
-    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
-    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
     context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 
     configWatcher = new EmmyConfigWatcher();
@@ -44,7 +48,6 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(configWatcher);
     startServer();
     registerDebuggers();
-    registerTreeView();
     return {
         reportAPIDoc: (classDoc: any) => {
             ctx?.client?.sendRequest("emmy/reportAPI", classDoc);
@@ -103,10 +106,6 @@ function registerDebuggers() {
             return allValues;
         }
     }));
-}
-
-function registerTreeView() {
-    active(ctx)
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
@@ -171,7 +170,7 @@ async function validateJava(): Promise<void> {
 
 async function startServer() {
     try {
-        if (!ctx.debugMode) {
+        if (!ctx.debugMode && !ctx.newLanguageServer) {
             await validateJava();
         }
     } catch (error) {
@@ -230,12 +229,57 @@ async function doStartServer() {
             });
             return Promise.resolve(result);
         };
-    } else {
+    } else if (!ctx.newLanguageServer) {
         const cp = path.resolve(context.extensionPath, "server", "*");
         const exePath = javaExecutablePath || "java";
         serverOptions = {
             command: exePath,
             args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseG1GC", "-XX:+UseStringDeduplication"]
+        };
+    } else {
+        let platform: string = os.platform();
+
+        let command: string = "";
+        switch (platform) {
+            case "win32":
+                command = path.join(
+                    context.extensionPath,
+                    'server',
+                    'win32-x64',
+                    'LanguageServer.exe'
+                )
+                break;
+            case "linux":
+                command = path.join(
+                    context.extensionPath,
+                    'server',
+                    'linux-x64',
+                    'LanguageServer'
+                )
+                fs.chmodSync(command, '777');
+                break;
+            case "darwin":
+                if (os.arch() === "arm64") {
+                    command = path.join(
+                        context.extensionPath,
+                        'server',
+                        'darwin-arm64',
+                        'LanguageServer'
+                    );
+                } else {
+                    command = path.join(
+                        context.extensionPath,
+                        'server',
+                        'darwin-x64',
+                        'LanguageServer'
+                    );
+                }
+                fs.chmodSync(command, '777');
+                break;
+        }
+        serverOptions = {
+            command: command,
+            args: []
         };
     }
 

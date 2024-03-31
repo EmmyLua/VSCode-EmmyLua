@@ -2,9 +2,28 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
-## next
+## 0.6.0
 
-全新的语言服务正在开发中, 项目使用C#重写.
+`NEW` 可选的使用新的语言分析后端，新的分析后端支持更多的特性，包括但不限于：
+- 真泛型类
+- 复杂泛型函数的类型推断
+- 运算符重载
+- 多重继承
+- 接口和接口继承
+- enum和alias的常量补全
+- 支持元组类型 [int, int, int]
+- 支持---@async标注
+- Emmylua doc可以在任意处换行, 并且支持多行注释
+- 支持 #123456 格式的文本的color显示
+- 支持基于代码补全的auto require (如果模块存在返回值)
+- 调整require的路径显示
+- 兼容LuaLs的大部分doc标注, 但功能并未完全实现
+
+`NOTE` java版本的语言服务会和C#写的语言服务共存, 去settings下搜索emmylua.new开启后重启vscode即可, 版本号暂时升级到0.6, 经过1到2个月的BUG修复期之后, 版本会升级到0.7, 此时会移除java版本的语言服务.
+再经过一段时间的稳定, vscode-emmylua版本号将升级到1.0
+
+新语言服务的地址: https://github.com/CppCXY/EmmyLuaAnalyzer
+
 
 ## 0.5.19
 

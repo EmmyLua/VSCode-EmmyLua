@@ -3,7 +3,6 @@
 
 VSCode version of [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5psq8f7jjix23mwg?svg=true)](https://ci.appveyor.com/project/EmmyLua/vscode-emmylua)
 
 QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下载)
 
@@ -47,4 +46,4 @@ A: 在项目根目录创建`emmy.config.json`然后如下填写:
 ```
 Q: 全新的语言服务何时上线?
 
-A: 不知道
+A: 现在已经上线, 去settings下搜索emmylua.new开启后重启vscode即可

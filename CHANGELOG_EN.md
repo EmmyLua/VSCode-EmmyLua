@@ -1,9 +1,27 @@
 # Change Log
 
+## 0.6.0
 
-## next
+`NEW` Optional use of the new language analysis backend, the new analysis backend supports more features, including but not limited to:
+- True generic classes
+- Complex generic function type inference
+- Operator overloading
+- Multiple inheritance
+- Interface inheritance
+- Constant completion of enum and alias
+- Support for tuple types [int, int, int]
+- Support for ---@async annotation
+- Emmylua doc can be line-wrapped anywhere, and supports multi-line comments
+- Support for color display of #123456 format text
+- Support for auto require based on code completion (module has return value)
+- Adjust the display of require path
+- Compatible with most of LuaLs's doc annotations, but the function is not fully implemented
 
-A completely new language service is under development, and the project is rewritten using C#.
+`NOTE` The Java version of the language service can coexist with the language service written in C#. To enable it, search for "emmylua.new" in settings, restart vscode after enabling. The version number is currently upgraded to 0.6. After 1 to 2 months of bug fixing, the version will be upgraded to 0.7, at which point the Java version of the language service will be removed. After a period of stability, the vscode-emmylua version number will be upgraded to 1.0.
+
+The address of the new language service: https://github.com/CppCXY/EmmyLuaAnalyzer
+
+`NEW` The debugger provides stronger customization features
 
 ## 0.5.19
 

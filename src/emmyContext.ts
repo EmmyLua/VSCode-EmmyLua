@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
 import { IProgressReport, ServerStatusParams } from './lspExt';
 
-export class EmmyCtx {
+export class EmmyContext {
     public LANGUAGE_ID: string = "lua"; //EmmyLua
     public client?: LanguageClient;
     private readonly statusBar: vscode.StatusBarItem;
@@ -11,7 +11,7 @@ export class EmmyCtx {
     constructor(
         public debugMode: boolean,
         public extensionContext: vscode.ExtensionContext,
-
+        public newLanguageServer: boolean
     ) {
         this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
         this.loadBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);

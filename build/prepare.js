@@ -20,6 +20,10 @@ async function downloadDepends() {
         downloadTo(`${config.emmyDebuggerUrl}/${config.emmyDebuggerVersion}/win32-x86.zip`, 'temp/win32-x86.zip'),
         downloadTo(`${config.emmyDebuggerUrl}/${config.emmyDebuggerVersion}/win32-x64.zip`, 'temp/win32-x64.zip'),
         downloadTo(`${config.lanServerUrl}/${config.lanServerVersion}/EmmyLua-LS-all.jar`, 'temp/EmmyLua-LS-all.jar'),
+        downloadTo(`${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/linux-x64.zip`, 'temp/server-linux-x64.zip'),
+        downloadTo(`${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/darwin-arm64.zip`, 'temp/server-darwin-arm64.zip'),
+        downloadTo(`${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/darwin-x64.zip`, 'temp/server-darwin-x64.zip'),
+        downloadTo(`${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/win32-x86.zip`, 'temp/server-win32-x86.zip'),
     ]);
 }
 
@@ -41,6 +45,11 @@ async function build() {
 
     // ls
     await fc('temp/EmmyLua-LS-all.jar', 'server/EmmyLua-LS-all.jar', { mkdirp: true });
+    // new ls
+    await decompress('temp/server-linux-x64.zip', 'server/');
+    await decompress('temp/server-darwin-x64.zip', 'server/');
+    await decompress('temp/server-darwin-arm64.zip', 'server/');
+    await decompress('temp/server-win32-x86.zip', 'server/');
 }
 
 build().catch(console.error);

@@ -1,0 +1,507 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\zc\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Users\zc\.cargo\bin;C:\Users\zc\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\zc\AppData\Local\JetBrains\Toolbox\scripts;C:\Users\zc\AppData\Roaming\npm;C:\Users\zc\xmake;C:\Users\zc\.dotnet\tools
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  19.9.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: connect ETIMEDOUT 104.16.27.34:443
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1532:16)
+
+npm manifest: 
+  {
+      "name": "emmylua",
+      "displayName": "EmmyLua",
+      "description": "EmmyLua for vscode",
+      "version": "0.5.19",
+      "icon": "res/icon.png",
+      "publisher": "tangzx",
+      "engines": {
+          "vscode": "^1.82.0"
+      },
+      "categories": [
+          "Programming Languages",
+          "Debuggers"
+      ],
+      "activationEvents": [
+          "onDebug"
+      ],
+      "repository": {
+          "type": "git",
+          "url": "https://github.com/EmmyLua/VSCode-EmmyLua"
+      },
+      "bugs": {
+          "url": "https://github.com/EmmyLua/VSCode-EmmyLua/issues"
+      },
+      "main": "./out/extension",
+      "contributes": {
+          "commands": [
+              {
+                  "command": "emmy.restartServer",
+                  "title": "EmmyLua: Restart Lua Server"
+              },
+              {
+                  "command": "emmy.insertEmmyDebugCode",
+                  "title": "EmmyLua: Insert Emmy Debugger Code"
+              },
+              {
+                  "command": "emmlua.syntax.view",
+                  "title": "EmmyLua: View Syntax Tree"
+              },
+              {
+                  "command": "emmlua.stopServer",
+                  "title": "EmmyLua: Stop EmmyLua Language Server"
+              }
+          ],
+          "snippets": [
+              {
+                  "language": "lua",
+                  "path": "./snippets/snippets.json"
+              }
+          ],
+          "languages": [
+              {
+                  "id": "lua",
+                  "extensions": [
+                      ".lua"
+                  ],
+                  "aliases": [
+                      "EmmyLua"
+                  ],
+                  "configuration": "./language-configuration.json"
+              }
+          ],
+          "breakpoints": [
+              {
+                  "language": "lua"
+              }
+          ],
+          "debuggers": [
+              {
+                  "type": "emmylua_attach",
+                  "label": "EmmyLua Attach Debug",
+                  "program": "./out/debugger/attach/EmmyAttachDebugAdapter.js",
+                  "runtime": "node",
+                  "configurationAttributes": {
+                      "attach": {
+                          "required": [
+                              "pid"
+                          ],
+                          "properties": {
+                              "pid": {
+                                  "type": "number",
+                                  "description": "%debug.attach.target_pid%",
+                                  "default": 0
+                              },
+                              "processName": {
+                                  "type": "string",
+                                  "description": "%debug.attach.target_process%",
+                                  "default": ""
+                              },
+                              "captureLog": {
+                                  "type": "boolean",
+                                  "description": "%debug.attach.captureLog%",
+                                  "default": false
+                              }
+                          }
+                      }
+                  },
+                  "initialConfigurations": [
+                      {
+                          "type": "emmylua_attach",
+                          "request": "attach",
+                          "name": "%debug.attach.name%",
+                          "pid": 0,
+                          "processName": "",
+                          "captureLog": false
+                      }
+                  ],
+                  "configurationSnippets": [
+                      {
+                          "label": "%debug.attach.label%",
+                          "description": "%debug.attach.desc%",
+                          "body": {
+                              "type": "emmylua_attach",
+                              "request": "attach",
+                              "name": "%debug.attach.name%",
+                              "pid": 0,
+                              "processName": ""
+                          }
+                      }
+                  ],
+                  "languages": [
+                      "lua"
+                  ]
+              },
+              {
+                  "type": "emmylua_launch",
+                  "label": "EmmyLua Launch Debug",
+                  "program": "./out/debugger/launch/EmmyLaunchDebugAdapter.js",
+                  "runtime": "node",
+                  "configurationAttributes": {
+                      "launch": {
+                          "required": [
+                              "program",
+                              "workingDir",
+                              "arguments",
+                              "newWindow"
+                          ],
+                          "properties": {
+                              "program": {
+                                  "type": "string",
+                                  "description": "%debug.launch.program%",
+                                  "default": ""
+                              },
+                              "workingDir": {
+                                  "type": "string",
+                                  "description": "%debug.launch.workingDir%",
+                                  "default": ""
+                              },
+                              "arguments": {
+                                  "type": "array",
+                                  "description": "%debug.launch.arguments%",
+                                  "default": []
+                              },
+                              "newWindow": {
+                                  "type": "boolean",
+                                  "description": "%debug.launch.newWindow%",
+                                  "default": false
+                              }
+                          }
+                      }
+                  },
+                  "initialConfigurations": [
+                      {
+                          "type": "emmylua_launch",
+                          "request": "launch",
+                          "name": "%debug.launch.name%",
+                          "program": "",
+                          "workingDir": "",
+                          "arguments": [],
+                          "newWindow": false
+                      }
+                  ],
+                  "configurationSnippets": [
+                      {
+                          "label": "%debug.launch.label%",
+                          "description": "%debug.launch.desc%",
+                          "body": {
+                              "type": "emmylua_launch",
+                              "request": "launch",
+                              "name": "%debug.launch.name%",
+                              "program": "",
+                              "workingDir": "",
+                              "arguments": [],
+                              "newWindow": false
+                          }
+                      }
+                  ],
+                  "languages": [
+                      "lua"
+                  ]
+              },
+              {
+                  "type": "emmylua_new",
+                  "label": "EmmyLua New Debugger",
+                  "program": "./out/debugger/new_debugger/EmmyNewDebugAdapter.js",
+                  "runtime": "node",
+                  "configurationAttributes": {
+                      "launch": {
+                          "required": [
+                              "host",
+                              "port",
+                              "ideConnectDebugger"
+                          ],
+                          "properties": {
+                              "host": {
+                                  "type": "string",
+                                  "description": "host",
+                                  "default": "localhost"
+                              },
+                              "port": {
+                                  "type": "number",
+                                  "description": "port",
+                                  "default": 9966
+                              },
+                              "ideConnectDebugger": {
+                                  "type": "boolean",
+                                  "description": "连接方式",
+                                  "default": true
+                              },
+                              "ext": {
+                                  "type": "array",
+                                  "description": "Lua文件后缀",
+                                  "default": [
+                                      ".lua"
+                                  ]
+                              }
+                          }
+                      }
+                  },
+                  "initialConfigurations": [
+                      {
+                          "type": "emmylua_new",
+                          "request": "launch",
+                          "name": "EmmyLua New Debug",
+                          "host": "localhost",
+                          "port": 9966,
+                          "ext": [
+                              ".lua",
+                              ".lua.txt",
+                              ".lua.bytes"
+                          ],
+                          "ideConnectDebugger": true
+                      }
+                  ],
+                  "configurationSnippets": [
+                      {
+                          "label": "EmmyLua New Debug",
+                          "description": "EmmyLua New Debug",
+                          "body": {
+                              "type": "emmylua_new",
+                              "request": "launch",
+                              "name": "EmmyLua New Debug",
+                              "host": "localhost",
+                              "port": 9966,
+                              "ext": [
+                                  ".lua",
+                                  ".lua.txt",
+                                  ".lua.bytes"
+                              ],
+                              "ideConnectDebugger": true
+                          }
+                      }
+                  ],
+                  "languages": [
+                      "lua"
+                  ]
+              }
+          ],
+          "configuration": {
+              "title": "EmmyLua",
+              "properties": {
+                  "emmylua.java.home": {
+                      "type": [
+                          "string",
+                          "null"
+                      ],
+                      "default": null,
+                      "description": "%emmylua.java.home%"
+                  },
+                  "emmylua.source.roots": {
+                      "type": [
+                          "array"
+                      ],
+                      "default": [],
+                      "description": "%emmylua.source.roots%"
+                  },
+                  "emmylua.completion.caseSensitive": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "%emmylua.completion.caseSensitive%"
+                  },
+                  "emmylua.codeLens": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "%emmylua.codeLens%"
+                  },
+                  "emmylua.debugger.defaultProgram": {
+                      "type": "string",
+                      "default": "lua",
+                      "description": "%emmylua.debugger.defaultProgram%"
+                  },
+                  "emmylua.colors.parameter": {
+                      "type": "string",
+                      "default": "#9FFC"
+                  },
+                  "emmylua.colors.global": {
+                      "type": "string",
+                      "default": "#FF6699"
+                  },
+                  "emmylua.colors.doc_type": {
+                      "type": "string",
+                      "default": "#66CCFF"
+                  },
+                  "emmylua.colors.not_use": {
+                      "type": "string",
+                      "default": "gray"
+                  },
+                  "emmylua.colors.upvalue": {
+                      "type": "string",
+                      "default": "#a8c023"
+                  },
+                  "emmylua.hint.paramHint": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "%emmylua.hint.paramHint%"
+                  },
+                  "emmylua.hint.localHint": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "%emmylua.hint.localHint%"
+                  },
+                  "emmylua.hint.varargHint": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "%emmylua.hint.varargHint%"
+                  },
+                  "emmylua.hint.overrideHint": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "%emmylua.hint.overrideHint%"
+                  },
+                  "emmylua.constructorNames": {
+                      "type": "string",
+                      "default": "new;get",
+                      "description": "%emmylua.constructor.names%"
+                  },
+                  "emmylua.requireLikeFunctions": {
+                      "type": "string",
+                      "default": "require",
+                      "description": "%emmylua.requirelike.names%"
+                  },
+                  "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "%emmylua.typecheck.anyTypeCanAssignToAnyDefineType%"
+                  },
+                  "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": {
+                      "type": "boolean",
+                      "default": true,
+                      "description": "%emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable%"
+                  },
+                  "emmylua.typecheck.defineTypeCanReceiveNilType": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "%emmylua.typecheck.defineTypeCanReceiveNilType%"
+                  },
+                  "emmylua.inspections.undeclaredVariable": {
+                      "type": "string",
+                      "enum": [
+                          "None",
+                          "Warning",
+                          "Error"
+                      ],
+                      "default": "None",
+                      "description": "%emmylua.inspections.undeclaredVariable%",
+                      "enumDescriptions": [
+                          "%emmylua.inspections.level.none%",
+                          "%emmylua.inspections.level.warning%",
+                          "%emmylua.inspections.level.error%"
+                      ]
+                  },
+                  "emmylua.inspections.fieldValidation": {
+                      "type": "string",
+                      "enum": [
+                          "None",
+                          "Warning",
+                          "Error"
+                      ],
+                      "default": "None",
+                      "description": "%emmylua.inspections.fieldValidation%",
+                      "enumDescriptions": [
+                          "%emmylua.inspections.level.none%",
+                          "%emmylua.inspections.level.warning%",
+                          "%emmylua.inspections.level.error%"
+                      ]
+                  },
+                  "emmylua.inspections.parameterValidation": {
+                      "type": "string",
+                      "enum": [
+                          "None",
+                          "Warning",
+                          "Error"
+                      ],
+                      "default": "None",
+                      "description": "%emmylua.inspections.parameterValidation%",
+                      "enumDescriptions": [
+                          "%emmylua.inspections.level.none%",
+                          "%emmylua.inspections.level.warning%",
+                          "%emmylua.inspections.level.error%"
+                      ]
+                  },
+                  "emmylua.inspections.assignValidation": {
+                      "type": "string",
+                      "enum": [
+                          "None",
+                          "Warning",
+                          "Error"
+                      ],
+                      "default": "None",
+                      "description": "%emmylua.inspections.assignValidation%",
+                      "enumDescriptions": [
+                          "%emmylua.inspections.level.none%",
+                          "%emmylua.inspections.level.warning%",
+                          "%emmylua.inspections.level.error%"
+                      ]
+                  },
+                  "emmylua.inspections.deprecated": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "%emmylua.inspections.deprecated%"
+                  }
+              }
+          },
+          "configurationDefaults": {
+              "[lua]": {
+                  "editor.quickSuggestions": {
+                      "other": true,
+                      "comments": true,
+                      "strings": true
+                  }
+              }
+          },
+          "jsonValidation": [
+              {
+                  "fileMatch": "emmy.config.json",
+                  "url": "./syntaxes/emmy.config.schema.json"
+              }
+          ],
+          "colors": [],
+          "views": {
+              "explorer": [
+                  {
+                      "id": "emmylua.syntax.tree",
+                      "name": "Syntax Tree"
+                  }
+              ]
+          }
+      },
+      "scripts": {
+          "vscode:prepublish": "node ./build/prepare-version && npm run compile",
+          "compile": "tsc -p ./",
+          "watch": "tsc -watch -p ./",
+          "test": "npm run compile && node ./node_modules/vscode/bin/test"
+      },
+      "devDependencies": {
+          "@types/mocha": "^9.1.0",
+          "@types/node": "^17.0.21",
+          "@types/vscode": "1.79.0",
+          "download": "^7.1.0",
+          "eslint": "^8.11.0",
+          "filecopy": "^4.0.2",
+          "typescript": "^4.0.2"
+      },
+      "dependencies": {
+          "@vscode/debugadapter": "^1.61.0",
+          "@vscode/debugprotocol": "^1.61.0",
+          "iconv-lite": "^0.6.3",
+          "smart-buffer": "^4.0.1",
+          "vscode-languageclient": "8.0.2"
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -10,6 +10,7 @@
     "emmylua.hint.overrideHint": "method override hint",
     "emmylua.constructor.names" : "constructor function names",
     "emmylua.requirelike.names": "set function names like require",
+    "emmylua.new.languageServer" : "Use new language server",
     
     "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": "A custom defined type can accept assignments of type any",
     "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": "A custom defined type can accept any parameter",
