@@ -245,6 +245,8 @@ async function doStartServer() {
                 command = path.join(
                     context.extensionPath,
                     'server',
+                    // TODO: 减少层级
+                    'win32-x64',
                     'win32-x64',
                     'LanguageServer.exe'
                 )
@@ -253,6 +255,8 @@ async function doStartServer() {
                 command = path.join(
                     context.extensionPath,
                     'server',
+                    // TODO
+                    'linux-x64',
                     'linux-x64',
                     'LanguageServer'
                 )
@@ -264,12 +268,14 @@ async function doStartServer() {
                         context.extensionPath,
                         'server',
                         'darwin-arm64',
+                        'darwin-arm64',
                         'LanguageServer'
                     );
                 } else {
                     command = path.join(
                         context.extensionPath,
                         'server',
+                        'darwin-x64',
                         'darwin-x64',
                         'LanguageServer'
                     );
