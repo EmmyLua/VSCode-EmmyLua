@@ -94,10 +94,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.45.tgz#2c0fafd78705e7a18b7906b5201a522719dc5190"
   integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
 
-"@types/vscode@1.87.0":
-  version "1.87.0"
-  resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.87.0.tgz#ee9b163f3d2115fb0b20619b34dd3abc5a923361"
-  integrity sha512-y3yYJV2esWr8LNjp3VNbSMWG7Y43jC8pCldG8YwiHGAQbsymkkMMt0aDT1xZIOFM2eFcNiUc+dJMx1+Z0UT8fg==
+"@types/vscode@1.82.0":
+  version "1.82.0"
+  resolved "https://registry.npmmirror.com/@types/vscode/-/vscode-1.82.0.tgz#89b0b21179dcf5e8cee1664a9a05c5f6c60d38d0"
+  integrity sha512-VSHV+VnpF8DEm8LNrn8OJ8VuUNcBzN3tMvKrNpbhhfuVjFm82+6v44AbDhLvVFgCzn6vs94EJNTp7w8S6+Q1Rw==
 
 "@ungap/structured-clone@^1.2.0":
   version "1.2.0"
@@ -302,6 +302,11 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
+
+concat-map@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmmirror.com/concat-map/-/concat-map-0.0.2.tgz#f497c5b65881435aa6860a55eb541f1601f63394"
+  integrity sha512-xGo3rY/AH8WxqkYSvsNV9yB79sN2oNVOXnmSMYLx28CVFBsXiEFCkcf6WIiWjk5VWKr4/1fV+KG5I4442xE2hg==
 
 config-chain@^1.1.11:
   version "1.1.13"

@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.1
+
+`FIX` Fixed type parsing error for types like { x:number }
+
+`FIX` Fixed reading of standard library
+
+`NOTE` The new language service is based on dotnet sdk 8, you need to download it yourself.
+
 ## 0.6.0
 
 `NEW` Optional use of the new language analysis backend, the new analysis backend supports more features, including but not limited to:

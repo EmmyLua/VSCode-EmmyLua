@@ -2,6 +2,14 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+## 0.6.1
+
+`FIX` 修复形如 { x:number} 的类型解析错误
+
+`FIX` 修复对标准库的读取
+
+`NOTE` 全新语言服务基于dotnet sdk 8, 需要自行下载
+
 ## 0.6.0
 
 `NEW` 可选的使用新的语言分析后端，新的分析后端支持更多的特性，包括但不限于：

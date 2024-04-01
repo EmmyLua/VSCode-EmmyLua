@@ -46,4 +46,4 @@ A: 在项目根目录创建`emmy.config.json`然后如下填写:
 ```
 Q: 全新的语言服务何时上线?
 
-A: 现在已经上线, 去settings下搜索emmylua.new开启后重启vscode即可
+A: 现在已经上线, 去settings下搜索emmylua.new开启后重启vscode即可, 全新语言服务基于dotnet sdk 8, 需要自行下载
