@@ -2,6 +2,10 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+## 0.6.2
+
+`FIX` 不索引大文件(超过200kb)
+
 ## 0.6.1
 
 `FIX` 修复形如 { x:number} 的类型解析错误
