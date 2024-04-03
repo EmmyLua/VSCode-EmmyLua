@@ -32,14 +32,14 @@ export function activate(context: vscode.ExtensionContext) {
     );
     if (!ctx.newLanguageServer) {
         javaExecutablePath = findJava();
-        context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
-        context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
-        context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
     }
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
+    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
 
     context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
 

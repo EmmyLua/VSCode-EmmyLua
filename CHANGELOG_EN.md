@@ -1,5 +1,22 @@
 # Change Log
 
+# 0.6.3
+
+`NEW` Support classic code rendering for EmmyLua
+
+`FIX` Optimize memory usage slightly
+
+`FIX` Temporarily disable error diagnostics from control flow analysis
+
+`NEW` Fix the issue of not finding references for index expressions
+
+`NEW` Support reading configurations, but currently has no effect
+
+
+## 0.6.2
+
+`FIX` Do not index large files (over 200kb)
+
 ## 0.6.1
 
 `FIX` Fixed type parsing error for types like { x:number }
