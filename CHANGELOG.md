@@ -2,6 +2,10 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.4
+
+`FIX` 修复双倍服务器的问题
+
 # 0.6.3
 
 `NEW` 支持emmylua经典代码渲染
