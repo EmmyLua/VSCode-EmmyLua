@@ -1,5 +1,23 @@
 # Change Log
 
+# 0.6.5
+
+`FIX` Fixed the bug where some global variables were not marked in red
+
+`FIX` Re-enabled checks for goto and break statements
+
+`FIX` Modified project exclusion logic
+
+`FIX` Optimized memory usage
+
+`FIX` Fixed the issue where renaming failed when the cursor was on the right side of the identifier
+
+`FIX` The plugin attempts to read the `.luarc.json` file at startup, but the functionality is not implemented
+
+# 0.6.4
+
+`FIX` Fixed the issue with duplicate servers
+
 # 0.6.3
 
 `NEW` Support classic code rendering for EmmyLua

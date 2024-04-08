@@ -2,6 +2,20 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.5
+
+`FIX` 修复部分全局变量没有标记为红色的BUG
+
+`FIX` 重新启用goto和break的相关检查
+
+`FIX` 修改项目排除逻辑
+
+`FIX` 优化内存占用
+
+`FIX` 修复重命名时光标在标识符右侧导致无法重命名的问题
+
+`FIX` 插件会在启动时试图读取`.luarc.json`文件, 功能未实现
+
 # 0.6.4
 
 `FIX` 修复双倍服务器的问题
