@@ -1,5 +1,11 @@
 # Change Log
 
+# 0.6.7
+
+`FIX` Fix multithreading problem.
+
+`FIX` Fix debug inline values being too high
+
 # 0.6.6
 
 `FIX` Fixed some completion issues

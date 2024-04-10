@@ -2,6 +2,12 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.7
+
+`FIX` 修复多线程问题
+
+`FIX` 修复debug inline values过多的问题
+
 # 0.6.6
 
 `FIX` 修复一些补全问题
