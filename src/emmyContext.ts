@@ -72,7 +72,7 @@ export class EmmyContext {
     registerProtocol() {
         this.client?.onNotification("emmy/progressReport", (d: IProgressReport) => {
             this.loadBar.show();
-            this.loadBar.text = `${d.text}`;
+            this.loadBar.text = `$(sync~spin) ${d.text}`;
             if (d.percent >= 1) {
                 setTimeout(() => {
                     this.loadBar.hide();

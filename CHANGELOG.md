@@ -2,6 +2,17 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.6
+
+`FIX` 修复一些补全问题
+
+`NEW` 增加一个显示解析进度的条
+
+`NEW` 替换插件端的debug inline values特性, 改为语言服务实现
+
+`NEW` 实现函数环境下self字段的直接补全而不用写self
+
+
 # 0.6.5
 
 `FIX` 修复部分全局变量没有标记为红色的BUG

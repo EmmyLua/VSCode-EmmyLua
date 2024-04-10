@@ -1,5 +1,15 @@
 # Change Log
 
+# 0.6.6
+
+`FIX` Fixed some completion issues
+
+`NEW` Added a progress bar for parsing
+
+`NEW` Replaced the debug inline values feature on the plugin side with language service implementation
+
+`NEW` Implemented direct completion of the `self` field in function context without having to write `self`
+
 # 0.6.5
 
 `FIX` Fixed the bug where some global variables were not marked in red

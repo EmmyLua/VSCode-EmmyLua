@@ -76,36 +76,38 @@ function registerDebuggers() {
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_attach', factory));
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_launch', factory));
     }
-    context.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
-        // 不知道是否应该发到ls上再做处理
-        // 先简单处理一下吧
-        provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext): vscode.ProviderResult<vscode.InlineValue[]> {
+    if (!ctx.newLanguageServer) {
+        context.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
+            // 不知道是否应该发到ls上再做处理
+            // 先简单处理一下吧
+            provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext): vscode.ProviderResult<vscode.InlineValue[]> {
 
-            const allValues: vscode.InlineValue[] = [];
-            const regExps = [
-                /(?<=local\s+)[^\s,\<]+/,
-                /(?<=---@param\s+)\S+/
-            ]
+                const allValues: vscode.InlineValue[] = [];
+                const regExps = [
+                    /(?<=local\s+)[^\s,\<]+/,
+                    /(?<=---@param\s+)\S+/
+                ]
 
-            for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
-                const line = document.lineAt(l);
+                for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
+                    const line = document.lineAt(l);
 
-                for (const regExp of regExps) {
-                    const match = regExp.exec(line.text);
-                    if (match) {
-                        const varName = match[0];
-                        const varRange = new vscode.Range(l, match.index, l, match.index + varName.length);
-                        // value found via variable lookup
-                        allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
-                        break;
+                    for (const regExp of regExps) {
+                        const match = regExp.exec(line.text);
+                        if (match) {
+                            const varName = match[0];
+                            const varRange = new vscode.Range(l, match.index, l, match.index + varName.length);
+                            // value found via variable lookup
+                            allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
+                            break;
+                        }
                     }
+
                 }
 
+                return allValues;
             }
-
-            return allValues;
-        }
-    }));
+        }));
+    }
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
