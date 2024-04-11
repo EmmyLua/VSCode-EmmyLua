@@ -4,6 +4,21 @@
 
 # 0.6.7
 
+`FIX` 临时把add改为TryAdd, 修复启动错误
+
+`FIX` 修复注释中的缩进显示
+
+`NEW` 隐式继承, 例如:
+```lua
+---@class A
+local a = enum {
+    aaa = 123
+}
+```
+此时A类将隐式继承右侧表达式的类型
+
+# 0.6.7
+
 `FIX` 修复多线程问题
 
 `FIX` 修复debug inline values过多的问题

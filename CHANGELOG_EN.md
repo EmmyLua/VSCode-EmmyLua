@@ -2,6 +2,21 @@
 
 # 0.6.7
 
+`FIX` Temporarily change add to TryAdd, fix startup error
+
+`FIX` Fix indentation in comments.
+
+`NEW` Implicit inheritance, e.g..
+```lua
+---@class A
+local a = enum {
+    aaa = 123
+}
+```
+At this point, class A will implicitly inherit the type of the right-hand expression
+
+# 0.6.7
+
 `FIX` Fix multithreading problem.
 
 `FIX` Fix debug inline values being too high
