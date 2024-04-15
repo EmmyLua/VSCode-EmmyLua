@@ -2,7 +2,25 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
-# 0.6.7
+# 0.6.9
+
+`FIX` 修复全局变量判断问题
+
+`FIX` 修复双倍打开文件的BUG
+
+`NEW` 增加大量代码片段
+
+`NEW` 推断回调函数的参数类型
+
+`NEW` 强化inlayHint, 函数调用参数上的inlayHint可以点击跳转
+
+`NEW` 提供continue补全(转化为goto continue)
+
+`NEW` 完善诊断管理, 可以通过---@diagnostic 系列注解关闭当前行和当前文件的诊断
+
+`NEW` 提供未定义全局变量的诊断
+
+# 0.6.8
 
 `FIX` 临时把add改为TryAdd, 修复启动错误
 

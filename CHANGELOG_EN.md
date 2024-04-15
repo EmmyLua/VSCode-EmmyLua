@@ -1,6 +1,24 @@
 # Change Log
 
-# 0.6.7
+# 0.6.9
+
+`FIX` Fixed global variable detection issue
+
+`FIX` Fixed double opening file bug
+
+`NEW` Added a large number of code snippets
+
+`NEW` Inferred parameter types for callback functions
+
+`NEW` Enhanced inlayHint, inlayHint on function call parameters can be clicked to jump
+
+`NEW` Provided continue completion (converted to goto continue)
+
+`NEW` Improved diagnostic management, can disable diagnostics for current line and current file using ---@diagnostic annotations
+
+`NEW` Provided diagnostics for undefined global variables
+
+# 0.6.8
 
 `FIX` Temporarily change add to TryAdd, fix startup error
 
