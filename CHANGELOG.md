@@ -2,6 +2,43 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.10
+
+`NEW` 现在支持从配置文件配置语言服务, 你可以在工作区创建.emmyrc.json, 具体格式目前是:
+```json
+{
+  "completion": {
+    "autoRequire": true,
+    "callSnippet": false,
+    "postfix": "@"
+  },
+  "diagnostics": {
+    "disable": [],
+    "globals": []
+  },
+  "hint": {},
+  "runtime": {
+    "version": "Lua5.4"
+  },
+  "workspace": {
+    "ignoreDir": [
+      "test"
+    ],
+    "library": [],
+    "workspaceRoots": [],
+    "preloadFileSize": 2048000
+  }
+}
+```
+
+`NEW` 现在提供工作区诊断和工作区禁用诊断
+
+`NEW` 支持在工作区内配置root路径, 这样require路径将会从root开始, root可以配置多个
+
+`NEW` 支持配置第三方库目录
+
+`NEW` 支持通过_G定义全局变量, 例如_G.aa = 123, 但是找不到引用目前
+
 # 0.6.9
 
 `FIX` 修复全局变量判断问题

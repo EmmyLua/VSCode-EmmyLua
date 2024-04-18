@@ -1,5 +1,42 @@
 # Change Log
 
+# 0.6.10
+
+`NEW` Now supports configuring the language service from the configuration file, you can create .emmyrc.json in the workspace, the specific format is currently:
+```json
+{
+  "completion": {
+    "autoRequire": true,
+    "callSnippet": false,
+    "postfix": "@"
+  },
+  "diagnostics": {
+    "disable": [],
+    "globals": []
+  },
+  "hint": {},
+  "runtime": {
+    "version": "Lua5.4"
+  },
+  "workspace": {
+    "ignoreDir": [
+      "test"
+    ],
+    "library": [],
+    "workspaceRoots": [],
+    "preloadFileSize": 2048000
+  }
+}
+```
+
+`NEW` Now provides workspace diagnostics and workspace disable diagnostics
+
+`NEW` Supports configuring the root path within the workspace, so the require path will start from the root, and multiple roots can be configured
+
+`NEW` Supports configuring third-party library directories
+
+`NEW` Supports defining global variables through _G, for example _G.aa = 123, but the reference cannot be found currently
+
 # 0.6.9
 
 `FIX` Fixed global variable detection issue
