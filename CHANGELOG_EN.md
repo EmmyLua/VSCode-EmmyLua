@@ -1,5 +1,22 @@
 # Change Log
 
+# 0.6.12
+
+`NEW` Implemented suffix completion feature, type '@' after an identifier to get suffix completion
+
+`FIX` Fixed the issue of double global variables
+
+`NEW` Compatible with some luals syntax:
+* Return type can be ... or ...string,
+* Compatible with doc attribute, for example---@enum (partial) A, but the related function is not implemented
+* Compatible with simplified description of nullable return type, for example---@return string?, but the related function is not implemented
+
+`NEW` Support for variable template parameter declaration, mainly used to implement unpack logic, for example:
+```lua
+---@generic T...
+---@param a [T...]
+---@return T...
+
 # 0.6.10
 
 `NEW` Now supports configuring the language service from the configuration file, you can create .emmyrc.json in the workspace, the specific format is currently:

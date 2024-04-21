@@ -2,6 +2,30 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.12
+
+`NEW` 实现后缀补全功能, 输入标识符后输入 '@' 即可获得后缀补全
+
+`FIX` 修复双倍全局变量的问题
+
+`NEW` 兼容luals一些语法:
+* 返回类型可以是 ... 或者 ...string, 
+* 兼容 doc attribute, 例如---@enum (partial) A, 但并未实现相关功能
+* 兼容返回类型可空简化描述, 例如---@return string?, 但并未实现相关功能
+
+`NEW` 支持可变模板参数声明, 主要用于实现unpack逻辑, 例如:
+```lua
+---@generic T...
+---@param a [T...]
+---@return T...
+```
+
+`FIX` 修复hover和inlayhint时, 表结构类型的字段提示问题
+
+`FIX` 修复多返回值函数, 后续返回延续的前一个的问题
+
+`NEW` 对无法推断类型的变量, 会默认给予一个匿名类型
+
 # 0.6.10
 
 `NEW` 现在支持从配置文件配置语言服务, 你可以在工作区创建.emmyrc.json, 具体格式目前是:
