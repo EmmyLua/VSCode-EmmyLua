@@ -1,5 +1,22 @@
 # Change Log
 
+# 0.6.14
+
+`NEW` Added inlayHint configuration, implemented localHint and overrideHint
+
+`NEW` Implemented DocumentLink feature, can jump to related files
+
+`NEW` Implemented resource file completion in strings, requires adding configuration:
+```json
+{
+  "resource": {
+    "paths": [
+      "absolute path to resource folder"
+    ],
+  }
+}
+```
+
 # 0.6.13
 
 `FIX` Fixed the issue where the left-hand type would be forcibly converted to an anonymous type when the right-hand expression is unknown.

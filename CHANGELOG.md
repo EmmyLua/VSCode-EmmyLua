@@ -2,6 +2,24 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.14
+
+`NEW` 增加inlayHint配置, 实现localHint和overrideHint
+
+`NEW` 实现DocumentLink功能, 可以跳转到相关文件
+
+`NEW` 实现字符串中的资源文件补全, 需要添加配置:
+```json
+{
+  "resource": {
+    "paths": [
+      "absolute path to resource folder"
+    ],
+  }
+}
+```
+
+
 # 0.6.13
 
 `FIX` 修复右侧表达式为unknown时, 左侧类型会被强制转换为匿名类型的问题
