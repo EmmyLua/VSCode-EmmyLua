@@ -1,5 +1,9 @@
 # Change Log
 
+# 0.6.13
+
+`FIX` Fixed the issue where the left-hand type would be forcibly converted to an anonymous type when the right-hand expression is unknown.
+
 # 0.6.12
 
 `NEW` Implemented suffix completion feature, type '@' after an identifier to get suffix completion
