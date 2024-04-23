@@ -1,5 +1,11 @@
 # Change Log
 
+# 0.6.15
+
+`FIX` Fixed the documentLink error caused by the initialization problem of the configuration class
+
+`NEW` Now all places where paths can be filled support relative paths, absolute paths, and `$ {workspaceFolder}` to represent the workspace, `~` to represent the user directory
+
 # 0.6.14
 
 `NEW` Added inlayHint configuration, implemented localHint and overrideHint

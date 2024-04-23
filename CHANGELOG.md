@@ -2,6 +2,12 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.15
+
+`FIX` 修复配置类的初始化问题导致的documentLink报错
+
+`NEW` 现在所有能够填写路径的地方, 都支持相对路径, 绝对路径, 以及$`${workspaceFolder}`指代工作区 `~`指代用户目录
+
 # 0.6.14
 
 `NEW` 增加inlayHint配置, 实现localHint和overrideHint
