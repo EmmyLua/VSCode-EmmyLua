@@ -2,6 +2,12 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.16
+
+`NEW` 重构算法, 优化内存占用, 减少30%的内存占用
+
+`NEW` 支持工作区符号搜索
+
 # 0.6.15
 
 `FIX` 修复配置类的初始化问题导致的documentLink报错

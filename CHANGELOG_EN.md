@@ -1,5 +1,11 @@
 # Change Log
 
+# 0.6.16
+
+`NEW` Refactored algorithm, optimized memory usage, reduced memory usage by 30%
+
+`NEW` Supports workspace symbol search
+
 # 0.6.15
 
 `FIX` Fixed the documentLink error caused by the initialization problem of the configuration class
