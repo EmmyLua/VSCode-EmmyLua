@@ -1,5 +1,17 @@
 # Change Log
 
+# 0.6.17
+
+`NEW` Refactored the declaration algorithm, optimized the hover prompt. Now when hovering, alias options will be expanded, and a Go to type jump is added.
+
+`NEW` Compatible with some of LuaLs's multiline union syntax.
+
+`NEW` Generated a schema.json file to support completion in json files.
+
+`NEW` Added rendering for deprecated, and some private field access checks.
+
+`NEW` Added configuration for setting function names and file naming conventions for autoRequire completion.
+
 # 0.6.16
 
 `NEW` Refactored algorithm, optimized memory usage, reduced memory usage by 30%
@@ -49,10 +61,12 @@
 ---@generic T...
 ---@param a [T...]
 ---@return T...
+```
 
 # 0.6.10
 
 `NEW` Now supports configuring the language service from the configuration file, you can create .emmyrc.json in the workspace, the specific format is currently:
+
 ```json
 {
   "completion": {

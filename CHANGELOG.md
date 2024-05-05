@@ -2,6 +2,18 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.6.17
+
+`NEW` 重构声明算法, 优化Hover时的提示, 现在hover时, 会展开alias的选项, 并且增加Go to 类型的跳转 
+
+`NEW` 兼容LuaLs的一些跨行联合语法
+
+`NEW` 生成了schema.json文件, 用于支持json文件的补全
+
+`NEW` 新增deprecated的渲染, 和一些私有字段的访问检查
+
+`NEW` 新增配置用于设置autoRequire时的补全函数名以及文件命名法的转换
+
 # 0.6.16
 
 `NEW` 重构算法, 优化内存占用, 减少30%的内存占用
