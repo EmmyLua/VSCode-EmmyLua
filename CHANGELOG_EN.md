@@ -1,5 +1,48 @@
 # Change Log
 
+# 0.6.18
+
+`NEW` Support for `---@verson` annotation, format: `---@version [>|<|>=|<=] [<framework>] <version>, ...`
+
+`NEW` Support for configuring `runtime.frameworkVersions`, configuration format is:
+```json
+{
+  "runtime": {
+    "frameworkVersions": [
+      "openresty 1.2.0"
+    ]
+  }
+}
+```
+
+`NEW` Support for diagnostic.globalsRegex, used to configure the regular expression for global variables, for example:
+```json
+{
+  "diagnostics": {
+    "globalsRegex": [
+      "^ngx\\."
+    ]
+  }
+}
+```
+
+`NEW` Optimized code completion, support for tablefield completion, support for metatable field completion
+
+`NEW` Support for CodeLens feature, enabled by configuring codeLens.enable, for example:
+```json
+{
+  "codeLens": {
+    "enable": true
+  }
+}
+```
+
+`NEW` The EmmyLuaAnalyzer project adds the EmmyLua.Cli project, used for generating documentation, code checking and other functions.
+
+`NEW` The command line tool supports generating documentation, the current implementation is very rudimentary and needs optimization.
+
+`FIX` Fixed many details of BUG
+
 # 0.6.17
 
 `NEW` Refactored the declaration algorithm, optimized the hover prompt. Now when hovering, alias options will be expanded, and a Go to type jump is added.

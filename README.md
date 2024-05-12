@@ -29,21 +29,6 @@ Q: Emmy New Debug为什么连不上目标
 
 A: 通常是由于插入代码require执行失败，或者`require("emmy_core")`返回true，这表明可执行文件没有导出lua符号
 
-Q: 项目中有很多大文件并不想参与解析如何排除？
-
-A: 在项目根目录创建`emmy.config.json`然后如下填写:
-```json
-{
-    "source": [
-        {
-            "dir": "./",
-            "exclude": [
-                "csv/**.lua"
-            ]
-        }
-    ]
-}
-```
 Q: 全新的语言服务何时上线?
 
 A: 现在已经上线, 去settings下搜索emmylua.new开启后重启vscode即可, 全新语言服务基于dotnet sdk 8, 需要自行下载

@@ -250,7 +250,7 @@ async function doStartServer() {
                     // TODO: 减少层级
                     'win32-x64',
                     'win32-x64',
-                    'LanguageServer.exe'
+                    'EmmyLua.LanguageServer.exe'
                 )
                 break;
             case "linux":
@@ -260,7 +260,7 @@ async function doStartServer() {
                     // TODO
                     'linux-x64',
                     'linux-x64',
-                    'LanguageServer'
+                    'EmmyLua.LanguageServer'
                 )
                 fs.chmodSync(command, '777');
                 break;
@@ -271,7 +271,7 @@ async function doStartServer() {
                         'server',
                         'darwin-arm64',
                         'darwin-arm64',
-                        'LanguageServer'
+                        'EmmyLua.LanguageServer'
                     );
                 } else {
                     command = path.join(
@@ -279,7 +279,7 @@ async function doStartServer() {
                         'server',
                         'darwin-x64',
                         'darwin-x64',
-                        'LanguageServer'
+                        'EmmyLua.LanguageServer'
                     );
                 }
                 fs.chmodSync(command, '777');

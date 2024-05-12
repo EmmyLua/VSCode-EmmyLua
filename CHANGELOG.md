@@ -2,6 +2,53 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# next-version
+
+下个版本会升级到0.7.0, 届时java版本的语言服务会默认禁用
+
+# 0.6.18
+
+`NEW` 支持`---@verson`注解, 格式为: `---@version [>|<|>=|<=] [<framework>] <version>, ...`
+
+`NEW` 支持配置`runtime.frameworkVersions`, 配置格式为:
+```json
+{
+  "runtime": {
+    "frameworkVersions": [
+      "openresty 1.2.0"
+    ]
+  }
+}
+```
+
+`NEW` 支持 diagnostic.globalsRegex, 用于配置全局变量的正则表达式, 例如:
+```json
+{
+  "diagnostics": {
+    "globalsRegex": [
+      "^ngx\\."
+    ]
+  }
+}
+```
+
+`NEW` 优化代码补全, 支持tablefield补全, 支持元字段补全
+
+`NEW` 支持CodeLens功能, 通过配置codeLens.enable开启, 例如:
+```json
+{
+  "codeLens": {
+    "enable": true
+  }
+}
+```
+
+`NEW` EmmyLuaAnalyzer项目新增EmmyLua.Cli工程, 用于生成文档, 代码检查等功能.
+
+`NEW` 命令行工具支持生成文档目前实现非常简陋需要优化.
+
+`FIX` 修复不少细节上的BUG
+
 # 0.6.17
 
 `NEW` 重构声明算法, 优化Hover时的提示, 现在hover时, 会展开alias的选项, 并且增加Go to 类型的跳转 
