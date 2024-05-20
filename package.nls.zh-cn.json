@@ -10,7 +10,7 @@
     "emmylua.hint.overrideHint": "方法覆盖夫类方法的override hint",
     "emmylua.constructor.names" : "构造函数名称列表",
     "emmylua.requirelike.names": "设置类似require的函数名列表",
-    "emmylua.new.languageServer" : "使用emmylua新的语言服务",
+    "emmylua.legacy.languageServer" : "使用过时的emmylua的语言服务",
 
     "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": "定义类型能接受any 类型的赋值",
     "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": "定义类型为any可以接受任何参数",

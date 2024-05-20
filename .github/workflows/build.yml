@@ -9,6 +9,25 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+         - os: windows-latest
+           platform: win32
+           arch: x64
+           npm_config_arch: x64
+         - os: ubuntu-latest
+           platform: linux
+           arch: x64
+           npm_config_arch: x64
+         - os: macos-latest
+           platform: darwin
+           arch: x64
+           npm_config_arch: x64
+         - os: macos-latest
+           platform: darwin
+           arch: arm64
+           npm_config_arch: arm64
 
     runs-on: ubuntu-latest
 
@@ -27,14 +46,13 @@ jobs:
        npm_config_arch: ${{ matrix.npm_config_arch }}
     - name: build
       run: |
-        node ./build/prepare-version.js
-        node ./build/prepare.js
-        npx vsce package -o VSCode-EmmyLua.vsix
+        node ./build/prepare.js ${{ env.target }}
+        npx vsce package --target ${{ env.target }}
     - name: Upload
       uses: actions/upload-artifact@v2
       with: 
         name: VSCode-EmmyLua
-        path: ${{ github.workspace }}/VSCode-EmmyLua.vsix
+        path: ${{ github.workspace }}/VSCode-EmmyLua*.vsix
   
   publish:
     runs-on: ubuntu-latest

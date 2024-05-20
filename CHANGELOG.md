@@ -2,9 +2,9 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
-# next-version
+# 0.7.0
 
-下个版本会升级到0.7.0, 届时java版本的语言服务会默认禁用
+`NEW` dotnet实现的语言服务开始正式替代java版本的语言服务, java版本的语言服务将来会在1.0版本移除, 现在会以legacy的形式启用
 
 # 0.6.18
 

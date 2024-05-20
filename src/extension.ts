@@ -28,15 +28,16 @@ export function activate(context: vscode.ExtensionContext) {
     ctx = new EmmyContext(
         process.env['EMMY_DEV'] === "true",
         context,
-        vscode.workspace.getConfiguration("emmylua").get("new.languageServer") as boolean
+        vscode.workspace.getConfiguration("emmylua").get("legacy.languageServer") as boolean
     );
-    if (!ctx.newLanguageServer) {
+    if (ctx.oldLanguageServer) {
         javaExecutablePath = findJava();
         context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
         context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
         context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
     }
+
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
     context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
 
@@ -76,7 +77,7 @@ function registerDebuggers() {
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_attach', factory));
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_launch', factory));
     }
-    if (!ctx.newLanguageServer) {
+    if (!ctx.oldLanguageServer) {
         context.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
             // 不知道是否应该发到ls上再做处理
             // 先简单处理一下吧
@@ -172,7 +173,7 @@ async function validateJava(): Promise<void> {
 
 async function startServer() {
     try {
-        if (!ctx.debugMode && !ctx.newLanguageServer) {
+        if (!ctx.debugMode && !ctx.oldLanguageServer) {
             await validateJava();
         }
     } catch (error) {
@@ -231,7 +232,7 @@ async function doStartServer() {
             });
             return Promise.resolve(result);
         };
-    } else if (!ctx.newLanguageServer) {
+    } else if (!ctx.oldLanguageServer) {
         const cp = path.resolve(context.extensionPath, "server", "*");
         const exePath = javaExecutablePath || "java";
         serverOptions = {
@@ -247,8 +248,6 @@ async function doStartServer() {
                 command = path.join(
                     context.extensionPath,
                     'server',
-                    // TODO: 减少层级
-                    'win32-x64',
                     'win32-x64',
                     'EmmyLua.LanguageServer.exe'
                 )
@@ -257,8 +256,6 @@ async function doStartServer() {
                 command = path.join(
                     context.extensionPath,
                     'server',
-                    // TODO
-                    'linux-x64',
                     'linux-x64',
                     'EmmyLua.LanguageServer'
                 )
@@ -270,14 +267,12 @@ async function doStartServer() {
                         context.extensionPath,
                         'server',
                         'darwin-arm64',
-                        'darwin-arm64',
                         'EmmyLua.LanguageServer'
                     );
                 } else {
                     command = path.join(
                         context.extensionPath,
                         'server',
-                        'darwin-x64',
                         'darwin-x64',
                         'EmmyLua.LanguageServer'
                     );

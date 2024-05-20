@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.6.18",
+    "version": "0.7.0",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -36,12 +36,6 @@
             {
                 "command": "emmlua.stopServer",
                 "title": "EmmyLua: Stop EmmyLua Language Server"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "lua",
-                "path": "./snippets/snippets.json"
             }
         ],
         "languages": [
@@ -280,10 +274,10 @@
                     "default": [],
                     "description": "%emmylua.source.roots%"
                 },
-                "emmylua.new.languageServer": {
+                "emmylua.legacy.languageServer": {
                     "type": "boolean",
                     "default": false,
-                    "description": "%emmylua.new.languageServer%"
+                    "description": "%emmylua.legacy.languageServer%"
                 },
                 "emmylua.completion.caseSensitive": {
                     "type": "boolean",

@@ -11,7 +11,7 @@ export class EmmyContext {
     constructor(
         public debugMode: boolean,
         public extensionContext: vscode.ExtensionContext,
-        public newLanguageServer: boolean
+        public oldLanguageServer: boolean
     ) {
         this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
         this.loadBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
