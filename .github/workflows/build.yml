@@ -12,22 +12,10 @@ jobs:
     strategy:
       matrix:
         include:
-         - os: windows-latest
-           platform: win32
-           arch: x64
-           npm_config_arch: x64
-         - os: ubuntu-latest
-           platform: linux
-           arch: x64
-           npm_config_arch: x64
-         - os: macos-latest
-           platform: darwin
-           arch: x64
-           npm_config_arch: x64
-         - os: macos-latest
-           platform: darwin
-           arch: arm64
-           npm_config_arch: arm64
+         - target: win32-x64
+         - target: linux-x64
+         - target: darwin-x64
+         - target: darwin-arm64
 
     runs-on: ubuntu-latest
 
