@@ -31,11 +31,10 @@ jobs:
         cmd: install
       env:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       npm_config_arch: ${{ matrix.npm_config_arch }}
     - name: build
       run: |
-        node ./build/prepare.js ${{ env.target }}
-        npx vsce package --target ${{ env.target }}
+        node ./build/prepare.js ${{ matrix.target }}
+        npx vsce package --target ${{ matrix.target }}
     - name: Upload
       uses: actions/upload-artifact@v2
       with: 
