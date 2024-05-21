@@ -21,6 +21,8 @@ local a = TypeOf("string") -- string type
 
 `FIX` 修复一些类型推断上的问题
 
+`NOTE` 如果项目中的报错过多, 可以按ctrl . 然后选择禁用这个诊断, 如果你的项目中是.lua.txt为后缀, 请在配置中的extensions里面添加.lua.txt, 然后重启vscode
+
 `NOTE` 所有的vscode配置对于dotnet版本的语言服务都是无效的, 他的配置需要在根目录创建.emmyrc.json文件, 一个模板配置是:
 
 ```json
@@ -51,7 +53,8 @@ local a = TypeOf("string") -- string type
     "runtime": {
         "version": "Lua5.4",
         "requireLikeFunction": [],
-        "frameworkVersions": []
+        "frameworkVersions": [],
+        "extensions": []
     },
     "workspace": {
         "ignoreDir": [],

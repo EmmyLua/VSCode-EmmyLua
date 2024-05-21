@@ -302,8 +302,11 @@ function restartServer() {
     }
 }
 
-function showReferences(uri: string, pos: vscode.Position) {
+function showReferences(uri: string, pos: vscode.Position | number, col?: number) {
     const u = vscode.Uri.parse(uri);
+    if (typeof pos === 'number') {
+        pos = new vscode.Position(pos, col!);
+    }
     const p = new vscode.Position(pos.line, pos.character);
     vscode.commands.executeCommand("vscode.executeReferenceProvider", u, p).then(locations => {
         vscode.commands.executeCommand("editor.action.showReferences", u, p, locations);
