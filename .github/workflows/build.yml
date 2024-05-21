@@ -26,7 +26,7 @@ jobs:
       with:
           node-version: 20.x
     - name: Install
-      uses: borales/actions-yarn@v4
+      uses: borales/actions-yarn@v5
       with: 
         cmd: install
       env:
@@ -36,7 +36,7 @@ jobs:
         node ./build/prepare.js ${{ matrix.target }}
         npx vsce package -o VSCode-EmmyLua-${{ matrix.target }}.vsix --target ${{ matrix.target }}
     - name: Upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with: 
         name: VSCode-EmmyLua-${{ matrix.target }}
         path: ${{ github.workspace }}/VSCode-EmmyLua*.vsix
@@ -46,7 +46,7 @@ jobs:
     needs: [build]
     if: success() && startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: actions/download-artifact@v2
-      - run: npx vsce publish --packagePath $(find VSCode-EmmyLua -iname *.vsix)
+      - uses: actions/download-artifact@v4
+      - run: npx vsce publish --packagePath $(find VSCode-EmmyLua* -iname "*.vsix")
         env:
           VSCE_PAT: ${{ secrets.VSCE_ACCESS_TOKEN }}
