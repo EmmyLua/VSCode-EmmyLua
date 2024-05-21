@@ -4,6 +4,70 @@
 
 `NEW` The language service implemented in dotnet officially begins to replace the Java version of the language service. The Java version of the language service will be removed in version 1.0 and is now enabled in a legacy form.
 
+`NEW` Debugger updated to 1.8.0
+
+`NEW` Supports string generics, for example:
+```lua
+---@generic T
+---@param a `T`
+---@return T
+function TypeOf(a)
+end
+
+local a = TypeOf("string") -- string type
+```
+
+`FIX` Fixed some issues with type inference
+
+`NOTE` All vscode configurations are invalid for the dotnet version of the language service. Its configuration requires creating a .emmyrc.json file in the root directory. A template configuration is:
+
+```json
+{
+    "completion": {
+        "autoRequire": true,
+        "autoRequireFunction": "require",
+        "autoRequireNamingConvention": "snakeCase",
+        "callSnippet": false,
+        "postfix": "@"
+    },
+    "diagnostics": {
+        "disable": [
+        ],
+        "globals": [
+        ],
+        "globalRegex": [
+        ],
+        "severity": {
+        }
+    },
+    "hint": {
+        "paramHint": true,
+        "indexHint": true,
+        "localHint": false,
+        "overrideHint": true
+    },
+    "runtime": {
+        "version": "Lua5.4",
+        "requireLikeFunction": [],
+        "frameworkVersions": []
+    },
+    "workspace": {
+        "ignoreDir": [],
+        "library": [],
+        "workspaceRoots": [
+        ],
+        "preloadFileSize": 12048000
+    },
+    "resource": {
+        "paths": [
+        ]
+    },
+    "codeLens":{
+        "enable": false
+    }
+}
+```
+
 # 0.6.18
 
 `NEW` Support for `---@verson` annotation, format: `---@version [>|<|>=|<=] [<framework>] <version>, ...`

@@ -4,7 +4,71 @@
 
 # 0.7.0
 
-`NEW` dotnet实现的语言服务开始正式替代java版本的语言服务, java版本的语言服务将来会在1.0版本移除, 现在会以legacy的形式启用
+`NEW` dotnet实现的语言服务开始正式替代java版本的语言服务, java版本的语言服务将来会在1.0版本移除, 现在可以以legacy的形式启用
+
+`NEW` 调试器更新到1.8.0
+
+`NEW` 支持字符串泛型, 例如:
+```lua
+---@generic T
+---@param a `T`
+---@return T
+function TypeOf(a)
+end
+
+local a = TypeOf("string") -- string type
+```
+
+`FIX` 修复一些类型推断上的问题
+
+`NOTE` 所有的vscode配置对于dotnet版本的语言服务都是无效的, 他的配置需要在根目录创建.emmyrc.json文件, 一个模板配置是:
+
+```json
+{
+    "completion": {
+        "autoRequire": true,
+        "autoRequireFunction": "require",
+        "autoRequireNamingConvention": "snakeCase",
+        "callSnippet": false,
+        "postfix": "@"
+    },
+    "diagnostics": {
+        "disable": [
+        ],
+        "globals": [
+        ],
+        "globalRegex": [
+        ],
+        "severity": {
+        }
+    },
+    "hint": {
+        "paramHint": true,
+        "indexHint": true,
+        "localHint": false,
+        "overrideHint": true
+    },
+    "runtime": {
+        "version": "Lua5.4",
+        "requireLikeFunction": [],
+        "frameworkVersions": []
+    },
+    "workspace": {
+        "ignoreDir": [],
+        "library": [],
+        "workspaceRoots": [
+        ],
+        "preloadFileSize": 12048000
+    },
+    "resource": {
+        "paths": [
+        ]
+    },
+    "codeLens":{
+        "enable": false
+    }
+}
+```
 
 # 0.6.18
 

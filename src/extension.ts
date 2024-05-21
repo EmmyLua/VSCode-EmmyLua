@@ -77,7 +77,7 @@ function registerDebuggers() {
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_attach', factory));
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_launch', factory));
     }
-    if (!ctx.oldLanguageServer) {
+    if (ctx.oldLanguageServer) {
         context.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
             // 不知道是否应该发到ls上再做处理
             // 先简单处理一下吧
@@ -173,7 +173,7 @@ async function validateJava(): Promise<void> {
 
 async function startServer() {
     try {
-        if (!ctx.debugMode && !ctx.oldLanguageServer) {
+        if (!ctx.debugMode && ctx.oldLanguageServer) {
             await validateJava();
         }
     } catch (error) {
@@ -232,7 +232,7 @@ async function doStartServer() {
             });
             return Promise.resolve(result);
         };
-    } else if (!ctx.oldLanguageServer) {
+    } else if (ctx.oldLanguageServer) {
         const cp = path.resolve(context.extensionPath, "server", "*");
         const exePath = javaExecutablePath || "java";
         serverOptions = {
