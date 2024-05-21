@@ -249,6 +249,7 @@ async function doStartServer() {
                     context.extensionPath,
                     'server',
                     'win32-x64',
+                    'win32-x64',
                     'EmmyLua.LanguageServer.exe'
                 )
                 break;
@@ -256,6 +257,7 @@ async function doStartServer() {
                 command = path.join(
                     context.extensionPath,
                     'server',
+                    'linux-x64',
                     'linux-x64',
                     'EmmyLua.LanguageServer'
                 )
@@ -267,12 +269,14 @@ async function doStartServer() {
                         context.extensionPath,
                         'server',
                         'darwin-arm64',
+                        'darwin-arm64',
                         'EmmyLua.LanguageServer'
                     );
                 } else {
                     command = path.join(
                         context.extensionPath,
                         'server',
+                        'darwin-x64',
                         'darwin-x64',
                         'EmmyLua.LanguageServer'
                     );
