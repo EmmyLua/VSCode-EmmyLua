@@ -1,5 +1,9 @@
 # Change Log
 
+# 0.7.1
+
+`FIX` Debugger rolled back to 1.7.1, the debugger will be updated in the next version
+
 # 0.7.0
 
 `NEW` The language service implemented in dotnet officially begins to replace the Java version of the language service. The Java version of the language service will be removed in version 1.0 and is now enabled in a legacy form.
