@@ -1,10 +1,10 @@
 {
-    "name": "emmylua",
-    "displayName": "EmmyLua",
-    "description": "EmmyLua for vscode",
+    "name": "emmylua-mooooooi",
+    "displayName": "EmmyLua Personal",
+    "description": "EmmyLua for personal vscode",
     "version": "0.7.1",
     "icon": "res/icon.png",
-    "publisher": "tangzx",
+    "publisher": "mooooooi",
     "engines": {
         "vscode": "^1.89.0"
     },
@@ -17,10 +17,10 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/EmmyLua/VSCode-EmmyLua"
+        "url": "https://github.com/mooooooi/VSCode-EmmyLua"
     },
     "bugs": {
-        "url": "https://github.com/EmmyLua/VSCode-EmmyLua/issues"
+        "url": "https://github.com/mooooooi/VSCode-EmmyLua/issues"
     },
     "main": "./out/extension",
     "contributes": {
