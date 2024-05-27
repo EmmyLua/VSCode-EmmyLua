@@ -26,3 +26,16 @@ A: 附加调试会试图获取进程内的lua符号，判断当前的lua版本�
 Q: Emmy New Debug为什么连不上目标
 
 A: 通常是由于插入代码require执行失败，或者`require("emmy_core")`返回true，这表明可执行文件没有导出lua符号
+
+Q: 为什么打开项目后大量爆红
+
+A: 这就是惊喜! 大部分爆红是因为emmylua检查到项目中有未定义的全局变量, 而大部分人没有给自己项目写annotation所以就会爆红了, 如果想快速修复它, 需要在创建.emmyrc.json之后填入
+```json
+{
+    "diagnostics": {
+        "disable": [
+            "undefined-global"
+        ]
+    },
+}
+```

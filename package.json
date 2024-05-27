@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -439,6 +439,10 @@
             {
                 "fileMatch": "emmy.config.json",
                 "url": "./syntaxes/emmy.config.schema.json"
+            },
+            {
+                "fileMatch": ".emmyrc.json",
+                "url": "./syntaxes/schema.json"
             }
         ],
         "colors": [],

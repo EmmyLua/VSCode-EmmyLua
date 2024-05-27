@@ -1,5 +1,47 @@
 # Change Log
 
+# 0.7.2
+
+`NEW` CodeLens feature is enabled by default
+
+`NEW` Support for decimals in the form of `.1`
+
+`NEW` Workspace code diagnostics are parallelized to take full advantage of multi-core CPUs
+
+`NEW` Document diagnostics are asynchronous and include a built-in 1-second debounce mechanism to reduce the impact on performance
+
+`NEW` Document updates are delayed by 0.1 seconds, so the document content is not immediately updated when typing quickly
+
+`NEW` Optimized file monitoring update mechanism within the workspace, supporting batch updates (mainly updates from version control tools like git)
+
+`NEW` Support for callable inference of classes, for example:
+```lua
+---@class A
+---@overload fun(a, b, c): A
+A = {}
+
+local a = A(1, 2, 3) -- A
+```
+
+`NEW` Support for strict mode configuration, the current strict mode configuration is:
+```json
+{
+  "strict": {
+    "requirePath": true,
+    "typeCall": true
+  }
+}
+```
+If `requirePath` is set to `false`, it allows require paths to not start from the root directory. If `typeCall` is set to `false`, it allows direct calls of any type to return the type itself.
+
+`FIX` Fixed some inference issues
+
+`FIX` Fixed crashes caused by duplicate file additions when workspaces overlap
+
+`FIX` Fixed inline comment judgment logic
+
+`FIX` Optimized generic function inference
+
 # 0.7.1
 
 `FIX` Debugger rolled back to 1.7.1, the debugger will be updated in the next version

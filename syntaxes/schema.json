@@ -1,0 +1,366 @@
+{
+  "definitions": {
+    "CodeLens": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "enable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Completion": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "autoRequire": {
+          "type": "boolean"
+        },
+        "autoRequireFunction": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "autoRequireNamingConvention": {
+          "type": "string",
+          "enum": [
+            "none",
+            "camelCase",
+            "pascalCase",
+            "snakeCase"
+          ]
+        },
+        "callSnippet": {
+          "type": "boolean"
+        },
+        "postfix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Diagnostics": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "disable": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "enum": [
+              "none",
+              "syntax-error",
+              "type-not-found",
+              "missing-return",
+              "type-not-match",
+              "missing-parameter",
+              "inject-field-fail",
+              "unreachable-code",
+              "unused",
+              "undefined-global",
+              "need-import",
+              "deprecated",
+              "access-private-member"
+            ]
+          }
+        },
+        "enable": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "globals": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "globalsRegex": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "severity": {
+          "type": "object",
+          "properties": {
+            "none": {
+              "type": "string",
+              "enum": [
+                "error",
+                "warning",
+                "information",
+                "hint"
+              ]
+            },
+            "syntax-error": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "type-not-found": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "missing-return": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "type-not-match": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "missing-parameter": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "inject-field-fail": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "unreachable-code": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "unused": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "undefined-global": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "need-import": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "deprecated": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "access-private-member": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "*": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            }
+          }
+        }
+      }
+    },
+    "Hint": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "paramHint": {
+          "type": "boolean"
+        },
+        "indexHint": {
+          "type": "boolean"
+        },
+        "localHint": {
+          "type": "boolean"
+        },
+        "overrideHint": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Resource": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "paths": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "Runtime": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "Lua5.1",
+            "LuaJIT",
+            "Lua5.2",
+            "Lua5.3",
+            "Lua5.4",
+            "LuaLatest"
+          ]
+        },
+        "requireLikeFunction": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "frameworkVersions": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "extensions": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "requirePattern": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "Strict": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "requirePath": {
+          "type": "boolean"
+        },
+        "typeCall": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Workspace": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "ignoreDir": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "library": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "workspaceRoots": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "preloadFileSize": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "completion": {
+      "$ref": "#/definitions/Completion"
+    },
+    "diagnostics": {
+      "$ref": "#/definitions/Diagnostics"
+    },
+    "hint": {
+      "$ref": "#/definitions/Hint"
+    },
+    "runtime": {
+      "$ref": "#/definitions/Runtime"
+    },
+    "workspace": {
+      "$ref": "#/definitions/Workspace"
+    },
+    "resource": {
+      "$ref": "#/definitions/Resource"
+    },
+    "codeLens": {
+      "$ref": "#/definitions/CodeLens"
+    },
+    "strict": {
+      "$ref": "#/definitions/Strict"
+    }
+  }
+}
