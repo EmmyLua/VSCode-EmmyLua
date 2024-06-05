@@ -2,7 +2,7 @@
     "name": "emmylua-mooooooi",
     "displayName": "EmmyLua Personal",
     "description": "EmmyLua for personal vscode",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "icon": "res/icon.png",
     "publisher": "mooooooi",
     "engines": {
@@ -439,6 +439,10 @@
             {
                 "fileMatch": "emmy.config.json",
                 "url": "./syntaxes/emmy.config.schema.json"
+            },
+            {
+                "fileMatch": ".emmyrc.json",
+                "url": "./syntaxes/schema.json"
             }
         ],
         "colors": [],
