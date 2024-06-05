@@ -1,5 +1,9 @@
 # Change Log
 
+# 0.7.4
+
+NO CHANGE
+
 # 0.7.3
 
 `CHG` Cancelled the document delay update

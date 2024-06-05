@@ -2,6 +2,10 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.7.4
+
+0.7.3更新失败, 版本号挺高到0.7.4
+
 # 0.7.3
 
 `CHG` 取消了文档延迟更新
