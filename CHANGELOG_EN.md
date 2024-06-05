@@ -1,5 +1,30 @@
 # Change Log
 
+# 0.7.3
+
+`CHG` Cancelled the document delay update
+
+`NEW` Optimized the stored syntax nodes from class to struct, reducing memory usage, approximately reducing memory usage by 30%
+
+`NEW` Optimized the snippet completion of pairs and ipairs implemented by `@whitecostume`
+
+`NEW` Allowed `---@type` to act on tableField, for example:
+```lua
+local t = {
+    ---@type string
+    aa = 1
+}
+```
+
+`CHG` Refactored the declaration and index system, preparing for other plugins
+
+`FIX` Fixed some inference bugs
+
+`FIX` Implemented visibility check as correctly as possible. Visibility check supports @private, @public, @protected, @package annotations, which represent private, public, protected, package four kinds of visibility. The so-called package visibility refers to visibility within the same file
+
+`NEW` The language service will now read file association configurations from the vscode plugin end to ensure correct analysis of suffixes like .lua.txt
+
+
 # 0.7.2
 
 `NEW` CodeLens feature is enabled by default
