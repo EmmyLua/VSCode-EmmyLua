@@ -2,6 +2,31 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.7.5
+
+`FIX` 优化子类推断, 避免出现无限递归
+
+`FIX` 清理代码, 优化内存占用, 提高数据结构的有效占用, 降低内存碎片.
+
+`FIX` 修复一个内存泄漏问题
+
+`NEW` 新增诊断算法: `no-discard`, `missing-parameter`, `disable-global-define`, `undefined-field`, `local-const-reassign`, 其中`disable-global-define`, `undefined-field` 默认关闭.
+
+`NEW` 新增诊断启用配置:
+```json
+{
+  "diagnostics": {
+    "enables": [
+      "disable-global-define",
+      "undefined-field",
+    ]
+  }
+}
+
+```
+
+`FIX` 优化了代码片段补全
+
 # 0.7.4
 
 0.7.3更新失败, 版本号挺高到0.7.4

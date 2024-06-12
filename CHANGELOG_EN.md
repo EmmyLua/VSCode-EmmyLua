@@ -1,5 +1,29 @@
 # Change Log
 
+# 0.7.5
+
+`FIX` Optimized subclass inference to avoid infinite recursion
+
+`FIX` Cleaned up code, optimized memory usage, improved effective use of data structures, and reduced memory fragmentation.
+
+`FIX` Fixed a memory leak issue
+
+`NEW` Added new diagnostic algorithms: `no-discard`, `missing-parameter`, `disable-global-define`, `undefined-field`, `local-const-reassign`. Among them, `disable-global-define`, `undefined-field` are turned off by default.
+
+`NEW` Added diagnostic enable configuration:
+```json
+{
+  "diagnostics": {
+    "enables": [
+      "disable-global-define",
+      "undefined-field",
+    ]
+  }
+}
+```
+
+`FIX` Optimized code snippet completion
+
 # 0.7.4
 
 NO CHANGE
