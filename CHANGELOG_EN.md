@@ -1,5 +1,12 @@
 # Change Log
 
+
+# 0.7.6
+
+`FIX` Fixed the issue of parent class completion not working
+
+`NEW` Added support for unpacking arrays
+
 # 0.7.5
 
 `FIX` Optimized subclass inference to avoid infinite recursion

@@ -2,6 +2,12 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.7.6
+
+`FIX` 修复父类补全失效
+
+`NEW` 支持unpack对数组的展开 
+
 # 0.7.5
 
 `FIX` 优化子类推断, 避免出现无限递归
