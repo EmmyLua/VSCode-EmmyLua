@@ -33,6 +33,21 @@ local GameObject = f("GameObject") -- UnityEngine.GameObject
 ```
 
 Now generics can expand function parameters, please refer to the declarations of pcall and xpcall, pcall and xpcall will now change their signatures based on the type of the first parameter.
+# 0.7.7
+
+`FIX` Fixed the bug where the language service reports an error when \u{xxx} is in the invalid area of UTF8 encoding
+
+`FIX` Global variables are now kept unique. If a global variable definition uses emmylua doc somewhere, it is the priority definition, otherwise it is a random definition
+
+`FIX` Avoid infinite recursive inference when alias is recursively defined
+
+`FIX` Fixed some inference bugs
+
+`FIX` Optimized document prompts for hover and completion items
+
+`CHG` Now variables will not directly equal the type of the right-hand expression. Each variable has an anonymous independent type to prevent the type returned from the expression from being modified
+
+`FIX` Fixed the inference problem of the return type of class-like functions to avoid countless types of unions
 
 # 0.7.6
 

@@ -72,7 +72,13 @@
               "undefined-global",
               "need-import",
               "deprecated",
-              "access-private-member"
+              "access-private-member",
+              "access-protected-member",
+              "access-package-member",
+              "no-discard",
+              "disable-global-define",
+              "undefined-field",
+              "local-const-reassign"
             ]
           }
         },
@@ -154,9 +160,57 @@
             "access-private-member": {
               "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
             },
+            "access-protected-member": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "access-package-member": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "no-discard": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "disable-global-define": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "undefined-field": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
+            "local-const-reassign": {
+              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
+            },
             "*": {
               "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
             }
+          }
+        },
+        "enables": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "enum": [
+              "none",
+              "syntax-error",
+              "type-not-found",
+              "missing-return",
+              "type-not-match",
+              "missing-parameter",
+              "inject-field-fail",
+              "unreachable-code",
+              "unused",
+              "undefined-global",
+              "need-import",
+              "deprecated",
+              "access-private-member",
+              "access-protected-member",
+              "access-package-member",
+              "no-discard",
+              "disable-global-define",
+              "undefined-field",
+              "local-const-reassign"
+            ]
           }
         }
       }
