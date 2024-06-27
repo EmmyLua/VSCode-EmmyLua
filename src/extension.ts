@@ -5,11 +5,9 @@ import * as path from "path";
 import * as net from "net";
 import * as process from "process";
 import * as Annotator from "./annotator";
-import * as cp from "child_process";
-import findJava from "./findJava";
+
 import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient/node";
 import { LuaLanguageConfiguration } from './languageConfiguration';
-import { EmmyConfigWatcher, IEmmyConfigUpdate } from './emmyConfigWatcher';
 import { EmmyNewDebuggerProvider } from './debugger/new_debugger/EmmyNewDebuggerProvider';
 import { EmmyAttachDebuggerProvider } from './debugger/attach/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/launch/EmmyLaunchDebuggerProvider';
@@ -17,36 +15,27 @@ import { EmmyContext } from './emmyContext';
 import { InlineDebugAdapterFactory } from './debugger/DebugFactory'
 import * as os from 'os';
 import * as fs from 'fs';
+import { IServerLocation, IServerPosition } from './lspExt';
 
 export let ctx: EmmyContext;
 let activeEditor: vscode.TextEditor;
-let javaExecutablePath: string | null;
-let configWatcher: EmmyConfigWatcher;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("emmy lua actived!");
     ctx = new EmmyContext(
         process.env['EMMY_DEV'] === "true",
-        context,
-        vscode.workspace.getConfiguration("emmylua").get("legacy.languageServer") as boolean
+        context
     );
-    if (ctx.oldLanguageServer) {
-        javaExecutablePath = findJava();
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
-        context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
-        context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
-    }
+
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
+    context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
+    // context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(onDidChangeConfiguration, null, context.subscriptions));
 
     context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
     context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
     context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
-
     context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
     context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
-
-    configWatcher = new EmmyConfigWatcher();
-    configWatcher.onConfigUpdate(onConfigUpdate);
-    context.subscriptions.push(configWatcher);
     startServer();
     registerDebuggers();
     return {
@@ -77,38 +66,6 @@ function registerDebuggers() {
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_attach', factory));
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_launch', factory));
     }
-    if (ctx.oldLanguageServer) {
-        context.subscriptions.push(vscode.languages.registerInlineValuesProvider('lua', {
-            // 不知道是否应该发到ls上再做处理
-            // 先简单处理一下吧
-            provideInlineValues(document: vscode.TextDocument, viewport: vscode.Range, context: vscode.InlineValueContext): vscode.ProviderResult<vscode.InlineValue[]> {
-
-                const allValues: vscode.InlineValue[] = [];
-                const regExps = [
-                    /(?<=local\s+)[^\s,\<]+/,
-                    /(?<=---@param\s+)\S+/
-                ]
-
-                for (let l = viewport.start.line; l <= context.stoppedLocation.end.line; l++) {
-                    const line = document.lineAt(l);
-
-                    for (const regExp of regExps) {
-                        const match = regExp.exec(line.text);
-                        if (match) {
-                            const varName = match[0];
-                            const varRange = new vscode.Range(l, match.index, l, match.index + varName.length);
-                            // value found via variable lookup
-                            allValues.push(new vscode.InlineValueVariableLookup(varRange, varName, false));
-                            break;
-                        }
-                    }
-
-                }
-
-                return allValues;
-            }
-        }));
-    }
 }
 
 function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
@@ -129,61 +86,8 @@ function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined) {
     }
 }
 
-function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
-    let shouldRestart = false;
-    let newJavaExecutablePath = findJava();
-    if (newJavaExecutablePath !== javaExecutablePath) {
-        javaExecutablePath = newJavaExecutablePath;
-        shouldRestart = true;
-    }
-
-    if (ctx.client !== undefined) {
-        Annotator.onDidChangeConfiguration(ctx.client);
-    }
-
-    if (shouldRestart) {
-        restartServer();
-    }
-}
-
-async function validateJava(): Promise<void> {
-    const exePath = javaExecutablePath || "java";
-    console.log('exe path : ' + exePath);
-    return new Promise<void>((resolve, reject) => {
-        cp.exec(`"${exePath}" -version`, (e, stdout, stderr) => {
-            let regexp: RegExp = /(?:java|openjdk) version "((\d+)(\.(\d+).+?)?)"/g;
-            if (stderr) {
-                let match = regexp.exec(stderr);
-                if (match) {
-                    let major = parseInt(match[2]) || 0;
-                    let minor = parseInt(match[4]) || 0;
-                    // java 1.8+
-                    if (major > 1 || (major === 1 && minor >= 8)) {
-                        resolve();
-                        return;
-                    }
-                    reject(`Unsupported Java version: ${match[1]}, please install Java 1.8 or above.`);
-                    return;
-                }
-            }
-            reject("Can't find Java! Please install Java 1.8 or above and set JAVA_HOME environment variable.");
-        });
-    });
-}
 
 async function startServer() {
-    try {
-        if (!ctx.debugMode && ctx.oldLanguageServer) {
-            await validateJava();
-        }
-    } catch (error) {
-        ctx.setServerStatus({
-            health: "error",
-            message: error as string,
-            command: "emmy.restartServer"
-        })
-        return;
-    }
     doStartServer().then(() => {
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     }).catch(reason => {
@@ -196,7 +100,6 @@ async function startServer() {
 }
 
 async function doStartServer() {
-    const configFiles = await configWatcher.watch();
     const context = ctx.extensionContext;
     const clientOptions: LanguageClientOptions = {
         documentSelector: [{ scheme: 'file', language: ctx.LANGUAGE_ID }],
@@ -206,12 +109,7 @@ async function doStartServer() {
                 vscode.workspace.createFileSystemWatcher("**/*.lua")
             ]
         },
-        initializationOptions: {
-            stdFolder: vscode.Uri.file(path.resolve(context.extensionPath, "res/std")).toString(),
-            apiFolders: [],
-            client: 'vsc',
-            configFiles: configFiles
-        }
+        initializationOptions: {}
     };
 
     let serverOptions: ServerOptions;
@@ -231,13 +129,6 @@ async function doStartServer() {
                 console.log("client connect error!");
             });
             return Promise.resolve(result);
-        };
-    } else if (ctx.oldLanguageServer) {
-        const cp = path.resolve(context.extensionPath, "server", "*");
-        const exePath = javaExecutablePath || "java";
-        serverOptions = {
-            command: exePath,
-            args: ["-cp", cp, "com.tang.vscode.MainKt", "-XX:+UseG1GC", "-XX:+UseStringDeduplication"]
         };
     } else {
         let platform: string = os.platform();
@@ -306,22 +197,17 @@ function restartServer() {
     }
 }
 
-function showReferences(uri: string, pos: vscode.Position | number, col?: number) {
+function showReferences(uri: string, pos: IServerPosition, locations: IServerLocation[]) {
     const u = vscode.Uri.parse(uri);
-    if (typeof pos === 'number') {
-        pos = new vscode.Position(pos, col!);
-    }
     const p = new vscode.Position(pos.line, pos.character);
-    vscode.commands.executeCommand("vscode.executeReferenceProvider", u, p).then(locations => {
-        vscode.commands.executeCommand("editor.action.showReferences", u, p, locations);
-    });
-}
-
-function onConfigUpdate(e: IEmmyConfigUpdate) {
-    const client = ctx.client;
-    if (client) {
-        client.sendRequest('emmy/updateConfig', e);
-    }
+    const vscodeLocations = locations.map(loc =>
+        new vscode.Location(
+            vscode.Uri.parse(loc.uri),
+            new vscode.Range(
+                new vscode.Position(loc.range.start.line, loc.range.start.character),
+                new vscode.Position(loc.range.end.line, loc.range.end.character)
+            )));
+    vscode.commands.executeCommand("editor.action.showReferences", u, p, vscodeLocations);
 }
 
 function stopServer() {

@@ -2,6 +2,40 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.8.0
+
+从这个版本开始, emmylua移除了java版本语言服务, 仅支持dotnet版本语言服务, 同时删除了所有以前为java版语言服务提供的配置. 
+
+`NEW` 调试器更新到1.8.2, 修复了tcpListen localhost时报错
+
+`FIX` 修复一个无限递归崩溃问题
+
+`CHG` 修改了hover的显示方式, 取消了对类的展开, 所有函数的签名参数会换行展示
+
+`CHG` 修改了codelens的实现方式
+
+`FIX` 处理了部分引用找不到的问题
+
+`FIX` 修复了hover上的Goto links的实现错误
+
+`FIX` 修复了参数Missing-parameter计算没有考虑不对成的定义和调用问题
+
+`NEW` 强化了document color的实现, 现在在字符串中的连续的6个或者8个16进制数字的组合被视为color
+
+`NEW` 重构了泛型系统, 泛型参数匹配支持前缀:
+```lua
+---@generic T
+---@param a UnityEngine.`T`
+---@return T
+local function f(a)
+    
+end
+
+local GameObject = f("GameObject") -- UnityEngine.GameObject
+```
+
+泛型现在可以展开函数参数, 请参考pcall和xpcall的声明, pcall和xpall现在会随着首个参数的类型改变签名
+
 # 0.7.6
 
 `FIX` 修复父类补全失效

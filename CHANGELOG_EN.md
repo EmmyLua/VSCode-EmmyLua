@@ -1,5 +1,38 @@
 # Change Log
 
+# 0.8.0
+
+Starting from this version, EmmyLua has removed the Java version of the language service and only supports the dotnet version of the language service, while also deleting all configurations previously provided for the Java version of the language service.
+
+`NEW` Debugger updated to 1.8.2, fixed an error when tcpListen localhost
+
+`FIX` Fixed an infinite recursion crash issue
+
+`CHG` Changed the display method of hover, cancelled the expansion for classes, all function signatures will be displayed with line breaks for parameters
+
+`CHG` Changed the implementation method of codelens
+
+`FIX` Addressed some issues where references could not be found
+
+`FIX` Fixed the implementation error of Goto links on hover
+
+`FIX` Fixed the calculation of Missing-parameter not considering mismatched definitions and calls
+
+`NEW` Enhanced the implementation of document color, now a sequence of 6 or 8 hexadecimal digits in a string is considered as color
+
+`NEW` Refactored the generic system, generic parameter matching supports prefix:
+```lua
+---@generic T
+---@param a UnityEngine.`T`
+---@return T
+local function f(a)
+    
+end
+
+local GameObject = f("GameObject") -- UnityEngine.GameObject
+```
+
+Now generics can expand function parameters, please refer to the declarations of pcall and xpcall, pcall and xpcall will now change their signatures based on the type of the first parameter.
 
 # 0.7.6
 

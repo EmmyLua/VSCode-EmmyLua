@@ -1,31 +1,4 @@
 {
-    "emmylua.java.home": "Specifies the path to the java home",
-    "emmylua.source.roots": "Source roots of your project",
-    "emmylua.completion.caseSensitive": "Case sensitive completion",
-    "emmylua.codeLens": "Show codeLens or not",
-    "emmylua.debugger.defaultProgram": "The default program to luanch/debug, such as 'c:/lua/lua.exe'",
-    "emmylua.hint.paramHint" : "Enable param hint",
-    "emmylua.hint.localHint" : "Enable local hint",
-    "emmylua.hint.varargHint": "Variable parameter hint",
-    "emmylua.hint.overrideHint": "method override hint",
-    "emmylua.constructor.names" : "constructor function names",
-    "emmylua.requirelike.names": "set function names like require",
-    "emmylua.legacy.languageServer" : "Use legacy language server",
-    
-    "emmylua.typecheck.anyTypeCanAssignToAnyDefineType": "A custom defined type can accept assignments of type any",
-    "emmylua.typecheck.defineAnyTypeCanBeAssignedByAnyVariable": "A custom defined type can accept any parameter",
-    "emmylua.typecheck.defineTypeCanReceiveNilType": "Any parameter type can accept nil ",
-
-    "emmylua.inspections.level.none": "do nothing",
-    "emmylua.inspections.level.warning": "treated as a warning",
-    "emmylua.inspections.level.error": "treated as a error",
-
-    "emmylua.inspections.fieldValidation": "non-existing table field check ",
-    "emmylua.inspections.parameterValidation": "Parameter validity check",
-    "emmylua.inspections.undeclaredVariable": "Check for undeclared variables used",
-    "emmylua.inspections.assignValidation": "Assign Validation check",
-    "emmylua.inspections.deprecated": "Deprecated check",
-
     "debug.attach.label": "EmmyLua: Attach by process id",
     "debug.attach.name": "Attach by process id",
     "debug.attach.target_pid": "Target pid",

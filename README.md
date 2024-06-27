@@ -15,9 +15,10 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 [CHANGELOG](CHANGELOG_EN.md)
 
 FAQ:
+
 Q: vscode-emmylua全家桶还有哪些?
 
-A: [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle), [EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)
+A: [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle), 暂时废弃的[EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)
 
 Q: 为什么附加调试没有作用？
 
@@ -29,7 +30,7 @@ A: 通常是由于插入代码require执行失败，或者`require("emmy_core")`
 
 Q: 为什么打开项目后大量爆红
 
-A: 这就是惊喜! 大部分爆红是因为emmylua检查到项目中有未定义的全局变量, 而大部分人没有给自己项目写annotation所以就会爆红了, 如果想快速修复它, 需要在创建.emmyrc.json之后填入
+A: 这就是惊喜! 大部分爆红是因为emmylua检查到项目中有未定义的全局变量, 而大部分人没有给自己项目写annotation所以就会爆红了, 如果想快速修复它, 需要在你打开的首个vscode工作区的顶层目录(不是在.vscode中)中创建.emmyrc.json之后填入
 ```json
 {
     "diagnostics": {
@@ -39,3 +40,19 @@ A: 这就是惊喜! 大部分爆红是因为emmylua检查到项目中有未定�
     },
 }
 ```
+
+Q: 我能否在其他平台上用到vscode-emmylua的代码分析功能?
+
+A: 可以, vscode-emmylua的代码分析功能来自[EmmyLuaAnalyzer](https://github.com/CppCXY/EmmyLuaAnalyzer), 它是标准的语言服务器, 可以被任何实现了LSP的客户端使用. 比如在Intellij平台你可以通过安装LSP4IJ然后通过简单的配置开启EmmyLuaAnalyzer的代码分析功能.
+
+Q: 为什么不用Vscode配置而是用.emmyrc.json?
+
+A: 为了方便在其他平台上使用EmmyLuaAnalyzer, 并且使用任何IDE也不用重新配置
+
+Q: 为什么选择使用dotnet重写emmylua语言服务器?
+
+A: 原本的基于java的语言服务内存占用比较大, 另外存在各种无法解决的递归崩溃, 而如今的dotnet性能被微软优化的非常高, 内存占用也比较低, 各方面工具链比较完整. 所以我选择了dotnet
+
+Q: 为什么没有文档?
+
+A: 说得好, 没有空写文档.
