@@ -14,6 +14,8 @@
 
 `NEW` Refactored the declaration analysis system.
 
+`NEW` Support for expanding format arguments in string.format.
+
 `NEW` Added support for using the annotation `---@module no-require` to indicate a file cannot be required, subsequent code completion will not show its require suggestion.
 
 `NEW` Added support for the annotation `---@mapping <new name>` to indicate a field/variable/function can be mapped to `<new name>` for use, for example:

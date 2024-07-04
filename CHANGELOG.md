@@ -16,6 +16,8 @@
 
 `NEW` 重构了声明分析系统
 
+`NEW` 支持string.format的格式参数展开
+
 `NEW` 支持通过注解`---@module no-require`表示一个文件不可以被require, 之后得代码补全不会出现他的require提示
 
 `NEW` 支持注解`---@mapping <new name>`表示一个字段/变量/函数可以映射到`<new name>`使用, 例如:
