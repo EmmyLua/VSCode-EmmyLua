@@ -1,5 +1,31 @@
 # Change Log
 
+# 0.8.1
+
+`FIX` Fixed performance issues when reading configuration tables.
+
+`FIX` Changed the support method for other encodings, no longer requiring the creation of a .emmyrc.json file.
+
+`FIX` Fixed an issue where word boundaries were not considered during document color rendering.
+
+`FIX` Fixed some bugs in generic inference.
+
+`CHG` Removed the inference that the `new` function defaults to returning its own type.
+
+`NEW` Refactored the declaration analysis system.
+
+`NEW` Added support for using the annotation `---@module no-require` to indicate a file cannot be required, subsequent code completion will not show its require suggestion.
+
+`NEW` Added support for the annotation `---@mapping <new name>` to indicate a field/variable/function can be mapped to `<new name>` for use, for example:
+
+```lua
+local t = {}
+---@mapping new
+t:ctor(a, b)
+
+t:new(1, 2)
+```
+
 # 0.8.0
 
 Starting from this version, EmmyLua has removed the Java version of the language service and only supports the dotnet version of the language service, while also deleting all configurations previously provided for the Java version of the language service.

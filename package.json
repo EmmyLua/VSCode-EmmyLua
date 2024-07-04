@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -14,6 +14,11 @@
     ],
     "activationEvents": [
         "onDebug"
+    ],
+    "keywords": [
+        "lua",
+        "emmylua",
+        "debugger"
     ],
     "repository": {
         "type": "git",

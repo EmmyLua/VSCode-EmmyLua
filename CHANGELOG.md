@@ -2,6 +2,31 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.8.1
+
+`FIX` 修复读取配置表时的性能问题
+
+`FIX` 修改了对其他编码的支持方式, 不再要求创建.emmyrc.json文件
+
+`FIX` 修复document color渲染时没有判断单词边界的问题
+
+`FIX` 修复泛型推断上的一些BUG
+
+`CHG` 移除了new函数默认返回自身类型的推断
+
+`NEW` 重构了声明分析系统
+
+`NEW` 支持通过注解`---@module no-require`表示一个文件不可以被require, 之后得代码补全不会出现他的require提示
+
+`NEW` 支持注解`---@mapping <new name>`表示一个字段/变量/函数可以映射到`<new name>`使用, 例如:
+```lua
+local t = {}
+---@mapping new
+t:ctor(a, b)
+
+t:new(1, 2)
+```
+
 # 0.8.0
 
 从这个版本开始, emmylua移除了java版本语言服务, 仅支持dotnet版本语言服务, 同时删除了所有以前为java版语言服务提供的配置. 
