@@ -354,6 +354,18 @@
             ]
           }
         },
+        "ignoreGlobs": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
         "library": {
           "type": [
             "array",
