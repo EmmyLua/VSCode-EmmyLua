@@ -1,5 +1,28 @@
 # Change Log
 
+# 0.8.10
+
+`NEW` Upgraded the version to 0.8.10, due to significant underlying changes, the version number was incremented by several versions, but from a binary perspective, version 10 is also version 2.
+
+`NEW` Upgraded the dotnet version to 9.0 preview.
+
+`CHG` Removed Newtonsoft.Json and replaced it with Text.Json. Removed omnisharp/csharp-language-server-protocol and replaced it with [EmmyLua.LanguageServer.Framework](https://github.com/CppCXY/LanguageServer.Framework).
+
+`NEW` Used dotnet9 AOT publishing to improve runtime performance, but there is not much difference in memory usage.
+
+`NOTE` EmmyLua.LanguageServer.Framework is a LSP framework that I have redeveloped to support the latest LSP standards and be compatible with AOT compilation. Feel free to check it out if you're interested.
+
+`NEW` Added support for configuring `workspace.ignoreGlobs` to exclude directories using regular expressions. Refer to the documentation of Microsoft.Extensions.FileSystemGlobbing for the specific format.
+```json
+{
+  "workspace": {
+    "ignoreGlobs": [
+      "**/data/*"
+    ]
+  }
+}
+```
+
 # 0.8.1
 
 `FIX` Fixed performance issues when reading configuration tables.

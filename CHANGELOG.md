@@ -2,6 +2,29 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# 0.8.10
+
+`NEW` 将版本升级到0.8.10, 由于底层改动巨大, 所以提升数个版本号, 然而从二进制来看10版本也是2
+
+`NEW` 将dotnet版本升级到9.0预览版
+
+`CHG` 移除Newtonsoft.Json使用Text.Json, 移除omnisharp/csharp-language-server-protocol使用[`EmmyLua.LanguageServer.Framework`](https://github.com/CppCXY/LanguageServer.Framework)
+
+`NEW` 使用dotnet9 aot发布, 提高不少运行时性能, 但是内存使用差异不大
+
+`NOTE` `EmmyLua.LanguageServer.Framework`是由我重新开发的支持最新的LSP标准和兼容AOT编译的LSP框架, 有兴趣可以看看
+
+`NEW` 支持配置`workspace.ignoreGlobs`, 可以通过正则表达式排除目录, 具体格式参考Microsoft.Extensions.FileSystemGlobbing的文档:
+```json
+{
+  "workspace": {
+    "ignoreGlobs": [
+      "**/data/*"
+    ]
+  }
+}
+```
+
 # 0.8.1
 
 `FIX` 修复读取配置表时的性能问题
