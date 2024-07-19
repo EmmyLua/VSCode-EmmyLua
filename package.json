@@ -39,7 +39,7 @@
                 "title": "EmmyLua: Insert Emmy Debugger Code"
             },
             {
-                "command": "emmlua.stopServer",
+                "command": "emmy.stopServer",
                 "title": "EmmyLua: Stop EmmyLua Language Server"
             }
         ],
