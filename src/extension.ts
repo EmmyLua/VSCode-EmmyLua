@@ -244,7 +244,7 @@ async function insertEmmyDebugCode() {
         dllPath = path.join(context.extensionPath, `debugger/emmy/mac/${arch}/emmy_core.dylib`);
     }
     else if (isLinux) {
-        dllPath = path.join(context.extensionPath, `debugger/emmy/linux/?.so`);
+        dllPath = path.join(context.extensionPath, `debugger/emmy/linux/emmy_core.so`);
     }
 
     const host = 'localhost';
