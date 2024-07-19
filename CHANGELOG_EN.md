@@ -1,5 +1,13 @@
 # Change Log
 
+# 0.8.12
+
+`FIX` Fixed code completion issues.
+
+`FIX` Fixed a bug where function return types couldn't be inferred.
+
+`NEW` Support for using `/` as a separator in require path suggestions, navigation, code analysis, and document links.
+
 # 0.8.10
 
 `NEW` Upgraded the version to 0.8.10, due to significant underlying changes, the version number was incremented by several versions, but from a binary perspective, version 10 is also version 2.
