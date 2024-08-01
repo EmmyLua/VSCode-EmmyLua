@@ -1,5 +1,90 @@
 # Change Log
 
+
+# 0.8.15
+
+`CHG` Refactored the underlying type system and index system.
+
+`FIX` Fixed inline values calculation error.
+
+`FIX` Fixed a bug where the return annotation was overridden by the function return type.
+
+`FIX` Fixed a bug where the param annotation couldn't be applied to the parameters of a for-in statement.
+
+`FIX` Fixed diagnostics issues with private and protected visibility.
+
+`CHG` Changed the logic of type members. Now, type members cannot be extended arbitrarily. The specific behaviors are as follows:
+* If a local variable is marked as `---@class`, other files cannot inject members into that class.
+* If a global variable is marked as `---@class`, members can be injected into that class from other files.
+* After a local variable is returned as a module, other files cannot inject members into that module.
+* A global variable can have members injected from any file.
+
+`NEW` Added support for attribute syntax for classes, e.g., `---@class (partial) A`, `---@enum (partial) B`.
+
+`NEW` Added support for partial class annotation. If a class is marked as a partial class, it needs to be declared as a partial class in other files to extend its members. For example, extending the string type:
+```lua
+---@class (partial) string
+local string = string
+
+function string:split(sep)
+end
+```
+
+`NEW` Added support for exact class annotation. If a class is marked as an exact class, only the members specified by `---@field` annotations can be used and defined. For example:
+
+```lua
+---@class (exact) AA
+---@field a number
+local AA = {}
+
+AA.b = 123 -- error
+AA.a = 456 -- ok
+
+```
+
+`NEW` Added diagnostics support for `inject-field-fail`, which is disabled by default.
+
+`NEW` Added diagnostics support for `duplicate-type`, which is enabled by default.
+
+`NEW` Code completion will hide members that are not visible based on visibility rules.
+
+`NEW` Introduced namespace annotation `---@namespace` to mark the namespace of the current file. For example:
+```lua
+---@namespace System
+```
+After specifying the namespace in the current file, all types defined in that file will be under the specified namespace. Classes within the same namespace can be accessed without writing the namespace prefix.
+
+`NEW` Introduced using annotation `---@using` to easily reference types from other namespaces. For example:
+```lua
+---@using System
+```
+After specifying the using annotation in the current file, types from the System namespace can be used directly. For example:
+```lua
+-- A.lua
+
+---@namespace System
+---@class FFI
+
+
+-- B.lua
+---@using System
+
+---@type FFI
+
+--- C.lua
+---@type System.FFI
+```
+
+`NEW` When defining a type, if the name contains a dot (.), a namespace will be automatically created. For example:
+```lua
+---@class System.FFC
+```
+
+`NEW` Improved reference lookup rules. When searching for references using the members of the current class, references in the current class will be prioritized, followed by references in all subclasses. References in parent classes will not be searched.
+
+`NEW` Improved code completion. When defining function statements with code snippet completion, the function definition will mimic the previous statement.
+
+
 # 0.8.12
 
 `FIX` Fixed code completion issues.

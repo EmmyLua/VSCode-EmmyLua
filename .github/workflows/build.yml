@@ -12,10 +12,10 @@ jobs:
     strategy:
       matrix:
         include:
-         - target: win32-x64
-         - target: linux-x64
-         - target: darwin-x64
-         - target: darwin-arm64
+         - {target: win32-x64, file: EmmyLua.LanguageServer-win32-x64.zip}
+         - {target: linux-x64, file: EmmyLua.LanguageServer-linux-x64.tar.gz}
+         - {target: darwin-x64, file: EmmyLua.LanguageServer-darwin-x64.zip}
+         - {target: darwin-arm64, file: EmmyLua.LanguageServer-darwin-arm64.zip}
 
     runs-on: ubuntu-latest
 
@@ -33,7 +33,7 @@ jobs:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: build
       run: |
-        node ./build/prepare.js ${{ matrix.target }}
+        node ./build/prepare.js ${{ matrix.file }}
         npx vsce package -o VSCode-EmmyLua-${{ matrix.target }}.vsix --target ${{ matrix.target }}
     - name: Upload
       uses: actions/upload-artifact@v4
