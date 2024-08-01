@@ -21,7 +21,7 @@ async function downloadDepends() {
         downloadTo(`${config.emmyDebuggerUrl}/${config.emmyDebuggerVersion}/darwin-x64.zip`, 'temp/darwin-x64.zip'),
         downloadTo(`${config.emmyDebuggerUrl}/${config.emmyDebuggerVersion}/win32-x86.zip`, 'temp/win32-x86.zip'),
         downloadTo(`${config.emmyDebuggerUrl}/${config.emmyDebuggerVersion}/win32-x64.zip`, 'temp/win32-x64.zip'),
-        downloadTo(`${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/${args[2]}`, args[2])
+        downloadTo(`${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/${args[2]}`, `temp/${args[2]}`)
     ]);
 }
 
