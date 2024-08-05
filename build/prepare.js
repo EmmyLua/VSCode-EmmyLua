@@ -43,7 +43,8 @@ async function build() {
 
     // new ls
     if (args[2].endsWith('.tar.gz')) {
-        await decompress(`temp/${args[2]}`, 'server/', { plugins: [decompressTargz()] });
+        let name = args[2].substring(0, args[2].length - 7);
+        await decompress(`temp/${args[2]}`, `server/${name}/`, { plugins: [decompressTargz()] });
     } else {
         await decompress(`temp/${args[2]}`, 'server/');
     }
