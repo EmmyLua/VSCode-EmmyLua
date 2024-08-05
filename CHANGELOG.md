@@ -2,6 +2,30 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# next
+
+考虑重新实现emmylua-unity, 或者考虑迁移到intellij平台
+
+# 0.8.16
+
+`CHG` 所有函数的函数返回值被视为新的实例, 对其返回值的修改在不同实例之间互相独立
+
+`FIX` 修复_G无法提示和添加全局变量的BUG
+
+`FIX` 修复table泛型无法参与推断的BUG
+
+`NEW` 引入特殊泛型类型, `namespace<T : string>`, 该类型会试图引用命名空间例如:
+```lua
+CS = {
+    ---@type namespace<"UnityEngine">
+    UnityEngine = {},
+    ---@type namespace<"System">
+    System = {},
+}
+
+```
+
+
 # 0.8.15
 
 `CHG` 重构底层类型系统, 重构索引系统

@@ -1,5 +1,28 @@
 # Change Log
 
+# next
+
+Consider reimplementing emmylua-unity or consider migrating to the IntelliJ platform.
+
+# 0.8.16
+
+`CHG` All function return values are treated as new instances, and modifications to their return values are independent between different instances.
+
+`FIX` Fixed the bug where `_G` cannot be prompted and global variables cannot be added.
+
+`FIX` Fixed the bug where table generics cannot participate in inference.
+
+`NEW` Introduced a special generic type, `namespace<T: string>`, which attempts to reference namespaces. For example:
+```lua
+CS = {
+  ---@type namespace<"UnityEngine">
+  UnityEngine = {},
+  ---@type namespace<"System">
+  System = {},
+}
+
+```
+
 
 # 0.8.15
 
