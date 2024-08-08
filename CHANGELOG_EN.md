@@ -2,7 +2,27 @@
 
 # next
 
-Consider reimplementing emmylua-unity or consider migrating to the IntelliJ platform.
+Consider re-releasing a plugin on the IntelliJ platform, integrating the content from the VSCode side.
+
+# 0.8.17
+
+`FIX` Fixed the issue with incorrect Linux directories.
+
+`FIX` Fixed inference issues related to the `table<TKey, TValue>` annotation.
+
+`FIX` Fixed a bug where global variables marked as classes could not be referenced elsewhere.
+
+`NEW` Added support for the `@source "<uri>#<line>:<col>"` annotation. When a field has this annotation, jumping will go to the specified location in the source.
+
+`NEW` VSCode-EmmyLua-Unity will be released soon (August 8, 2024). The API exported using this plugin will follow the rules of xlua and support jumping to the corresponding C# implementation for fields.
+
+`NEW` Enum annotation `@enum` supports `key` attribute, for example:
+```lua举注解`@enum` 支持`key` attribute, 例如:
+---@enum (key) AAA
+---| CS.A.B.C AAA
+``` CS.A.B.C
+This way, during code completion, it will automatically complete as `CS.A.B.C` instead of `AAA.CS.A.B.C`.
+这样在代码补全时, 会自动补全为`CS.A.B.C`而不是`AAA.CS.A.B.C`
 
 # 0.8.16
 
@@ -12,7 +32,7 @@ Consider reimplementing emmylua-unity or consider migrating to the IntelliJ plat
 
 `FIX` Fixed the bug where table generics cannot participate in inference.
 
-`NEW` Introduced a special generic type, `namespace<T: string>`, which attempts to reference namespaces. For example:
+`NEW` Introduced a special generic type, `namespace<T : string>`, which attempts to reference namespaces. For example:
 ```lua
 CS = {
   ---@type namespace<"UnityEngine">

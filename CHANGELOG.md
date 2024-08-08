@@ -4,11 +4,26 @@
 
 # next
 
-考虑重新实现emmylua-unity, 或者考虑迁移到intellij平台
+会考虑在intellij平台重新发布一个插件, 集成vscode端的内容
 
 # 0.8.17
 
 `FIX` 修复linux目录错误的问题
+
+`FIX` 修复table<TKey, TValue>注解的相关推断问题
+
+`FIX` 修复全局变量如果标记了class, 则在其他地方找不到引用的BUG
+
+`NEW` 支持注解`@source "<uri>#<line>:<col>"`当字段拥有该注解时, 跳转会跳转到该source指定的位置
+
+`NEW` VSCode-EmmyLua-Unity不久(2024年8月8日)会发布, 使用该插件导出的API, 会依据xlua的规则导出对应的API, 并且字段支持跳转到对应的C#实现
+
+`NEW` 枚举注解`@enum` 支持`key` attribute, 例如:
+```lua
+---@enum (key) AAA
+---| CS.A.B.C
+```
+这样在代码补全时, 会自动补全为`CS.A.B.C`而不是`AAA.CS.A.B.C`
 
 # 0.8.16
 
