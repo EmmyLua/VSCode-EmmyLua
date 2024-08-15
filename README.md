@@ -18,7 +18,7 @@ FAQ:
 
 Q: vscode-emmylua全家桶还有哪些?
 
-A: [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle), 暂时废弃的[EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)
+A: [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle), [EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)
 
 Q: 为什么附加调试没有作用？
 
@@ -55,4 +55,4 @@ A: 原本的基于java的语言服务内存占用比较大, 另外存在各种�
 
 Q: 为什么没有文档?
 
-A: 说得好, 没有空写文档.
+A: 配置文件的文档见 https://github.com/CppCXY/EmmyLuaAnalyzer/blob/master/docs/.emmyrc.json_CN.md

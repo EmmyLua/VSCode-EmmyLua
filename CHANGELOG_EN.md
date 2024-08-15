@@ -1,8 +1,26 @@
 # Change Log
 
-# next
+# 0.8.18
 
-Consider re-releasing a plugin on the IntelliJ platform, integrating the content from the VSCode side.
+`FIX` Fixed the issue where the code completion list for parameters with enum and alias included too many quotes.
+
+`FIX` Fixed the issue where inlineValues did not work during debugging.
+
+`NEW` '_' is not considered an unused variable.
+
+`NEW` Enum types can be used as keys and participate in inference.
+
+`NEW` Added new doc snippet completion. When selecting `param;@return` on a function statement, it will automatically complete the doc for parameters and return.
+
+`NEW` Fixed the error with multiple root directories on the IntelliJ platform.
+
+`NEW` Added support for code formatting, which is implemented through the pinvoke reference `EmmyLuaCodeStyle`.
+
+`NEW` VScode-EmmyLua-Unity plugin has been released. Users of Xlua can try installing and using it.
+
+`NEW` Intellij-EmmyLua2 plugin has been released. Users on the Jetbrains platform can try using this plugin, which internally integrates `EmmyLuaAnalyzer`, `EmmyLuaCodeStyle`, and `EmmyLuaDebugger` used in vscode. In the future, `intellij-emmylua2-unity` and `intellij-emmylua2-attachdebugger` will also be available.
+
+`NEW` Added configuration documentation: https://github.com/CppCXY/EmmyLuaAnalyzer/blob/master/docs/.emmyrc.json_EN.md
 
 # 0.8.17
 
@@ -17,12 +35,11 @@ Consider re-releasing a plugin on the IntelliJ platform, integrating the content
 `NEW` VSCode-EmmyLua-Unity will be released soon (August 8, 2024). The API exported using this plugin will follow the rules of xlua and support jumping to the corresponding C# implementation for fields.
 
 `NEW` Enum annotation `@enum` supports `key` attribute, for example:
-```lua举注解`@enum` 支持`key` attribute, 例如:
+```lua
 ---@enum (key) AAA
 ---| CS.A.B.C AAA
-``` CS.A.B.C
+```
 This way, during code completion, it will automatically complete as `CS.A.B.C` instead of `AAA.CS.A.B.C`.
-这样在代码补全时, 会自动补全为`CS.A.B.C`而不是`AAA.CS.A.B.C`
 
 # 0.8.16
 

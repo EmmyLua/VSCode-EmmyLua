@@ -103,12 +103,13 @@ async function doStartServer() {
     const context = ctx.extensionContext;
     const clientOptions: LanguageClientOptions = {
         documentSelector: [{ scheme: 'file', language: ctx.LANGUAGE_ID }],
-        synchronize: {
-            configurationSection: ["emmylua", "files.associations"],
-            fileEvents: [
-                vscode.workspace.createFileSystemWatcher("**/*.lua")
-            ]
-        },
+        // synchronize: {
+        //     configurationSection: ["emmylua", "files.associations"],
+        //     fileEvents: [
+        //         vscode.workspace.createFileSystemWatcher("**/*.lua"),
+        //         vscode.workspace.createFileSystemWatcher("**/.editorconfig"),
+        //     ]
+        // },
         initializationOptions: {}
     };
 

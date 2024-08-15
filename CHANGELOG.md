@@ -2,9 +2,27 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
-# next
+# 0.8.18
 
-会考虑在intellij平台重新发布一个插件, 集成vscode端的内容
+`FIX` 修复参数为enum和alias时的代码补全列表包含了过多的引号
+
+`FIX` 修复调试时inlineValues没有生效的问题
+
+`NEW` '_' 不被视为未使用变量
+
+`NEW` 枚举类型可以作为key, 参与推断
+
+`NEW` 添加新的doc片段补全`param;@return`在函数语句上选择时会自动补全参数和return的doc
+
+`NEW` 修复在intellij平台上多根目录的错误
+
+`NEW` 支持代码格式化, 该功能通过pinvoke引用`EmmyLuaCodeStyle`实现
+
+`NEW` VScode-EmmyLua-Unity插件已经发布, 使用Xlua的用户可以试着安装使用
+
+`NEW` Intellij-EmmyLua2插件已经发布, jetbrain平台的用户可以试着使用该插件, 该插件内部集成vscode中所用的`EmmyLuaAnalyzer`, `EmmyLuaCodeStyle` 和`EmmyLuaDebugger`, 未来还会上架`intellij-emmylua2-unity`和`intellij-emmylua2-attachdebugger`
+
+`NEW` 新增配置文档: https://github.com/CppCXY/EmmyLuaAnalyzer/blob/master/docs/.emmyrc.json_CN.md
 
 # 0.8.17
 
