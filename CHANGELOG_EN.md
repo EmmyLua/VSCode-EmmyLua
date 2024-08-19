@@ -1,5 +1,27 @@
 # Change Log
 
+# next
+
+The next version will start from 0.9.0 and will focus on implementing type checking.
+
+# 0.8.20
+
+`FIX` Fixed the issue with incorrect function signature judgment during consecutive calls.
+
+`FIX` Fixed the inference problem when using alias types as keys.
+
+`FIX` Fixed the issue where completion for constant integer fields was not working:
+```lua
+---@class A
+---@field [1] string
+local a
+a[1] -- now can completion
+```
+
+`NEW` Optimized semantic tokens, which now only apply to documentation.
+
+`NOTE` 0.8.20 is the last release version in the 0.8.x series. The version number will be upgraded to 0.9.0 in the future.
+
 # 0.8.18
 
 `FIX` Fixed the issue where the code completion list for parameters with enum and alias included too many quotes.

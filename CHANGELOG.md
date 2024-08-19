@@ -2,6 +2,28 @@
 
 [English Change Log](CHANGELOG_EN.md)
 
+# next
+
+下一个版本从0.9.0开始, 将重点实现类型检查
+
+# 0.8.20
+
+`FIX` 修复了连续调用时函数签名判断错误
+
+`FIX` 修复alias类型作为key时的推断问题
+
+`FIX` 修复了常整数field补全失效的问题:
+```lua
+---@class A
+---@field [1] string
+local a
+a[1] -- now can completion
+```
+
+`NEW` 优化了语义token, 他仅仅作用于doc
+
+`NOTE` 0.8.20 作为 0.8.x 系列最后一个发布版本, 后续版本号将升级到0.9.0
+
 # 0.8.18
 
 `FIX` 修复参数为enum和alias时的代码补全列表包含了过多的引号

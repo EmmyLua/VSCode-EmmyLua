@@ -24,7 +24,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             afterText: /^\s*end\s*$/,
             action: { indentAction: IndentAction.IndentOutdent, appendText: "\t" }
         },
-                {
+        {
             // 匹配 local function 语句的行
             beforeText: /^\s*local\s+function\s+\w*\s*\(.*\)\s*$/,
             afterText: /^\s*end\s*$/,
