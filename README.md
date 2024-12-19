@@ -14,7 +14,7 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 
 [CHANGELOG](CHANGELOG_EN.md)
 
-FAQ:
+## FAQ:
 
 Q: vscode-emmylua全家桶还有哪些?
 
@@ -56,3 +56,15 @@ A: 原本的基于java的语言服务内存占用比较大, 另外存在各种�
 Q: 为什么没有文档?
 
 A: 配置文件的文档见 https://github.com/CppCXY/EmmyLuaAnalyzer/blob/master/docs/.emmyrc.json_CN.md
+
+## FAQ – English:
+
+Q: How can I enable remote debugging with EmmyLua?
+
+A: ⓵ Load your Lua file in VSCode. ⓶ You need to "inject" the path to the debugging library and `require` it. Move to the top of your Lua code and activate the VSCode Command Palette and run the command **`EmmyLua: Insert Emmy Debugger Code`**; this injects code like this (appropriate for your particular OS):
+```lua
+package.cpath = package.cpath .. ";c:/User/Path/to/emmy_core/?.dll"
+local dbg = require("emmy_core")
+dbg.tcpListen("localhost", 9966)
+```
+⓷ Where you want to break, add a line **`dbg.waitIDE(); dbg.breakHere()`**. ⓸ Run your external program, this will block at the breakpoint, wating for a debugger to connect; so ⓹ activate the **`EmmyLua New Debug`** debug configuration to connect the debugger.
