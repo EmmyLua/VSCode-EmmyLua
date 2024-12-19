@@ -7,19 +7,12 @@ export interface AnnotatorParams {
 export enum AnnotatorType {
     Param,
     Global,
-    DocType,
+    Local,
     Upvalue,
-    NotUse
-}
-
-export interface RenderRange{
-    range: vscode.Range;
-    hint: string;
 }
 
 export interface IAnnotator {
-    uri: string;
-    ranges: RenderRange[];
+    ranges: vscode.Range[];
     type: AnnotatorType;
 }
 

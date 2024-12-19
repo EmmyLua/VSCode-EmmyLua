@@ -1,6 +1,7 @@
 import * as proto from "./EmmyDebugProto";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { Handles } from "@vscode/debugadapter";
+import iconv = require('iconv-lite');
 
 export interface IEmmyStackContext {
     handles: Handles<IEmmyStackNode>;
@@ -89,7 +90,9 @@ export class EmmyVariable implements IEmmyStackNode {
                 // else {
                 //     presentationHint.attributes?.push('public');
                 // }
-
+                // if (!/^[\x00-\x7F]*$/.test(name)) {
+                   
+                // }
                 break;
             case proto.ValueType.TNUMBER:
                 name = `[${name}]`;

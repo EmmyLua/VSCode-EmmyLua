@@ -272,13 +272,22 @@
                     "type": "string",
                     "default": "#FF6699"
                 },
-                "emmylua.colors.doc_type": {
-                    "type": "string",
-                    "default": "#66CCFF"
-                },
                 "emmylua.colors.upvalue": {
                     "type": "string",
                     "default": "#a8c023"
+                },
+                "emmylua.colors.local": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Local variable colors",
+                    "default": [
+                        "#66CCFF",
+                        "#ADD8E6",
+                        "#FFA07A",
+                        "#90EE90"
+                    ]
                 }
             }
         },
