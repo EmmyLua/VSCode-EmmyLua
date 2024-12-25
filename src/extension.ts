@@ -138,17 +138,26 @@ async function doStartServer() {
                 command = path.join(
                     context.extensionPath,
                     'server',
-                    'EmmyLua.LanguageServer-win32-x64',
-                    'EmmyLua.LanguageServer.exe'
+                    'emmylua_ls-win32-x64',
+                    'emmylua_ls.exe'
                 )
                 break;
             case "linux":
-                command = path.join(
-                    context.extensionPath,
-                    'server',
-                    'EmmyLua.LanguageServer-linux-x64',
-                    'EmmyLua.LanguageServer'
-                )
+                if (os.arch() === "arm64") {
+                    command = path.join(
+                        context.extensionPath,
+                        'server',
+                        'emmylua_ls-linux-arm64',
+                        'emmylua_ls'
+                    );
+                } else {
+                    command = path.join(
+                        context.extensionPath,
+                        'server',
+                        'emmylua_ls-linux-x64',
+                        'emmylua_ls'
+                    );
+                }
                 fs.chmodSync(command, '777');
                 break;
             case "darwin":
@@ -156,15 +165,15 @@ async function doStartServer() {
                     command = path.join(
                         context.extensionPath,
                         'server',
-                        'EmmyLua.LanguageServer-darwin-arm64',
-                        'EmmyLua.LanguageServer'
+                        'emmylua_ls-darwin-arm64',
+                        'emmylua_ls'
                     );
                 } else {
                     command = path.join(
                         context.extensionPath,
                         'server',
-                        'EmmyLua.LanguageServer-darwin-x64',
-                        'EmmyLua.LanguageServer'
+                        'emmylua_ls-darwin-x64',
+                        'emmylua_ls'
                     );
                 }
                 fs.chmodSync(command, '777');

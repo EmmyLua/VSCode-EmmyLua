@@ -1,7 +1,7 @@
 import * as proto from "./EmmyDebugProto";
 import { DebugProtocol } from "@vscode/debugprotocol";
 import { Handles } from "@vscode/debugadapter";
-import iconv = require('iconv-lite');
+// import iconv = require('iconv-lite');
 
 export interface IEmmyStackContext {
     handles: Handles<IEmmyStackNode>;
