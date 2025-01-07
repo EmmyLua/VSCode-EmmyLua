@@ -26,18 +26,18 @@ function createDecorationUnderline(key: string): vscode.TextEditorDecorationType
     if (typeof (color) === 'string') {
         config.light = {
             color,
-            textDecoration: `underline;text-decoration-color:${color};`
+            textDecoration: `underline;text-decoration-color:${color};text-underline-offset: 4px;`
         };
         config.dark = {
             color,
-            textDecoration: `underline;text-decoration-color:${color};`
+            textDecoration: `underline;text-decoration-color:${color};text-underline-offset: 4px;`
         };
     } else {
         config.light = {
-            textDecoration: `underline;`
+            textDecoration: `underline;text-underline-offset: 4px;`
         };
         config.dark = {
-            textDecoration: `underline;`
+            textDecoration: `underline;text-underline-offset: 4px;`
         };
     }
     return vscode.window.createTextEditorDecorationType(config);
