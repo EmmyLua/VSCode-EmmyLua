@@ -16,8 +16,8 @@ jobs:
          - {target: win32-arm64,  file: emmylua_ls-win32-arm64.zip}
          - {target: linux-x64,    file: emmylua_ls-linux-x64-glibc.2.17.tar.gz}
          - {target: linux-arm64,  file: emmylua_ls-linux-aarch64-glibc.2.17.tar.gz}
-         - {target: darwin-x64,   file: emmylua_ls-darwin-x64.zip}
-         - {target: darwin-arm64, file: emmylua_ls-darwin-arm64.zip}
+         - {target: darwin-x64,   file: emmylua_ls-darwin-x64.tar.gz}
+         - {target: darwin-arm64, file: emmylua_ls-darwin-arm64.tar.gz}
 
     runs-on: ubuntu-latest
 
