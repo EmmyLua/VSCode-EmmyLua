@@ -13,7 +13,6 @@ jobs:
       matrix:
         include:
          - {target: win32-x64,    file: emmylua_ls-win32-x64.zip}
-         - {target: win32-ia32,   file: emmylua_ls-win32-ia32.zip}
          - {target: win32-arm64,  file: emmylua_ls-win32-arm64.zip}
          - {target: linux-x64,    file: emmylua_ls-linux-x64-glibc.2.17.tar.gz}
          - {target: linux-arm64,  file: emmylua_ls-linux-aarch64-glibc.2.17.tar.gz}

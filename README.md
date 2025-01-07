@@ -10,9 +10,11 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 [![donate](https://img.shields.io/badge/donate-emmy-FF69B4.svg?style=flat-square)](https://emmylua.github.io/donate.html)
 [![加入QQ群](https://img.shields.io/badge/chat-QQ群-46BC99.svg?style=flat-square)](//shang.qq.com/wpa/qunwpa?idkey=f1acce081c45fbb5670ed5f880f7578df7a8b84caa5d2acec230ac957f0c1716)
 
-[更新日志](CHANGELOG.md)
+[更新日志](CHANGELOG_CN.md)
 
-[CHANGELOG](CHANGELOG_EN.md)
+[CHANGELOG](CHANGELOG.md)
+
+[EmmyLua Langauge Server](https://github.com/CppCXY/emmylua-analyzer-rust)
 
 ## FAQ (中文 & English)
 
@@ -38,8 +40,8 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 
 **Q (中文)**: 我能否在其他平台使用 vscode-emmylua 的代码分析？  
 **Q (English)**: Can I use vscode-emmylua’s code analysis on other platforms?  
-**A (中文)**: 可以，它基于 [EmmyLuaAnalyzer](https://github.com/CppCXY/EmmyLuaAnalyzer)，兼容支持 LSP 的客户端  
-**A (English)**: Yes, it uses [EmmyLuaAnalyzer](https://github.com/CppCXY/EmmyLuaAnalyzer), which is a standard LSP  
+**A (中文)**: 可以，它基于 [emmylua-analyzer-rust](https://github.com/CppCXY/emmylua-analyzer-rust)，兼容支持 LSP 的客户端  
+**A (English)**: Yes, it uses [emmylua-analyzer-rust](https://github.com/CppCXY/emmylua-analyzer-rust), which is a standard LSP  
 
 **Q (中文)**: 为什么不用 VSCode 配置，而是用 .emmyrc.json？  
 **Q (English)**: Why use .emmyrc.json instead of VSCode settings?  
@@ -53,8 +55,8 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 
 **Q (中文)**: 为什么没有文档？  
 **Q (English)**: Why is there no documentation?  
-**A (中文)**: 配置文件文档见 https://github.com/CppCXY/EmmyLuaAnalyzer/blob/master/docs/.emmyrc.json_CN.md  
-**A (English)**: See configuration docs at https://github.com/CppCXY/EmmyLuaAnalyzer/blob/master/docs/.emmyrc.json_EN.md  
+**A (中文)**: 配置文件文档见 https://github.com/CppCXY/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_CN.md  
+**A (English)**: See configuration docs at https://github.com/CppCXY/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md  
 
 ## FAQ – Debugging (中文 & English)
 

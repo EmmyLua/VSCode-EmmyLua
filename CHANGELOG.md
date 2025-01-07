@@ -2,9 +2,9 @@
 
 [中文Log](CHANGELOG_CN.md)
 
-# next
+# 0.9.0
 
-The next version will start from 0.9.0 and will focus on implementing type checking.
+`CHG` use `emmylua-analyzer-rust` as the language server
 
 # 0.8.20
 
