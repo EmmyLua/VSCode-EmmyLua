@@ -1,401 +1,6 @@
 {
-  "definitions": {
-    "CodeLens": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "enable": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Completion": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "autoRequire": {
-          "type": "boolean"
-        },
-        "autoRequireFunction": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "autoRequireNamingConvention": {
-          "type": "string",
-          "enum": [
-            "none",
-            "camelCase",
-            "pascalCase",
-            "snakeCase"
-          ]
-        },
-        "callSnippet": {
-          "type": "boolean"
-        },
-        "postfix": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      }
-    },
-    "Diagnostics": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "disable": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": "string",
-            "enum": [
-              "none",
-              "syntax-error",
-              "type-not-found",
-              "missing-return",
-              "type-not-match",
-              "missing-parameter",
-              "inject-field-fail",
-              "unreachable-code",
-              "unused",
-              "undefined-global",
-              "need-import",
-              "deprecated",
-              "access-private-member",
-              "access-protected-member",
-              "access-package-member",
-              "no-discard",
-              "disable-global-define",
-              "undefined-field",
-              "local-const-reassign"
-            ]
-          }
-        },
-        "enable": {
-          "type": [
-            "boolean",
-            "null"
-          ]
-        },
-        "globals": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "globalsRegex": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "severity": {
-          "type": "object",
-          "properties": {
-            "none": {
-              "type": "string",
-              "enum": [
-                "error",
-                "warning",
-                "information",
-                "hint"
-              ]
-            },
-            "syntax-error": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "type-not-found": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "missing-return": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "type-not-match": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "missing-parameter": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "inject-field-fail": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "unreachable-code": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "unused": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "undefined-global": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "need-import": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "deprecated": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "access-private-member": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "access-protected-member": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "access-package-member": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "no-discard": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "disable-global-define": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "undefined-field": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "local-const-reassign": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            },
-            "*": {
-              "$ref": "#/definitions/Diagnostics/properties/severity/properties/none"
-            }
-          }
-        },
-        "enables": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": "string",
-            "enum": [
-              "none",
-              "syntax-error",
-              "type-not-found",
-              "missing-return",
-              "type-not-match",
-              "missing-parameter",
-              "inject-field-fail",
-              "unreachable-code",
-              "unused",
-              "undefined-global",
-              "need-import",
-              "deprecated",
-              "access-private-member",
-              "access-protected-member",
-              "access-package-member",
-              "no-discard",
-              "disable-global-define",
-              "undefined-field",
-              "local-const-reassign"
-            ]
-          }
-        }
-      }
-    },
-    "Hint": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "paramHint": {
-          "type": "boolean"
-        },
-        "indexHint": {
-          "type": "boolean"
-        },
-        "localHint": {
-          "type": "boolean"
-        },
-        "overrideHint": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Resource": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "paths": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      }
-    },
-    "Runtime": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "version": {
-          "type": "string",
-          "enum": [
-            "Lua5.1",
-            "LuaJIT",
-            "Lua5.2",
-            "Lua5.3",
-            "Lua5.4",
-            "LuaLatest"
-          ]
-        },
-        "requireLikeFunction": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "frameworkVersions": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "extensions": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "requirePattern": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      }
-    },
-    "Strict": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "requirePath": {
-          "type": "boolean"
-        },
-        "typeCall": {
-          "type": "boolean"
-        }
-      }
-    },
-    "Workspace": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "properties": {
-        "ignoreDir": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "ignoreGlobs": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "library": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "workspaceRoots": {
-          "type": [
-            "array",
-            "null"
-          ],
-          "items": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        },
-        "preloadFileSize": {
-          "type": "integer"
-        }
-      }
-    }
-  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Emmyrc",
   "type": "object",
   "properties": {
     "$schema": {
@@ -404,29 +9,582 @@
         "null"
       ]
     },
+    "codeLens": {
+      "default": {
+        "enable": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcCodeLen"
+        }
+      ]
+    },
     "completion": {
-      "$ref": "#/definitions/Completion"
+      "default": {
+        "autoRequire": true,
+        "autoRequireFunction": "require",
+        "autoRequireNamingConvention": "keep",
+        "callSnippet": false,
+        "enable": true,
+        "postfix": "@"
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcCompletion"
+        }
+      ]
     },
     "diagnostics": {
-      "$ref": "#/definitions/Diagnostics"
+      "default": {
+        "disable": [],
+        "enable": true,
+        "enables": [],
+        "globals": [],
+        "globalsRegex": [],
+        "severity": {}
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcDiagnostic"
+        }
+      ]
     },
     "hint": {
-      "$ref": "#/definitions/Hint"
+      "default": {
+        "enable": true,
+        "indexHint": true,
+        "localHint": true,
+        "overrideHint": true,
+        "paramHint": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcInlayHint"
+        }
+      ]
     },
-    "runtime": {
-      "$ref": "#/definitions/Runtime"
+    "hover": {
+      "default": {
+        "enable": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcHover"
+        }
+      ]
     },
-    "workspace": {
-      "$ref": "#/definitions/Workspace"
+    "references": {
+      "default": {
+        "enable": true,
+        "fuzzySearch": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcReference"
+        }
+      ]
     },
     "resource": {
-      "$ref": "#/definitions/Resource"
+      "default": {
+        "paths": []
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcResource"
+        }
+      ]
     },
-    "codeLens": {
-      "$ref": "#/definitions/CodeLens"
+    "runtime": {
+      "default": {
+        "extensions": [],
+        "frameworkVersions": [],
+        "requireLikeFunction": [],
+        "requirePattern": [],
+        "version": "LuaLatest"
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcRuntime"
+        }
+      ]
+    },
+    "semanticTokens": {
+      "default": {
+        "enable": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcSemanticToken"
+        }
+      ]
+    },
+    "signature": {
+      "default": {
+        "detailSignatureHelper": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcSignature"
+        }
+      ]
     },
     "strict": {
-      "$ref": "#/definitions/Strict"
+      "default": {
+        "requirePath": true,
+        "typeCall": false
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcStrict"
+        }
+      ]
+    },
+    "workspace": {
+      "default": {
+        "encoding": "utf-8",
+        "ignoreDir": [],
+        "ignoreGlobs": [],
+        "library": [],
+        "preloadFileSize": 0,
+        "workspaceRoots": []
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcWorkspace"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "DiagnosticCode": {
+      "type": "string",
+      "enum": [
+        "none",
+        "syntax-error",
+        "type-not-found",
+        "missing-return",
+        "type-not-match",
+        "missing-parameter",
+        "inject-field-fail",
+        "unreachable-code",
+        "unused",
+        "undefined-global",
+        "need-import",
+        "deprecated",
+        "access-private-member",
+        "access-protected-member",
+        "access-package-member",
+        "no-discard",
+        "disable-global-define",
+        "undefined-field",
+        "local-const-reassign",
+        "duplicate-type"
+      ]
+    },
+    "DiagnosticSeveritySetting": {
+      "oneOf": [
+        {
+          "description": "Represents an error diagnostic severity.",
+          "type": "string",
+          "enum": [
+            "error"
+          ]
+        },
+        {
+          "description": "Represents a warning diagnostic severity.",
+          "type": "string",
+          "enum": [
+            "warning"
+          ]
+        },
+        {
+          "description": "Represents an information diagnostic severity.",
+          "type": "string",
+          "enum": [
+            "information"
+          ]
+        },
+        {
+          "description": "Represents a hint diagnostic severity.",
+          "type": "string",
+          "enum": [
+            "hint"
+          ]
+        }
+      ]
+    },
+    "EmmyrcCodeLen": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable code lens.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcCompletion": {
+      "description": "Configuration for EmmyLua code completion.",
+      "type": "object",
+      "properties": {
+        "autoRequire": {
+          "description": "Whether to automatically require modules.",
+          "default": true,
+          "type": "boolean"
+        },
+        "autoRequireFunction": {
+          "description": "The function used for auto-requiring modules.",
+          "default": "require",
+          "type": "string"
+        },
+        "autoRequireNamingConvention": {
+          "description": "The naming convention for auto-required filenames.",
+          "default": "keep",
+          "allOf": [
+            {
+              "$ref": "#/definitions/EmmyrcFilenameConvention"
+            }
+          ]
+        },
+        "callSnippet": {
+          "description": "Whether to use call snippets in completions.",
+          "default": false,
+          "type": "boolean"
+        },
+        "enable": {
+          "description": "Whether to enable code completion.",
+          "default": true,
+          "type": "boolean"
+        },
+        "postfix": {
+          "description": "The postfix trigger used in completions.",
+          "default": "@",
+          "type": "string"
+        }
+      }
+    },
+    "EmmyrcDiagnostic": {
+      "description": "Represents the diagnostic configuration for Emmyrc.",
+      "type": "object",
+      "properties": {
+        "disable": {
+          "description": "A list of diagnostic codes that are disabled.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticCode"
+          }
+        },
+        "enable": {
+          "description": "A flag indicating whether diagnostics are enabled.",
+          "default": true,
+          "type": "boolean"
+        },
+        "enables": {
+          "description": "A list of diagnostic codes that are enabled.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticCode"
+          }
+        },
+        "globals": {
+          "description": "A list of global variables.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "globalsRegex": {
+          "description": "A list of regular expressions for global variables.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severity": {
+          "description": "A map of diagnostic codes to their severity settings.",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/DiagnosticSeveritySetting"
+          }
+        }
+      }
+    },
+    "EmmyrcFilenameConvention": {
+      "oneOf": [
+        {
+          "description": "Keep the original filename.",
+          "type": "string",
+          "enum": [
+            "keep"
+          ]
+        },
+        {
+          "description": "Convert the filename to snake_case.",
+          "type": "string",
+          "enum": [
+            "snake-case"
+          ]
+        },
+        {
+          "description": "Convert the filename to PascalCase.",
+          "type": "string",
+          "enum": [
+            "pascal-case"
+          ]
+        },
+        {
+          "description": "Convert the filename to camelCase.",
+          "type": "string",
+          "enum": [
+            "camel-case"
+          ]
+        }
+      ]
+    },
+    "EmmyrcHover": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable hover.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcInlayHint": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable inlay hints.",
+          "default": true,
+          "type": "boolean"
+        },
+        "indexHint": {
+          "description": "Whether to enable index hints.",
+          "default": true,
+          "type": "boolean"
+        },
+        "localHint": {
+          "description": "Whether to enable local hints. Whether to enable override hints.",
+          "default": true,
+          "type": "boolean"
+        },
+        "overrideHint": {
+          "description": "Whether to enable override hints.",
+          "default": true,
+          "type": "boolean"
+        },
+        "paramHint": {
+          "description": "Whether to enable parameter hints.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcLuaVersion": {
+      "oneOf": [
+        {
+          "description": "Lua 5.1",
+          "type": "string",
+          "enum": [
+            "Lua5.1"
+          ]
+        },
+        {
+          "description": "LuaJIT",
+          "type": "string",
+          "enum": [
+            "LuaJIT"
+          ]
+        },
+        {
+          "description": "Lua 5.2",
+          "type": "string",
+          "enum": [
+            "Lua5.2"
+          ]
+        },
+        {
+          "description": "Lua 5.3",
+          "type": "string",
+          "enum": [
+            "Lua5.3"
+          ]
+        },
+        {
+          "description": "Lua 5.4",
+          "type": "string",
+          "enum": [
+            "Lua5.4"
+          ]
+        },
+        {
+          "description": "Lua 5.4",
+          "type": "string",
+          "enum": [
+            "LuaLatest"
+          ]
+        }
+      ]
+    },
+    "EmmyrcReference": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable reference search.",
+          "default": true,
+          "type": "boolean"
+        },
+        "fuzzySearch": {
+          "description": "Determines whether to enable fuzzy searching for fields where references cannot be found.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcResource": {
+      "type": "object",
+      "properties": {
+        "paths": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "EmmyrcRuntime": {
+      "type": "object",
+      "properties": {
+        "extensions": {
+          "description": "file Extensions. eg: .lua, .lua.txt",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "frameworkVersions": {
+          "description": "Framework versions.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requireLikeFunction": {
+          "description": "Functions that like require.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requirePattern": {
+          "description": "Require pattern. eg. \"?.lua\", \"?/init.lua\"",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "Lua version.",
+          "default": "LuaLatest",
+          "allOf": [
+            {
+              "$ref": "#/definitions/EmmyrcLuaVersion"
+            }
+          ]
+        }
+      }
+    },
+    "EmmyrcSemanticToken": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable semantic token.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcSignature": {
+      "type": "object",
+      "properties": {
+        "detailSignatureHelper": {
+          "description": "Whether to enable signature help.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcStrict": {
+      "type": "object",
+      "properties": {
+        "requirePath": {
+          "description": "Whether to enable strict mode require path.",
+          "default": true,
+          "type": "boolean"
+        },
+        "typeCall": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcWorkspace": {
+      "type": "object",
+      "properties": {
+        "encoding": {
+          "description": "Encoding. eg: \"utf-8\"",
+          "default": "utf-8",
+          "type": "string"
+        },
+        "ignoreDir": {
+          "description": "Ignore directories.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ignoreGlobs": {
+          "description": "Ignore globs. eg: [\"**/*.lua\"]",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "library": {
+          "description": "Library paths. eg: \"/usr/local/share/lua/5.1\"",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preloadFileSize": {
+          "default": 0,
+          "type": "integer",
+          "format": "int32"
+        },
+        "workspaceRoots": {
+          "description": "Workspace roots. eg: [\"src\", \"test\"]",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

@@ -5,10 +5,11 @@ export interface AnnotatorParams {
 }
 
 export enum AnnotatorType {
-    Param,
+    ReadOnlyParam,
     Global,
-    Local,
-    Upvalue,
+    ReadOnlyLocal,
+    MutLocal,
+    MutParam,
 }
 
 export interface IAnnotator {

@@ -16,6 +16,7 @@ import { InlineDebugAdapterFactory } from './debugger/DebugFactory'
 import * as os from 'os';
 import * as fs from 'fs';
 import { IServerLocation, IServerPosition } from './lspExt';
+import { onDidChangeConfiguration } from './annotator';
 
 export let ctx: EmmyContext;
 let activeEditor: vscode.TextEditor;
@@ -34,6 +35,13 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
     context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
     context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration("emmylua")) {
+                onDidChangeConfiguration()
+            }
+        })
+    );
     startServer();
     registerDebuggers();
     return {
@@ -97,17 +105,26 @@ async function startServer() {
     });
 }
 
+const serverPaths: { [key: string]: { [key: string]: string } } = {
+    win32: {
+        arm64: 'emmylua_ls-win32-arm64',
+        x64: 'emmylua_ls-win32-x64',
+        ia32: 'emmylua_ls-win32-ia32'
+    },
+    linux: {
+        arm64: 'emmylua_ls-linux-aarch64-glibc.2.17',
+        x64: 'emmylua_ls-linux-x64-glibc.2.17'
+    },
+    darwin: {
+        arm64: 'emmylua_ls-darwin-arm64',
+        x64: 'emmylua_ls-darwin-x64'
+    }
+};
+
 async function doStartServer() {
     const context = ctx.extensionContext;
     const clientOptions: LanguageClientOptions = {
         documentSelector: [{ scheme: 'file', language: ctx.LANGUAGE_ID }],
-        // synchronize: {
-        //     configurationSection: ["emmylua", "files.associations"],
-        //     fileEvents: [
-        //         vscode.workspace.createFileSystemWatcher("**/*.lua"),
-        //         vscode.workspace.createFileSystemWatcher("**/.editorconfig"),
-        //     ]
-        // },
         initializationOptions: {}
     };
 
@@ -130,54 +147,20 @@ async function doStartServer() {
             return Promise.resolve(result);
         };
     } else {
-        let platform: string = os.platform();
+        let platform = os.platform();
+        let arch = os.arch();
+        let executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
 
-        let command: string = "";
-        switch (platform) {
-            case "win32":
-                command = path.join(
-                    context.extensionPath,
-                    'server',
-                    'emmylua_ls-win32-x64',
-                    'emmylua_ls.exe'
-                )
-                break;
-            case "linux":
-                if (os.arch() === "arm64") {
-                    command = path.join(
-                        context.extensionPath,
-                        'server',
-                        'emmylua_ls-linux-arm64',
-                        'emmylua_ls'
-                    );
-                } else {
-                    command = path.join(
-                        context.extensionPath,
-                        'server',
-                        'emmylua_ls-linux-x64',
-                        'emmylua_ls'
-                    );
-                }
-                fs.chmodSync(command, '777');
-                break;
-            case "darwin":
-                if (os.arch() === "arm64") {
-                    command = path.join(
-                        context.extensionPath,
-                        'server',
-                        'emmylua_ls-darwin-arm64',
-                        'emmylua_ls'
-                    );
-                } else {
-                    command = path.join(
-                        context.extensionPath,
-                        'server',
-                        'emmylua_ls-darwin-x64',
-                        'emmylua_ls'
-                    );
-                }
-                fs.chmodSync(command, '777');
-                break;
+        const serverDir = serverPaths[platform]?.[arch];
+        if (!serverDir) {
+            vscode.window.showErrorMessage(`Unsupported platform: ${platform} ${arch}`);
+            return;
+        }
+
+        const command = path.join(context.extensionPath, 'server', serverDir, executableName);
+
+        if (platform !== 'win32') {
+            fs.chmodSync(command, '777');
         }
         serverOptions = {
             command: command,
