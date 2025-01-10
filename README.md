@@ -1,9 +1,6 @@
 ![logo](/res/logo.png)
 # EmmyLua for VSCode
 
-VSCode version of [EmmyLua](https://github.com/EmmyLua/IntelliJ-EmmyLua)
-
-
 QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下载)
 
 [![Online EmmyLua Doc](https://img.shields.io/badge/emmy-doc-46BC99.svg?style=flat-square)](https://emmylua.github.io)
@@ -48,10 +45,10 @@ QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下
 **A (中文)**: 方便在其他平台上使用，无需在每个 IDE 中重复配置  
 **A (English)**: It works across platforms without extra IDE configuration  
 
-**Q (中文)**: 为什么用 .NET 重写语言服务器？  
-**Q (English)**: Why rewrite the language server in .NET?  
-**A (中文)**: Java 版内存占用较大且有递归崩溃问题，.NET 性能更优  
-**A (English)**: The Java version used too much memory and had recursion issues; .NET is more optimized  
+**Q (中文)**: 为什么用 Rust 重写语言服务器？放弃.net和java语言服务器 
+**Q (English)**: Why rewrite the language server in Rust? and abandon the .NET and Java servers?
+**A (中文)**: 因为我想试试 rust
+**A (English)**: I want to try rust
 
 **Q (中文)**: 为什么没有文档？  
 **Q (English)**: Why is there no documentation?  

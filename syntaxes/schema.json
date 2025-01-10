@@ -157,28 +157,174 @@
   },
   "definitions": {
     "DiagnosticCode": {
-      "type": "string",
-      "enum": [
-        "none",
-        "syntax-error",
-        "type-not-found",
-        "missing-return",
-        "type-not-match",
-        "missing-parameter",
-        "inject-field-fail",
-        "unreachable-code",
-        "unused",
-        "undefined-global",
-        "need-import",
-        "deprecated",
-        "access-private-member",
-        "access-protected-member",
-        "access-package-member",
-        "no-discard",
-        "disable-global-define",
-        "undefined-field",
-        "local-const-reassign",
-        "duplicate-type"
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "none"
+          ]
+        },
+        {
+          "description": "Syntax error",
+          "type": "string",
+          "enum": [
+            "syntax-error"
+          ]
+        },
+        {
+          "description": "Type not found",
+          "type": "string",
+          "enum": [
+            "type-not-found"
+          ]
+        },
+        {
+          "description": "Missing return statement",
+          "type": "string",
+          "enum": [
+            "missing-return"
+          ]
+        },
+        {
+          "description": "Param Type not match",
+          "type": "string",
+          "enum": [
+            "param-type-not-match"
+          ]
+        },
+        {
+          "description": "Missing parameter",
+          "type": "string",
+          "enum": [
+            "missing-parameter"
+          ]
+        },
+        {
+          "description": "Inject field fail",
+          "type": "string",
+          "enum": [
+            "inject-field-fail"
+          ]
+        },
+        {
+          "description": "Unreachable code",
+          "type": "string",
+          "enum": [
+            "unreachable-code"
+          ]
+        },
+        {
+          "description": "Unused",
+          "type": "string",
+          "enum": [
+            "unused"
+          ]
+        },
+        {
+          "description": "Undefined global",
+          "type": "string",
+          "enum": [
+            "undefined-global"
+          ]
+        },
+        {
+          "description": "Deprecated",
+          "type": "string",
+          "enum": [
+            "deprecated"
+          ]
+        },
+        {
+          "description": "Access invisible",
+          "type": "string",
+          "enum": [
+            "access-invisible"
+          ]
+        },
+        {
+          "description": "Discard return value",
+          "type": "string",
+          "enum": [
+            "discard-returns"
+          ]
+        },
+        {
+          "description": "Disable global define",
+          "type": "string",
+          "enum": [
+            "disable-global-define"
+          ]
+        },
+        {
+          "description": "Undefined field",
+          "type": "string",
+          "enum": [
+            "undefined-field"
+          ]
+        },
+        {
+          "description": "Local const reassign",
+          "type": "string",
+          "enum": [
+            "local-const-reassign"
+          ]
+        },
+        {
+          "description": "Iter variable reassign",
+          "type": "string",
+          "enum": [
+            "iter-variable-reassign"
+          ]
+        },
+        {
+          "description": "Duplicate type",
+          "type": "string",
+          "enum": [
+            "duplicate-type"
+          ]
+        },
+        {
+          "description": "Redefined local",
+          "type": "string",
+          "enum": [
+            "redefined-local"
+          ]
+        },
+        {
+          "description": "Redefined label",
+          "type": "string",
+          "enum": [
+            "redefined-label"
+          ]
+        },
+        {
+          "description": "Name Style check",
+          "type": "string",
+          "enum": [
+            "name-style-check"
+          ]
+        },
+        {
+          "description": "Code style check",
+          "type": "string",
+          "enum": [
+            "code-style-check"
+          ]
+        },
+        {
+          "description": "Need check nil",
+          "type": "string",
+          "enum": [
+            "need-check-nil"
+          ]
+        },
+        {
+          "description": "Await in sync",
+          "type": "string",
+          "enum": [
+            "await-in-sync"
+          ]
+        }
       ]
     },
     "DiagnosticSeveritySetting": {

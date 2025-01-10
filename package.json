@@ -274,7 +274,7 @@
                 },
                 "emmylua.colors.local": {
                     "type": "string",
-                    "default": "#66CCFF"
+                    "default": ""
                 }
             }
         },
