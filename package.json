@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -275,6 +275,11 @@
                 "emmylua.colors.local": {
                     "type": "string",
                     "default": ""
+                },
+                "emmylua.ls.start_parameters": {
+                    "type": "array",
+                    "default": [
+                    ]
                 }
             }
         },
@@ -289,23 +294,11 @@
         },
         "jsonValidation": [
             {
-                "fileMatch": "emmy.config.json",
-                "url": "./syntaxes/emmy.config.schema.json"
-            },
-            {
                 "fileMatch": ".emmyrc.json",
                 "url": "./syntaxes/schema.json"
             }
         ],
-        "colors": [],
-        "views": {
-            "explorer": [
-                {
-                    "id": "emmylua.syntax.tree",
-                    "name": "Syntax Tree"
-                }
-            ]
-        }
+        "colors": []
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",

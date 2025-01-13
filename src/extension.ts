@@ -157,15 +157,20 @@ async function doStartServer() {
             return;
         }
 
-        const command = path.join(context.extensionPath, 'server', serverDir, executableName);
+        const exe = path.join(context.extensionPath, 'server', serverDir, executableName);
 
         if (platform !== 'win32') {
-            fs.chmodSync(command, '777');
+            fs.chmodSync(exe, '777');
         }
         serverOptions = {
-            command: command,
+            command: exe,
             args: []
         };
+
+        let parameters = vscode.workspace.getConfiguration("emmylua").get<string[]>("ls.start_parameters");
+        if (parameters && parameters.length > 0) {
+            serverOptions.args = parameters;
+        }
     }
 
     ctx.client = new LanguageClient(ctx.LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);

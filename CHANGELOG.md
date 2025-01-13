@@ -2,6 +2,12 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.1
+
+`FIX` Fixed a crash issue
+
+`CHG` Refactored the logic related to excluding files
+
 # 0.9.0
 
 `CHG` use `emmylua-analyzer-rust` as the language server
