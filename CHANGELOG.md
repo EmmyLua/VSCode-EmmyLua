@@ -2,6 +2,20 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.2
+
+`FIX` Fixed the issue with `globalsRegex` being ineffective in the configuration options
+
+`FIX` Now re-supports defining and accessing global variables using `_G`
+
+`FIX` Now re-supports non-strict require mode, where require paths do not need to start from the root directory. This mode requires setting `strict.requirePath` to `false`
+
+`FIX` Fixed an issue that caused errors in document/symbol
+
+`FIX` Fixed the issue with type inference failure for types like `{ [number]: T }`
+
+`CHG` Optimized code by using `smol_str` more extensively
+
 # 0.9.1
 
 `FIX` Fixed a crash issue

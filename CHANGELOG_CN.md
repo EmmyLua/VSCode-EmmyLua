@@ -1,5 +1,19 @@
 # Change Log
 
+# 0.9.2
+
+`FIX` 修复了配置项里面得globalsRegex无效的问题
+
+`FIX` 现在重新支持使用_G定义和访问全局变量的问题
+
+`FIX` 现在重新支持非严格require模式, 也就是require路径不需要从根目录开始, 该模式需要配置 strict.requirePath 为 false
+
+`FIX` 修复一个导致document/symbol报错的问题
+
+`FIX` 修复`{ [number]: T }`这样的类型推断失效的问题
+
+`CHG` 优化代码, 更多的使用smol_str
+
 # 0.9.1
 
 `FIX` 修复一个崩溃问题
