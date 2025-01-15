@@ -1,5 +1,13 @@
 # Change Log
 
+# 0.9.3
+
+`FIX` 修复上个变量查找声明的方式, 将跳过赋值语句本身
+
+`FIX` 允许设置诊断间隔, 通过`diagnostics.diagnosticInterval`, 默认值是500
+
+`FIX` 修复链式调用没有推断和提示的问题
+
 # 0.9.2
 
 `FIX` 修复了配置项里面得globalsRegex无效的问题

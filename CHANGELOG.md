@@ -2,6 +2,14 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.3
+
+`FIX` Fixed the method for locating variable declarations, skipping the assignment statements themselves
+
+`FIX` Allowed setting the diagnostic interval via `diagnostics.diagnosticInterval`, default is 500
+
+`FIX` Fixed the issue where chained calls were not inferred or prompted
+
 # 0.9.2
 
 `FIX` Fixed the issue with `globalsRegex` being ineffective in the configuration options

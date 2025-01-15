@@ -36,6 +36,7 @@
     },
     "diagnostics": {
       "default": {
+        "diagnosticInterval": 500,
         "disable": [],
         "enable": true,
         "enables": [],
@@ -413,6 +414,15 @@
       "description": "Represents the diagnostic configuration for Emmyrc.",
       "type": "object",
       "properties": {
+        "diagnosticInterval": {
+          "description": "The interval in milliseconds to perform diagnostics.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0.0
+        },
         "disable": {
           "description": "A list of diagnostic codes that are disabled.",
           "default": [],
