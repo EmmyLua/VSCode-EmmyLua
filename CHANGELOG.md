@@ -2,6 +2,14 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.4
+
+`FIX` Fixed the issue where fields/functions marked with `@source` could not be navigated to
+
+`FIX` Fixed the issue where `@class` and `@enum` annotations did not apply to table fields
+
+`FIX` Fixed the issue where type checking could not correctly compute union types
+
 # 0.9.3
 
 `FIX` Fixed the method for locating variable declarations, skipping the assignment statements themselves
