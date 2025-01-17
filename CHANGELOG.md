@@ -2,6 +2,14 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.5
+
+`FIX` Fixed the error in checking asymmetric function definition calls
+
+`NEW` Added need-nil-check diagnostics to verify if variables that may be nil are being checked
+
+`NEW` Refactored control flow analysis to better support nil checks
+
 # 0.9.4
 
 `FIX` Fixed the issue where fields/functions marked with `@source` could not be navigated to
