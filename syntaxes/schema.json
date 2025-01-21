@@ -50,6 +50,16 @@
         }
       ]
     },
+    "documentColor": {
+      "default": {
+        "enable": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcDocumentColor"
+        }
+      ]
+    },
     "hint": {
       "default": {
         "enable": true,
@@ -467,6 +477,16 @@
           "additionalProperties": {
             "$ref": "#/definitions/DiagnosticSeveritySetting"
           }
+        }
+      }
+    },
+    "EmmyrcDocumentColor": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable document color.",
+          "default": true,
+          "type": "boolean"
         }
       }
     },

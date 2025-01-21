@@ -1,5 +1,25 @@
 # Change Log
 
+# 0.9.6
+
+`NEW` 对非vscode平台添加progress notifications
+
+`NEW` 添加nix flake, 用于nix的用户的安装, 参考 PR#4
+
+`NEW` 支持在hover中显示参数和返回的描述
+
+`NEW` 支持连续的require语句被视为import块, 并被vscode自动折叠, 如果该文件只有require语句则不生效
+
+`FIX` 修复拼写错误 `interger` -> `integer`
+
+`FIX` 修复盘符下首个目录为中文时url解析的问题
+
+`FIX` 修复关于table方面的类型检查的问题
+
+`FIX` 修改document color的实现, 要求必须是连续的单词, 并提供选项关闭document color功能
+
+`FIX` 修复self作为函数显式参数时的类型推断问题
+
 # 0.9.5
 
 `FIX` 修复不对称函数定义调用的检查错误
