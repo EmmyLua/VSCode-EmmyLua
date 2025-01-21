@@ -1,5 +1,11 @@
 # Change Log
 
+# 0.9.7
+
+`FIX` 修复一个可能的无法完成索引的问题
+
+`FIX` 修复类型检查时, 对子类传入父类参数检查失败的问题
+
 # 0.9.6
 
 `NEW` 对非vscode平台添加progress notifications

@@ -2,6 +2,12 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.7
+
+`FIX` Fixed a potential issue where indexing could not be completed
+
+`FIX` Fixed an issue where type checking failed when passing subclass parameters to a parent class
+
 # 0.9.6
 
 `NEW` Add progress notifications for non-VSCode platforms
