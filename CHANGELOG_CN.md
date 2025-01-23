@@ -1,5 +1,13 @@
 # Change Log
 
+# 0.9.8
+
+`FIX` 修复一些多返回值推断错误的问题
+
+`FIX` 去掉hover时多余的`@return`
+
+`NEW` 语言服务器支持通过变量`$EMMYLUA_LS_RESOURCES`定位资源文件
+
 # 0.9.7
 
 `FIX` 修复一个可能的无法完成索引的问题

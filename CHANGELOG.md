@@ -2,6 +2,14 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.8
+
+`FIX` Fixed some multiple return value inference errors
+
+`FIX` Removed redundant `@return` in hover
+
+`NEW` Language server supports locating resource files through the `$EMMYLUA_LS_RESOURCES` variable
+
 # 0.9.7
 
 `FIX` Fixed a potential issue where indexing could not be completed
