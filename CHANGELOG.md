@@ -2,6 +2,67 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.9
+
+`NEW` Support generic alias fold
+
+`NEW` Support `code style check`, which powered by `emmyluacodestyle`
+
+`NEW` Basic table declaration field names autocompletion.
+
+`FIX` Fix possible panic due to integer overflow when calculating pows.
+
+`NEW` Support compile by winodws mingw
+
+`NEW` `emmylua_check` now supports `workspace.library`
+
+`FIX` Fix std resource loaded for cli tools
+
+`FIX` Fix `self` parameter regard as unuseful issue
+
+`NEW` Add `emmylua_check` cli tool, you can use it to check lua code. you can install it by `cargo install emmylua_check`
+
+`NEW` all the crates release to crates.io. now you can get `emmylua_parser`, `emmylua_code_analysis`, `emmylua_ls`, `emmylua_doc_cli` from crates.io.
+```shell
+cargo install emmylua_ls
+cargo install emmylua_doc_cli
+```
+
+`CHG` refactor `template system`, optimize the generic infer
+
+`FIX` now configurations are loaded properly in NeoVim in cases when no extra LSP configuration parameters are provided
+
+`CHG` extended humanization of small constant table types
+
+`NEW` Add configuration option `workspace.moduleMap` to map old module names to new ones. The `moduleMap` is a list of mappings, for example:
+
+```json
+{
+    "workspace": {
+        "moduleMap": [
+            {
+                "pattern": "^lib(.*)$",
+                "replace": "script$1"
+            }
+        ]
+    }
+}
+```
+
+This feature ensures that `require` works correctly. If you need to translate module names starting with `lib` to use `script`, add the appropriate mapping here.
+
+`CHG` Refactor project structure, move all resources into executable binary
+
+`NEW` Add Develop Guide
+
+`NEW` support `workspace/didChangeConfiguration` notification for neovim
+
+`CHG` refactor `semantic token`
+
+`NEW` support simple generic type instantiation based on the passed functions
+
+`FIX` Fix find generic class template parameter issue
+
 # 0.9.8
 
 `FIX` Fixed some multiple return value inference errors

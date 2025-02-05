@@ -1,5 +1,64 @@
 # Change Log
 
+`NEW` 支持alias generic展开
+
+`NEW` 支持由 `emmyluacodestyle` 提供支持的 `code style check`
+
+`NEW` 基本表声明字段名自动补全
+
+`FIX` 修正计算幂时可能因整数溢出而引发崩溃的问题
+
+`NEW` 支持在 Windows 上使用 mingw 编译
+
+`NEW` `emmylua_check` 现支持 `workspace.library`
+
+`FIX` 修正 CLI 工具加载标准资源的问题
+
+`FIX` 修正将 `self` 参数识别为未使用的问题
+
+`NEW` 添加 `emmylua_check` CLI 工具，你可以使用该工具检查 Lua 代码，可通过 `cargo install emmylua_check` 进行安装
+
+`NEW` 所有 crates 均已发布到 crates.io，现你可从 crates.io 获取 `emmylua_parser`、`emmylua_code_analysis`、`emmylua_ls`、`emmylua_doc_cli`：
+```shell
+cargo install emmylua_ls
+cargo install emmylua_doc_cli
+```
+
+`CHG` 重构 `template system`，优化泛型推断
+
+`FIX` 现已在未提供额外 LSP 配置参数时正确加载 NeoVim 中的配置
+
+`CHG` 扩展对小型常量表类型更友好的处理
+
+`NEW` 添加配置选项 `workspace.moduleMap` 用于将旧模块名映射为新模块名。`moduleMap` 是一个映射列表，例如：
+
+```json
+{
+  "workspace": {
+    "moduleMap": [
+      {
+        "pattern": "^lib(.*)$",
+        "replace": "script$1"
+      }
+    ]
+  }
+}
+```
+
+此功能确保 `require` 能正确工作。如果你需要将以 `lib` 开头的模块名转换为 `script`，请在此处添加适当的映射。
+
+`CHG` 重构项目结构，将所有资源移动到可执行二进制文件中
+
+`NEW` 添加开发指南
+
+`NEW` 支持 Neovim 的 `workspace/didChangeConfiguration` 通知
+
+`CHG` 重构语义标记 `semantic token`
+
+`NEW` 支持基于传入函数的简单泛型类型实例化
+
+`FIX` 修复查找泛型类模板参数的问题
+
 # 0.9.8
 
 `FIX` 修复一些多返回值推断错误的问题
