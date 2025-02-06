@@ -2,6 +2,18 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.10
+
+`FIX` Fix generic table infer issue
+
+`FIX` Fix tuple infer issue
+
+`NEW` Compact luals env variable start with `$`
+
+`FIX` Refactor `humanize type` for stack overflow issue
+
+`Fix` Fix a documentation cli tool render issue
+
 # 0.9.9
 
 `NEW` Support generic alias fold

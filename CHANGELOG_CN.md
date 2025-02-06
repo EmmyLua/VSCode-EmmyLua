@@ -1,5 +1,19 @@
 # Change Log
 
+# 0.9.10
+
+`FIX` 修复泛型表推断问题
+
+`FIX` 修复元组推断问题
+
+`NEW` 兼容以`$` 开头的环境变量
+
+`FIX` 重构 `humanize type` 以解决堆栈溢出问题
+
+`Fix` 修复文档 CLI 工具渲染问题
+
+# 0.9.9
+
 `NEW` 支持alias generic展开
 
 `NEW` 支持由 `emmyluacodestyle` 提供支持的 `code style check`
