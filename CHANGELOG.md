@@ -2,6 +2,10 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.11
+
+`FIX` Fix mac path issue
+
 # 0.9.10
 
 `FIX` Fix generic table infer issue

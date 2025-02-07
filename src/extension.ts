@@ -105,22 +105,6 @@ async function startServer() {
     });
 }
 
-const serverPaths: { [key: string]: { [key: string]: string } } = {
-    win32: {
-        arm64: 'emmylua_ls-win32-arm64',
-        x64: 'emmylua_ls-win32-x64',
-        ia32: 'emmylua_ls-win32-ia32'
-    },
-    linux: {
-        arm64: 'emmylua_ls-linux-aarch64-glibc.2.17',
-        x64: 'emmylua_ls-linux-x64-glibc.2.17'
-    },
-    darwin: {
-        arm64: 'emmylua_ls-darwin-arm64',
-        x64: 'emmylua_ls-darwin-x64'
-    }
-};
-
 async function doStartServer() {
     const context = ctx.extensionContext;
     const clientOptions: LanguageClientOptions = {
@@ -148,16 +132,8 @@ async function doStartServer() {
         };
     } else {
         let platform = os.platform();
-        let arch = os.arch();
         let executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
-
-        const serverDir = serverPaths[platform]?.[arch];
-        if (!serverDir) {
-            vscode.window.showErrorMessage(`Unsupported platform: ${platform} ${arch}`);
-            return;
-        }
-
-        const exe = path.join(context.extensionPath, 'server', serverDir, executableName);
+        const exe = path.join(context.extensionPath, 'server', executableName);
 
         if (platform !== 'win32') {
             fs.chmodSync(exe, '777');
