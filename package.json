@@ -280,7 +280,12 @@
                     "type": "array",
                     "default": [
                     ]
-                }
+                },
+                "emmylua.autoInsertTripleDash": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "%config.autoInsertTripleDash.description%"
+                  }
             }
         },
         "configurationDefaults": {
