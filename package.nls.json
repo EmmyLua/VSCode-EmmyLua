@@ -13,5 +13,6 @@
     "debug.launch.workingDir": "working directory",
     "debug.launch.arguments": "arguments pass to executable file",
     "debug.launch.blockOnExit": "block process when exit",
-    "debug.launch.newWindow": "create new windows"
+    "debug.launch.newWindow": "create new windows",
+    "config.autoInsertTripleDash.description": "Automatically insert \"---\" when line breaking after a comment"
 }
