@@ -2,6 +2,32 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.12
+
+`NEW` Support type-check when casting tuples to arrays.
+
+`NEW` Now autocompletion suggests function overloads.
+
+`NEW` Improved completion for integer member keys.
+
+`NEW` Infer value by reassign
+
+`NEW` Improved analyze base control flow
+
+`NEW` Improved hover for class
+
+`NEW` Optimized semantic token
+
+`NEW` Infer Some table array as tuple
+
+`NEW` Infer `{ ... }` as array
+
+`NEW` Semantic Model now is immutable
+
+`FIX` Fix inference issue by resolving iteration order problem.
+
+`FIX` Improve type check
+
 # 0.9.11
 
 `FIX` Fix mac path issue
