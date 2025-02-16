@@ -32,8 +32,11 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
         ];
 
         // 读取配置决定是否添加三横线规则
-        const config = workspace.getConfiguration('emmylua');
-        const autoInsertTripleDash = config.get<boolean>('autoInsertTripleDash', true);
+        const config = workspace.getConfiguration(
+            undefined,
+            workspace.workspaceFolders?.[0]
+        );
+        const autoInsertTripleDash = config.get<boolean>('emmylua.misc.autoInsertTripleDash', true);
         // 第二个参数是默认值（当配置不存在时使用）
         if (autoInsertTripleDash) {
             this.onEnterRules = [

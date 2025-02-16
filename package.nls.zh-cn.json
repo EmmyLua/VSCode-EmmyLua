@@ -14,5 +14,6 @@
     "debug.launch.arguments": "传递给可执行文件的参数",
     "debug.launch.blockOnExit": "进程结束时是否阻塞进程保持窗口开启",
     "debug.launch.newWindow": "emmylua会创建一个新窗口展示这个进程",
-    "config.autoInsertTripleDash.description": "在注解后换行时自动插入 \"---\""
+    "config.autoInsertTripleDash.description": "在注解后换行时自动插入 \"---\"",
+    "config.misc.executablePath": "VSCode中指定可执行文件路径"
 }
