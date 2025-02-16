@@ -131,19 +131,27 @@ async function doStartServer() {
             return Promise.resolve(result);
         };
     } else {
-        let platform = os.platform();
-        let executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
-        const exe = path.join(context.extensionPath, 'server', executableName);
+        const config = vscode.workspace.getConfiguration(
+            undefined,
+            vscode.workspace.workspaceFolders?.[0]
+        );
+        let configExecutablePath = config.get<string>("emmylua.misc.executablePath")?.trim();
+        if (!configExecutablePath || configExecutablePath.length == 0) {
+            let platform = os.platform();
+            let executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
+            configExecutablePath = path.join(context.extensionPath, 'server', executableName);
 
-        if (platform !== 'win32') {
-            fs.chmodSync(exe, '777');
+            if (platform !== 'win32') {
+                fs.chmodSync(configExecutablePath, '777');
+            }
         }
+
         serverOptions = {
-            command: exe,
+            command: configExecutablePath,
             args: []
         };
 
-        let parameters = vscode.workspace.getConfiguration("emmylua").get<string[]>("ls.start_parameters");
+        let parameters = config.get<string[]>("emmylua.ls.startParameters");
         if (parameters && parameters.length > 0) {
             serverOptions.args = parameters;
         }

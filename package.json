@@ -276,14 +276,19 @@
                     "type": "string",
                     "default": ""
                 },
-                "emmylua.ls.start_parameters": {
+                "emmylua.ls.startParameters": {
                     "type": "array",
                     "default": []
                 },
-                "emmylua.autoInsertTripleDash": {
+                "emmylua.misc.autoInsertTripleDash": {
                     "type": "boolean",
                     "default": true,
                     "description": "%config.autoInsertTripleDash.description%"
+                },
+                "emmylua.misc.executablePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "%config.misc.executablePath%"
                 }
             }
         },

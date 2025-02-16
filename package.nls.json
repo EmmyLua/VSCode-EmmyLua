@@ -14,5 +14,6 @@
     "debug.launch.arguments": "arguments pass to executable file",
     "debug.launch.blockOnExit": "block process when exit",
     "debug.launch.newWindow": "create new windows",
-    "config.autoInsertTripleDash.description": "Automatically insert \"---\" when line breaking after a comment"
+    "config.autoInsertTripleDash.description": "Automatically insert \"---\" when line breaking after a comment",
+    "config.misc.executablePath": "Specify the executable file path in VSCode"
 }
