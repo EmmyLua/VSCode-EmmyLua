@@ -2,6 +2,24 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.13
+
+`FIX` Fix issue `emmylua_ls` might not exit in unix.
+
+`NEW` Support TypeScript-like type gymnastics
+
+`FIX` Fix infinite recursion issue in alias generics.
+
+`NEW` Improve reference search
+
+`NEW` Refactor type check
+
+`NEW` Optimize hover
+
+`NEW` Optimize completion
+
+`NEW` Support `pcall` return type and check
+
 # 0.9.12
 
 `NEW` Support type-check when casting tuples to arrays.
