@@ -1,5 +1,33 @@
 # Change Log
 
+# 0.9.14
+`CHG` 重构 `folding range`
+
+`FIX` 修复超类补全问题
+
+`NEW` 支持 `@field` 函数重载，例如：
+```lua
+---@class AAA
+---@field event fun(s:string):string
+---@field event fun(s:number):number
+```
+
+`FIX` 修复枚举类型检查
+
+`FIX` 自定义运算符推断
+
+`FIX` 修复 select 函数并添加 std.Select 类型
+
+`CHG` 重构联合类型
+
+`NEW` 为类型添加描述
+
+`NEW` 支持多联合类型中不带 `#` 的描述
+
+`NEW` 添加标准库翻译
+
+`NEW` 优化参数内嵌提示：如果参数名与变量名相同，则不显示参数名称
+
 # 0.9.13
 `FIX` 修复 Unix 系统下 `emmylua_ls` 可能无法退出的问题。
 

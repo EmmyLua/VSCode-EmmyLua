@@ -2,6 +2,36 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.14
+
+`CHG` Refactor `folding range`
+
+`FIX` Fix super class completion issue
+
+`NEW` Support `@field` function overload like:
+```lua
+---@class AAA
+---@field event fun(s:string):string
+---@field event fun(s:number):number
+```
+
+`FIX` Fix enum type check
+
+`FIX` custom operator infer
+
+`FIX` Fix select function and add std.Select type 
+
+`CHG` Refactor Union type
+
+`NEW` Add description to type
+
+`NEW` Support description without '#' on multi union
+
+`NEW` Add standard library translation
+
+`NEW` Optimize inlay hint for parameter, if the parameter name is the same as the variable name, the parameter name will not be displayed
+
+
 # 0.9.13
 
 `FIX` Fix issue `emmylua_ls` might not exit in unix.
