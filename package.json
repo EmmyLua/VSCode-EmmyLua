@@ -276,6 +276,11 @@
                     "type": "string",
                     "default": ""
                 },
+                "emmylua.colors.mutable_underline": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Mutable variable underline"
+                },
                 "emmylua.ls.startParameters": {
                     "type": "array",
                     "default": []

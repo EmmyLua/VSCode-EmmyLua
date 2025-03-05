@@ -55,8 +55,15 @@ function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
     D_LOCAL = createDecoration("colors.local");
-    D_MUT_LOCAL = createDecorationUnderline("colors.local");
-    D_MUT_PARAM = createDecorationUnderline("colors.parameter");
+    let mutable_underline = vscode.workspace.getConfiguration("emmylua").get("colors.mutable_underline");
+    if (mutable_underline) {
+        D_MUT_LOCAL = createDecorationUnderline("colors.local");
+        D_MUT_PARAM = createDecorationUnderline("colors.parameter");
+    }
+    else {
+        D_MUT_LOCAL = createDecoration("colors.local");
+        D_MUT_PARAM = createDecoration("colors.parameter");
+    }
 }
 
 export function onDidChangeConfiguration() {
