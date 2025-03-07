@@ -1,5 +1,27 @@
 # Change Log
 
+# 0.9.15
+
+`NEW` 允许禁用可变变量的下划线
+
+`NEW` 支持负整数类型
+
+`Fix` 修复别名类型检查问题
+
+`CHG` 重构流程分析算法
+
+`FIX` 修复属性解包问题
+
+`NEW` 支持过滤补全项
+
+`NEW` 在保存文件时支持重新索引项目
+
+`NEW` 支持检查 `redundant_parameter`、`redundant_return_value`、`missing_return_value`、`return_type_mismatch`
+
+`NEW` 更好地支持在其他编辑器中 require 模块
+
+`NEW` 支持从 `@field` 注解继承函数定义的参数类型
+
 # 0.9.14
 `CHG` 重构 `folding range`
 

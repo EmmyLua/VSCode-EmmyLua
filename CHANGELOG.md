@@ -2,6 +2,28 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.15
+
+`NEW` Allow disable underline for mutable variable
+
+`NEW` Support negative integer as type
+
+`Fix` Fix alias type check issue
+
+`CHG` Refactor flow analyze algorithm
+
+`FIX` Fix property unwrap issue
+
+`NEW` Support filter the completion item
+
+`NEW` Support reindex project when save a file
+
+`NEW` Support check for `redundant_parameter`, `redundant_return_value`, `missing_return_value`, `return_type_mismatch`
+
+`NEW` Better Support require module for other editor
+
+`NEW` Support function stat inherit param type from `@field` annotation
+
 # 0.9.14
 
 `CHG` Refactor `folding range`
