@@ -1,5 +1,37 @@
 # Change Log
 
+# 0.9.16
+
+`NEW` 默认禁用重新索引，需要通过 `workspace.enableReindex` 启用
+
+`NEW` 添加新的诊断：`inject_field`、`missing_fields`、`redefined_local`、`undefined_field`、`inject-field`、`missing-global-doc`、 
+`incomplete-signature-doc`、`circle-doc-class`、`assign-type-mismatch`、`unbalanced_assignments`、`check_return_count`、`duplicate_require`、`circle_doc_class`、`incomplete_signature_doc`、`unnecessary_assert`
+
+`NEW` 支持将 `true` 和 `false` 作为类型
+
+`NEW` 兼容格式化 luals 函数返回语法，如：`(name: string, age: number)`
+
+`NEW` 迭代器函数的别名和重载（例如 `fun(v: any): (K, V)`，其中 `K` 为键类型，`V` 为值类型）现用于推断 `for` 循环中的类型
+
+`NEW` 兼容格式化 luals 字符串模板语法，如：xxx`T`、`T`、`T`XXX，示例用法：
+```lua
+---@generic T
+---@class aaa.`T`.bbb
+---@return T
+function get_type(a)
+end
+
+local d = get_type('xxx') --- aaa.xxx.bbb
+```
+
+`NEW` 支持 `@see` 任意内容
+
+`NEW` 加强模块文档导出
+
+`NEW` 支持 `@module` 用法：`---@module "module path"`
+
+`NEW` 调试器更新, 修复一个可能的崩溃问题 fixed by `@mxyf`
+
 # 0.9.15
 
 `NEW` 允许禁用可变变量的下划线

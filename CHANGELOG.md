@@ -2,6 +2,39 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.16
+
+`NEW` Disable re-index in default, need to enable by `workspace.enableReindex`
+
+`NEW` Add New Diagnostics `inject_field`, `missing_fields`, `redefined_local`, `undefined_field`, `inject-field`, `missing-global-doc`, 
+`incomplete-signature-doc`, `circle-doc-class`, `assign-type-mismatch`, `unbalanced_assignments`, `check_return_count`, `duplicate_require`, `circle_doc_class`, `incomplete_signature_doc`, `unnecessary_assert`
+
+`NEW` Support `true` and `false` as type
+
+`NEW` Compact luals fun return syntax like: `(name: string, age: number)`
+
+`NEW` Aliases and overloads of iterator functions (i.e `fun(v: any): (K, V)` where `K` is the key type and `V` is the value type) are now used to infer types in `for` loops
+
+`NEW` Compact luals string template syntax like: xxx`T`, `T`, `T`XXX, usage:
+```lua
+
+---@generic T
+---@class aaa.`T`.bbb
+---@return T
+function get_type(a)
+end
+
+local d = get_type('xxx') --- aaa.xxx.bbb
+```
+
+`NEW` Support `@see` any thing
+
+`NEW` Enhance module documentation export
+
+`NEW` Support `@module` usage: `---@module "module path"`
+
+`NEW` Debugger updated, fixed a potential crash issue fixed by `@mxyf`
+
 # 0.9.15
 
 `NEW` Allow disable underline for mutable variable

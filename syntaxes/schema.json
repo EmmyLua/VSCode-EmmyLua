@@ -87,7 +87,8 @@
     "references": {
       "default": {
         "enable": true,
-        "fuzzySearch": true
+        "fuzzySearch": true,
+        "shortStringSearch": false
       },
       "allOf": [
         {
@@ -152,6 +153,7 @@
     },
     "workspace": {
       "default": {
+        "enableReindex": false,
         "encoding": "utf-8",
         "ignoreDir": [],
         "ignoreGlobs": [],
@@ -392,6 +394,69 @@
           "type": "string",
           "enum": [
             "duplicate-doc-field"
+          ]
+        },
+        {
+          "description": "Missing fields",
+          "type": "string",
+          "enum": [
+            "missing-fields"
+          ]
+        },
+        {
+          "description": "Inject Field",
+          "type": "string",
+          "enum": [
+            "inject-field"
+          ]
+        },
+        {
+          "description": "Circle Doc Class",
+          "type": "string",
+          "enum": [
+            "circle-doc-class"
+          ]
+        },
+        {
+          "description": "Incomplete signature doc",
+          "type": "string",
+          "enum": [
+            "incomplete-signature-doc"
+          ]
+        },
+        {
+          "description": "Missing global doc",
+          "type": "string",
+          "enum": [
+            "missing-global-doc"
+          ]
+        },
+        {
+          "description": "Assign type mismatch",
+          "type": "string",
+          "enum": [
+            "assign-type-mismatch"
+          ]
+        },
+        {
+          "description": "Duplicate require",
+          "type": "string",
+          "enum": [
+            "duplicate-require"
+          ]
+        },
+        {
+          "description": "non-literal-expressions-in-assert",
+          "type": "string",
+          "enum": [
+            "non-literal-expressions-in-assert"
+          ]
+        },
+        {
+          "description": "unnecessary-assert",
+          "type": "string",
+          "enum": [
+            "unnecessary-assert"
           ]
         }
       ]
@@ -678,6 +743,11 @@
           "description": "Determines whether to enable fuzzy searching for fields where references cannot be found.",
           "default": true,
           "type": "boolean"
+        },
+        "shortStringSearch": {
+          "description": "Cache Short string for search",
+          "default": false,
+          "type": "boolean"
         }
       }
     },
@@ -776,6 +846,11 @@
     "EmmyrcWorkspace": {
       "type": "object",
       "properties": {
+        "enableReindex": {
+          "description": "Enable reindex.",
+          "default": false,
+          "type": "boolean"
+        },
         "encoding": {
           "description": "Encoding. eg: \"utf-8\"",
           "default": "utf-8",
