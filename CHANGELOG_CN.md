@@ -1,5 +1,29 @@
 # Change Log
 
+# 0.9.17
+
+`CHG` 重构类型推断
+
+`CHG` 重构成员推断
+
+`FIX` 优化并修复元组类型检查
+
+`NEW` 支持在元组中使用可变类型，例如: `[string, integer...]`
+
+`FIX` 优化 pcall 推断，现在可以匹配 self 和别名
+
+`FIX` 对于 range 迭代变量，现在会去除 nil 类型
+
+`FIX` 优化部分标准库的类型检查
+
+`NEW` 支持从 setmetatable 中推断类型
+
+`NEW` emmylua_doc_cli 将导出更多信息
+
+`NEW` 优化子类与父类之间的类型检查规则
+
+`NEW` 允许 '-' 作为描述
+
 # 0.9.16
 
 `NEW` 默认禁用重新索引，需要通过 `workspace.enableReindex` 启用

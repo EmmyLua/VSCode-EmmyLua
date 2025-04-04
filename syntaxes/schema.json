@@ -453,6 +453,13 @@
           ]
         },
         {
+          "description": "Unbalanced assignments",
+          "type": "string",
+          "enum": [
+            "unbalanced-assignments"
+          ]
+        },
+        {
           "description": "unnecessary-assert",
           "type": "string",
           "enum": [
