@@ -142,6 +142,7 @@
     },
     "strict": {
       "default": {
+        "arrayIndex": true,
         "requirePath": false,
         "typeCall": false
       },
@@ -839,6 +840,11 @@
     "EmmyrcStrict": {
       "type": "object",
       "properties": {
+        "arrayIndex": {
+          "description": "Whether to enable strict mode array indexing.",
+          "default": true,
+          "type": "boolean"
+        },
         "requirePath": {
           "description": "Whether to enable strict mode require path.",
           "default": false,

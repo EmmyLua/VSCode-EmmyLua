@@ -1,5 +1,24 @@
 # Change Log
 
+# 0.9.18
+
+`NEW` Now language server configuration might be provided globally via the `<os-specific home dir>/.emmyrc.json`, `<os-specific config dir>/emmylua_ls/.emmyrc.json`, or by setting a variable `EMMYLUALS_CONFIG` with a path to the json configuration.
+Global configuration have less priority than the local one
+
+`NEW` Classes might now infer from generic types and provide corresponding completions.
+
+`CHG` Refactor flow analyze algorithm
+
+`NEW` Array return values are now considered nullable. If you want to remove this behavior, you can set `strict.arrayIndex` to `false` in the configuration file.
+
+`FIX` Fix some self infer issue 
+
+`FIX` Fix some diagnostic action issue
+
+`FIX` Optimize some type check
+
+`FIX` Optimize some completion
+
 # 0.9.17
 
 `CHG` 重构类型推断
