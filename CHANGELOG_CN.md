@@ -2,22 +2,21 @@
 
 # 0.9.18
 
-`NEW` Now language server configuration might be provided globally via the `<os-specific home dir>/.emmyrc.json`, `<os-specific config dir>/emmylua_ls/.emmyrc.json`, or by setting a variable `EMMYLUALS_CONFIG` with a path to the json configuration.
-Global configuration have less priority than the local one
+`NEW` 现在可以通过 `<os-specific home dir>/.emmyrc.json`、`<os-specific config dir>/emmylua_ls/.emmyrc.json`，或者设置环境变量 `EMMYLUALS_CONFIG`（指向 JSON 配置文件的路径）在全局提供语言服务器的配置。全局配置优先级低于本地配置。
 
-`NEW` Classes might now infer from generic types and provide corresponding completions.
+`NEW` 现在类也可以从泛型类型中推断，并提供相应的补全。
 
-`CHG` Refactor flow analyze algorithm
+`CHG` 重构了流程分析算法
 
-`NEW` Array return values are now considered nullable. If you want to remove this behavior, you can set `strict.arrayIndex` to `false` in the configuration file.
+`NEW` 数组返回值现在被视为可空类型。如果不想要这种行为，可以在配置文件中将 `strict.arrayIndex` 设置为 `false`。
 
-`FIX` Fix some self infer issue 
+`FIX` 修复了一些 self 推断的问题
 
-`FIX` Fix some diagnostic action issue
+`FIX` 修复了一些诊断动作的问题
 
-`FIX` Optimize some type check
+`FIX` 优化了一些类型检查
 
-`FIX` Optimize some completion
+`FIX` 优化了一些补全功能
 
 # 0.9.17
 
