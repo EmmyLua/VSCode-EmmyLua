@@ -294,6 +294,17 @@
                     "type": "string",
                     "default": "",
                     "description": "%config.misc.executablePath%"
+                },
+                "lua.trace.server": {
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "markdownDescription": "Traces the communication between VS Code and the EmmyLua language server in the Output view. Default is `off`.",
+                    "scope": "window"
                 }
             }
         },
