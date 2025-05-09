@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.9.18",
+    "version": "0.9.19",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -280,6 +280,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Mutable variable underline"
+                },
+                "emmylua.develop.port" : {
+                    "type": "number",
+                    "default": 5007,
+                    "description": "%config.develop.port%"
                 },
                 "emmylua.ls.startParameters": {
                     "type": "array",

@@ -1,5 +1,22 @@
 # Change Log
 
+
+# 0.9.19
+
+`FIX` 修复读取 UTF-8 BOM 编码的配置文件的问题
+
+`NEW` 支持`调用层次结构`功能，但目前仅支持传入调用
+
+`NEW` 支持新标签 `@internal` 用于成员或声明。当成员或声明被标记为 `@internal` 时，它仅在当前库内可见。这意味着如果你在一个库中使用 `@internal`，其他库或工作区无法访问此成员或声明。
+
+`NEW` 支持`转到实现`功能
+
+`NEW` 支持 `@nodisacrd` 并可提供原因
+
+`FIX` 修复一些性能问题
+
+`NEW` 调试器使用 zig 构建，现在可以在 glibc-2.17 系统上使用
+
 # 0.9.18
 
 `NEW` 现在可以通过 `<os-specific home dir>/.emmyrc.json`、`<os-specific config dir>/emmylua_ls/.emmyrc.json`，或者设置环境变量 `EMMYLUALS_CONFIG`（指向 JSON 配置文件的路径）在全局提供语言服务器的配置。全局配置优先级低于本地配置。
