@@ -24,6 +24,7 @@
         "autoRequire": true,
         "autoRequireFunction": "require",
         "autoRequireNamingConvention": "keep",
+        "autoRequireSeparator": ".",
         "callSnippet": false,
         "enable": true,
         "postfix": "@"
@@ -143,6 +144,7 @@
     "strict": {
       "default": {
         "arrayIndex": true,
+        "metaOverrideFileDefine": true,
         "requirePath": false,
         "typeCall": false
       },
@@ -466,6 +468,27 @@
           "enum": [
             "unnecessary-assert"
           ]
+        },
+        {
+          "description": "unnecessary-if",
+          "type": "string",
+          "enum": [
+            "unnecessary-if"
+          ]
+        },
+        {
+          "description": "duplicate-set-field",
+          "type": "string",
+          "enum": [
+            "duplicate-set-field"
+          ]
+        },
+        {
+          "description": "duplicate-index",
+          "type": "string",
+          "enum": [
+            "duplicate-index"
+          ]
         }
       ]
     },
@@ -533,6 +556,11 @@
               "$ref": "#/definitions/EmmyrcFilenameConvention"
             }
           ]
+        },
+        "autoRequireSeparator": {
+          "description": "A separator used in auto-require paths.",
+          "default": ".",
+          "type": "string"
         },
         "callSnippet": {
           "description": "Whether to use call snippets in completions.",
@@ -842,6 +870,11 @@
       "properties": {
         "arrayIndex": {
           "description": "Whether to enable strict mode array indexing.",
+          "default": true,
+          "type": "boolean"
+        },
+        "metaOverrideFileDefine": {
+          "description": "meta define overrides file define",
           "default": true,
           "type": "boolean"
         },
