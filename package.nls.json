@@ -16,5 +16,6 @@
     "debug.launch.newWindow": "create new windows",
     "config.autoInsertTripleDash.description": "Automatically insert \"---\" when line breaking after a comment",
     "config.misc.executablePath": "Specify the executable file path in VSCode",
-    "config.develop.port": "Specify the port for the debugger to listen on"
+    "config.develop.port": "Specify the port for the debugger to listen on",
+    "config.misc.globalConfigPath": "Specify a path to the global configuration file"
 }

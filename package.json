@@ -300,6 +300,11 @@
                     "default": "",
                     "description": "%config.misc.executablePath%"
                 },
+                "emmylua.misc.globalConfigPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "%config.misc.globalConfigPath%"
+                },
                 "lua.trace.server": {
                     "type": "string",
                     "enum": [
