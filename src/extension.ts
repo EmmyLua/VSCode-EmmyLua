@@ -148,12 +148,21 @@ async function doStartServer() {
 
         serverOptions = {
             command: configExecutablePath,
-            args: []
+            args: [],
+            options: { env: {} }
         };
 
         let parameters = config.get<string[]>("emmylua.ls.startParameters");
         if (parameters && parameters.length > 0) {
             serverOptions.args = parameters;
+        }
+
+        let globalConfigPath = config.get<string>("emmylua.misc.globalConfigPath")?.trim();
+        if (globalConfigPath && globalConfigPath.length > 0) {
+            if (!serverOptions.options || !serverOptions.options.env) {
+                serverOptions.options = { env: {} }
+            }
+            serverOptions.options.env['EMMYLUALS_CONFIG'] = globalConfigPath;
         }
     }
 
