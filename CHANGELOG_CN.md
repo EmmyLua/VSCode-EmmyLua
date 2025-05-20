@@ -1,5 +1,79 @@
 # Change Log
 
+# 0.9.20
+
+`FIX` 修复一个崩溃问题
+
+`NEW` 支持函数的`@return_cast`注解。当函数的返回值是布尔值（必须标注为布尔值）时，可以添加额外的注解`---@return_cast <param> <cast op>`，表示当函数返回true时，参数`<param>`将根据转换操作转为相应类型。例如：
+```lua
+---@return boolean
+---@return_cast n integer
+local function isInteger(n)
+  return n == math.floor(n)
+end
+
+local a ---@type integer | string
+
+if isInteger(a) then
+  print(a) -- a: integer
+else
+  print(a) -- a: string
+end
+```
+
+`@return_cast`支持self参数。例如：
+```lua
+---@class My2
+
+---@class My1
+
+---@class My3:My2,My1
+local m = {}
+
+
+---@return boolean
+---@return_cast self My1
+function m:isMy1()
+end
+
+---@return boolean
+---@return_cast self My2
+function m:isMy2()
+end
+
+if m:isMy1() then
+  print(m) -- m: My1
+elseif m:isMy2() then
+  print(m) -- m: My2
+end
+```
+
+`CHG` 移除诊断`lua-syntax-error`，合并到`syntax-error`中，并添加`doc-syntax-error`用于文档语法错误
+
+`FIX` 修复格式化问题，现在当存在`syntax-error`时，格式化将不返回值
+
+`FIX` 修复性能问题：防止函数返回表时产生大量联合类型
+
+`CHG` 当require函数返回的对象是类/枚举时，禁止在其上定义新成员，而表则不受限制
+
+`NEW` 支持`Lua 5.5`全局声明语法
+
+`NEW` 支持`TypeGuard<T>`作为返回类型。例如：
+```lua
+
+---@return TypeGuard<string>
+local function is_string(value)
+  return type(value) == "string"
+end
+
+local a
+
+if is_string(a) then
+  print(a:sub(1, 1))
+else
+  print("a is not a string")
+end
+```
 
 # 0.9.19
 
@@ -11,7 +85,7 @@
 
 `NEW` 支持`转到实现`功能
 
-`NEW` 支持 `@nodisacrd` 并可提供原因
+`NEW` 支持 `@nodiscard` 并可提供原因
 
 `FIX` 修复一些性能问题
 

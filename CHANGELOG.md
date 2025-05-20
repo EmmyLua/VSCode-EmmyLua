@@ -2,6 +2,81 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.20
+
+`FIX` Fix a crash issue
+
+`NEW` Support `@return_cast` for functions. When a function's return value is boolean (must be annotated as boolean), you can add an additional annotation `---@return_cast <param> <cast op>`, indicating that when the function returns true, the parameter `<param>` will be transformed to the corresponding type according to the cast. For example:
+```lua
+---@return boolean
+---@return_cast n integer
+local function isInteger(n)
+    return n == math.floor(n)
+end
+
+local a ---@type integer | string
+
+if isInteger(a) then
+    print(a) -- a: integer
+else
+    print(a) -- a: string
+end
+```
+
+`@return_cast` support self param. For example:
+```lua
+---@class My2
+
+---@class My1
+
+---@class My3:My2,My1
+local m = {}
+
+
+---@return boolean
+---@return_cast self My1
+function m:isMy1()
+end
+
+---@return boolean
+---@return_cast self My2
+function m:isMy2()
+end
+
+if m:isMy1() then
+    print(m) -- m: My1
+elseif m:isMy2() then
+    print(m) -- m: My2
+end
+```
+
+`CHG` Remove diagnostic `lua-syntax-error`, it merges into `syntax-error`, add `doc-syntax-error` for doc syntax error
+
+`FIX` Fix format issue, Now When exist `syntax-error`, the format never return value
+
+`FIX` Fix a performance issue: prevent large union types when functions return tables
+
+`CHG` When an object returned by require function is a class/enum, defining new members on it is prohibited, while tables are not restricted
+
+`NEW` Support `Lua 5.5` global decl grammar
+
+`NEW` Support `TypeGuard<T>` as return type. For example:
+```lua
+
+---@return TypeGuard<string>
+local function is_string(value)
+    return type(value) == "string"
+end
+
+local a
+
+if is_string(a) then
+    print(a:sub(1, 1))
+else
+    print("a is not a string")
+end
+```
+
 # 0.9.19
 
 `FIX` Fix reading configuration file encoded with UTF-8 BOM
@@ -10,9 +85,9 @@
 
 `NEW` Support new tag `@internal` for members or declarations. When a member or declaration is marked as `@internal`, it is only visible within its current library. This means that if you use `@internal` in one library, you cannot access this member or declaration from other libraries or workspace.
 
-`NEW` Support `Goto to implementation`
+`NEW` Support `Go to implementation`
 
-`NEW` Support `@nodisacrd` with reason
+`NEW` Support `@nodiscard` with reason
 
 `FIX` Fix Some performance issue
 
