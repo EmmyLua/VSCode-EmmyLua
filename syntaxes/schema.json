@@ -9,6 +9,16 @@
         "null"
       ]
     },
+    "codeAction": {
+      "default": {
+        "insertSpace": false
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcCodeAction"
+        }
+      ]
+    },
     "codeLens": {
       "default": {
         "enable": true
@@ -190,10 +200,10 @@
           ]
         },
         {
-          "description": "Lua syntax error",
+          "description": "Doc syntax error",
           "type": "string",
           "enum": [
-            "lua-syntax-error"
+            "doc-syntax-error"
           ]
         },
         {
@@ -489,6 +499,13 @@
           "enum": [
             "duplicate-index"
           ]
+        },
+        {
+          "description": "generic-constraint-mismatch",
+          "type": "string",
+          "enum": [
+            "generic-constraint-mismatch"
+          ]
         }
       ]
     },
@@ -523,6 +540,16 @@
           ]
         }
       ]
+    },
+    "EmmyrcCodeAction": {
+      "type": "object",
+      "properties": {
+        "insertSpace": {
+          "description": "Whether to insert space after '---'",
+          "default": false,
+          "type": "boolean"
+        }
+      }
     },
     "EmmyrcCodeLen": {
       "type": "object",
@@ -756,6 +783,13 @@
           "type": "string",
           "enum": [
             "Lua5.4"
+          ]
+        },
+        {
+          "description": "Lua 5.5",
+          "type": "string",
+          "enum": [
+            "Lua5.5"
           ]
         },
         {
