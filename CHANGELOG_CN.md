@@ -1,5 +1,45 @@
 # Change Log
 
+# 0.9.21
+# 0.9.21
+
+`NEW` 实现 `std.Unpack` 类型以提升 `unpack` 函数的类型推断，以及 `std.Rawget` 类型以提升 `rawget` 函数的类型推断
+
+`NEW` 支持类似 `luals` 的 `generator` 实现
+
+`FIX` 修复在嵌套闭包中丢失类型窄化的问题
+
+`NEW` 改进了 lambda 函数的泛型参数推断，现在能更好地推断 lambda 函数的参数类型
+
+`CHG` 将 `math.huge` 改为数字类型
+
+`FIX` 优化了可变泛型返回值的推断，现在可用于异步库返回值推断：
+```lua
+--- @generic T, R
+--- @param argc integer
+--- @param func fun(...:T..., cb: fun(...:R...))
+--- @return async fun(...:T...):R...
+local function wrap(argc, func) end
+
+--- @param a string
+--- @param b string
+--- @param callback fun(out: string)
+local function system(a, b, callback) end
+
+local wrapped = wrap(3, system)
+```
+
+`FIX` 优化了某些类型提示的渲染
+
+`NEW` 在代码补全中添加了模块和类型的文档提示
+
+`NEW` 添加了交集类型的类型检查
+
+`NEW` 支持泛型约束检查、字符串模板参数类型检查和代码补全
+
+`FIX` 修复当项目中存在大型 Lua 表时类型检查严重降低性能的问题，之前这会导致整个项目变得无响应
+
+
 # 0.9.20
 
 `FIX` 修复一个崩溃问题

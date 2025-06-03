@@ -2,6 +2,45 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+# 0.9.21
+
+`NEW` Implement `std.Unpack` type for better type inference of the `unpack` function, and `std.Rawget` type for better type inference of the `rawget` function
+
+`NEW` Support `generator` implementation similar to `luals`
+
+`FIX` Fix issue where type narrowing is lost in nested closures
+
+`NEW` Improved generic parameter inference for lambda functions, now better inferring parameter types for lambda functions
+
+`CHG` Changed `math.huge` to number type
+
+`FIX` Optimized inference of variadic generic return values, now usable for asynchronous library return value inference:
+```lua
+--- @generic T, R
+--- @param argc integer
+--- @param func fun(...:T..., cb: fun(...:R...))
+--- @return async fun(...:T...):R...
+local function wrap(argc, func) end
+
+--- @param a string
+--- @param b string
+--- @param callback fun(out: string)
+local function system(a, b, callback) end
+
+local wrapped = wrap(3, system)
+```
+
+`FIX` Optimized rendering of certain type hints
+
+`NEW` Added documentation hints for modules and types in code completion
+
+`NEW` Added type checking for intersection types
+
+`NEW` Support for generic constraint checking, string template parameter type checking and code completion
+
+`FIX` Fix performance issue where type checking drastically slows down when large Lua tables are present in the project, causing the entire project to become unresponsive
+
+
 # 0.9.20
 
 `FIX` Fix a crash issue
