@@ -219,315 +219,315 @@
           ]
         },
         {
-          "description": "Syntax error",
+          "description": "语法错误",
           "type": "string",
           "enum": [
             "syntax-error"
           ]
         },
         {
-          "description": "Doc syntax error",
+          "description": "文档语法错误",
           "type": "string",
           "enum": [
             "doc-syntax-error"
           ]
         },
         {
-          "description": "Type not found",
+          "description": "类型未找到",
           "type": "string",
           "enum": [
             "type-not-found"
           ]
         },
         {
-          "description": "Missing return statement",
+          "description": "缺少返回语句",
           "type": "string",
           "enum": [
             "missing-return"
           ]
         },
         {
-          "description": "Param Type not match",
+          "description": "参数类型不匹配",
           "type": "string",
           "enum": [
             "param-type-not-match"
           ]
         },
         {
-          "description": "Missing parameter",
+          "description": "缺少参数",
           "type": "string",
           "enum": [
             "missing-parameter"
           ]
         },
         {
-          "description": "Redundant parameter",
+          "description": "多余的参数",
           "type": "string",
           "enum": [
             "redundant-parameter"
           ]
         },
         {
-          "description": "Inject field fail",
+          "description": "注入字段失败",
           "type": "string",
           "enum": [
             "inject-field-fail"
           ]
         },
         {
-          "description": "Unreachable code",
+          "description": "不可达代码",
           "type": "string",
           "enum": [
             "unreachable-code"
           ]
         },
         {
-          "description": "Unused",
+          "description": "未使用",
           "type": "string",
           "enum": [
             "unused"
           ]
         },
         {
-          "description": "Undefined global",
+          "description": "未定义的全局变量",
           "type": "string",
           "enum": [
             "undefined-global"
           ]
         },
         {
-          "description": "Deprecated",
+          "description": "已弃用",
           "type": "string",
           "enum": [
             "deprecated"
           ]
         },
         {
-          "description": "Access invisible",
+          "description": "访问不可见",
           "type": "string",
           "enum": [
             "access-invisible"
           ]
         },
         {
-          "description": "Discard return value",
+          "description": "丢弃返回值",
           "type": "string",
           "enum": [
             "discard-returns"
           ]
         },
         {
-          "description": "Disable global define",
+          "description": "禁用全局定义",
           "type": "string",
           "enum": [
             "disable-global-define"
           ]
         },
         {
-          "description": "Undefined field",
+          "description": "未定义的字段",
           "type": "string",
           "enum": [
             "undefined-field"
           ]
         },
         {
-          "description": "Local const reassign",
+          "description": "局部常量重新赋值",
           "type": "string",
           "enum": [
             "local-const-reassign"
           ]
         },
         {
-          "description": "Iter variable reassign",
+          "description": "迭代变量重新赋值",
           "type": "string",
           "enum": [
             "iter-variable-reassign"
           ]
         },
         {
-          "description": "Duplicate type",
+          "description": "重复类型",
           "type": "string",
           "enum": [
             "duplicate-type"
           ]
         },
         {
-          "description": "Redefined local",
+          "description": "重新定义的局部变量",
           "type": "string",
           "enum": [
             "redefined-local"
           ]
         },
         {
-          "description": "Redefined label",
+          "description": "重新定义的标签",
           "type": "string",
           "enum": [
             "redefined-label"
           ]
         },
         {
-          "description": "Name Style check",
+          "description": "命名风格检查",
           "type": "string",
           "enum": [
             "name-style-check"
           ]
         },
         {
-          "description": "Code style check",
+          "description": "代码风格检查",
           "type": "string",
           "enum": [
             "code-style-check"
           ]
         },
         {
-          "description": "Need check nil",
+          "description": "需要检查nil",
           "type": "string",
           "enum": [
             "need-check-nil"
           ]
         },
         {
-          "description": "Await in sync",
+          "description": "在同步中等待",
           "type": "string",
           "enum": [
             "await-in-sync"
           ]
         },
         {
-          "description": "Doc tag usage error",
+          "description": "文档标签使用错误",
           "type": "string",
           "enum": [
             "annotation-usage-error"
           ]
         },
         {
-          "description": "Return type mismatch",
+          "description": "返回类型不匹配",
           "type": "string",
           "enum": [
             "return-type-mismatch"
           ]
         },
         {
-          "description": "Missing return value",
+          "description": "缺少返回值",
           "type": "string",
           "enum": [
             "missing-return-value"
           ]
         },
         {
-          "description": "Redundant return value",
+          "description": "多余的返回值",
           "type": "string",
           "enum": [
             "redundant-return-value"
           ]
         },
         {
-          "description": "Undefined Doc Param",
+          "description": "未定义的文档参数",
           "type": "string",
           "enum": [
             "undefined-doc-param"
           ]
         },
         {
-          "description": "Duplicate doc field",
+          "description": "重复的文档字段",
           "type": "string",
           "enum": [
             "duplicate-doc-field"
           ]
         },
         {
-          "description": "Missing fields",
+          "description": "缺少字段",
           "type": "string",
           "enum": [
             "missing-fields"
           ]
         },
         {
-          "description": "Inject Field",
+          "description": "注入字段",
           "type": "string",
           "enum": [
             "inject-field"
           ]
         },
         {
-          "description": "Circle Doc Class",
+          "description": "循环文档类",
           "type": "string",
           "enum": [
             "circle-doc-class"
           ]
         },
         {
-          "description": "Incomplete signature doc",
+          "description": "不完整的签名文档",
           "type": "string",
           "enum": [
             "incomplete-signature-doc"
           ]
         },
         {
-          "description": "Missing global doc",
+          "description": "缺少全局文档",
           "type": "string",
           "enum": [
             "missing-global-doc"
           ]
         },
         {
-          "description": "Assign type mismatch",
+          "description": "赋值类型不匹配",
           "type": "string",
           "enum": [
             "assign-type-mismatch"
           ]
         },
         {
-          "description": "Duplicate require",
+          "description": "重复require",
           "type": "string",
           "enum": [
             "duplicate-require"
           ]
         },
         {
-          "description": "non-literal-expressions-in-assert",
+          "description": "断言中的非字面表达式",
           "type": "string",
           "enum": [
             "non-literal-expressions-in-assert"
           ]
         },
         {
-          "description": "Unbalanced assignments",
+          "description": "不平衡的赋值",
           "type": "string",
           "enum": [
             "unbalanced-assignments"
           ]
         },
         {
-          "description": "unnecessary-assert",
+          "description": "不必要的断言",
           "type": "string",
           "enum": [
             "unnecessary-assert"
           ]
         },
         {
-          "description": "unnecessary-if",
+          "description": "不必要的if",
           "type": "string",
           "enum": [
             "unnecessary-if"
           ]
         },
         {
-          "description": "duplicate-set-field",
+          "description": "重复设置字段",
           "type": "string",
           "enum": [
             "duplicate-set-field"
           ]
         },
         {
-          "description": "duplicate-index",
+          "description": "重复索引",
           "type": "string",
           "enum": [
             "duplicate-index"
           ]
         },
         {
-          "description": "generic-constraint-mismatch",
+          "description": "泛型约束不匹配",
           "type": "string",
           "enum": [
             "generic-constraint-mismatch"
@@ -538,28 +538,28 @@
     "DiagnosticSeveritySetting": {
       "oneOf": [
         {
-          "description": "Represents an error diagnostic severity.",
+          "description": "表示错误诊断严重性",
           "type": "string",
           "enum": [
             "error"
           ]
         },
         {
-          "description": "Represents a warning diagnostic severity.",
+          "description": "表示警告诊断严重性",
           "type": "string",
           "enum": [
             "warning"
           ]
         },
         {
-          "description": "Represents an information diagnostic severity.",
+          "description": "表示信息诊断严重性",
           "type": "string",
           "enum": [
             "information"
           ]
         },
         {
-          "description": "Represents a hint diagnostic severity.",
+          "description": "表示提示诊断严重性",
           "type": "string",
           "enum": [
             "hint"
@@ -571,7 +571,7 @@
       "type": "object",
       "properties": {
         "insertSpace": {
-          "description": "Whether to insert space after '---'",
+          "description": "是否在'---'后插入空格",
           "default": false,
           "type": "boolean"
         }
@@ -581,28 +581,28 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable code lens.",
+          "description": "是否启用代码透镜",
           "default": true,
           "type": "boolean"
         }
       }
     },
     "EmmyrcCompletion": {
-      "description": "Configuration for EmmyLua code completion.",
+      "description": "EmmyLua代码补全配置",
       "type": "object",
       "properties": {
         "autoRequire": {
-          "description": "Whether to automatically require modules.",
+          "description": "是否自动require模块",
           "default": true,
           "type": "boolean"
         },
         "autoRequireFunction": {
-          "description": "The function used for auto-requiring modules.",
+          "description": "自动require模块使用的函数",
           "default": "require",
           "type": "string"
         },
         "autoRequireNamingConvention": {
-          "description": "The naming convention for auto-required filenames.",
+          "description": "自动require文件名的命名约定",
           "default": "keep",
           "allOf": [
             {
@@ -611,42 +611,42 @@
           ]
         },
         "autoRequireSeparator": {
-          "description": "A separator used in auto-require paths.",
+          "description": "自动require路径中使用的分隔符",
           "default": ".",
           "type": "string"
         },
         "callSnippet": {
-          "description": "Whether to use call snippets in completions.",
+          "description": "是否在补全中使用调用片段",
           "default": false,
           "type": "boolean"
         },
         "enable": {
-          "description": "Whether to enable code completion.",
+          "description": "是否启用代码补全",
           "default": true,
           "type": "boolean"
         },
         "postfix": {
-          "description": "The postfix trigger used in completions.",
+          "description": "补全中使用的后缀触发器",
           "default": "@",
           "type": "string"
         }
       }
     },
     "EmmyrcDiagnostic": {
-      "description": "Represents the diagnostic configuration for Emmyrc.",
+      "description": "Emmyrc的诊断配置",
       "type": "object",
       "properties": {
         "diagnosticInterval": {
-          "description": "The interval in milliseconds to perform diagnostics.",
+          "description": "执行诊断的间隔时间（毫秒）",
           "type": [
             "integer",
             "null"
           ],
           "format": "uint64",
-          "minimum": 0.0
+          "minimum": 0
         },
         "disable": {
-          "description": "A list of diagnostic codes that are disabled.",
+          "description": "禁用的诊断代码列表",
           "default": [],
           "type": "array",
           "items": {
@@ -654,12 +654,12 @@
           }
         },
         "enable": {
-          "description": "A flag indicating whether diagnostics are enabled.",
+          "description": "是否启用诊断",
           "default": true,
           "type": "boolean"
         },
         "enables": {
-          "description": "A list of diagnostic codes that are enabled.",
+          "description": "启用的诊断代码列表",
           "default": [],
           "type": "array",
           "items": {
@@ -667,7 +667,7 @@
           }
         },
         "globals": {
-          "description": "A list of global variables.",
+          "description": "全局变量列表",
           "default": [],
           "type": "array",
           "items": {
@@ -675,7 +675,7 @@
           }
         },
         "globalsRegex": {
-          "description": "A list of regular expressions for global variables.",
+          "description": "全局变量的正则表达式列表",
           "default": [],
           "type": "array",
           "items": {
@@ -683,7 +683,7 @@
           }
         },
         "severity": {
-          "description": "A map of diagnostic codes to their severity settings.",
+          "description": "诊断代码到严重性设置的映射",
           "default": {},
           "type": "object",
           "additionalProperties": {
@@ -696,7 +696,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable document color.",
+          "description": "是否启用文档颜色",
           "default": true,
           "type": "boolean"
         }
@@ -705,28 +705,28 @@
     "EmmyrcFilenameConvention": {
       "oneOf": [
         {
-          "description": "Keep the original filename.",
+          "description": "保持原始文件名",
           "type": "string",
           "enum": [
             "keep"
           ]
         },
         {
-          "description": "Convert the filename to snake_case.",
+          "description": "将文件名转换为snake_case",
           "type": "string",
           "enum": [
             "snake-case"
           ]
         },
         {
-          "description": "Convert the filename to PascalCase.",
+          "description": "将文件名转换为PascalCase",
           "type": "string",
           "enum": [
             "pascal-case"
           ]
         },
         {
-          "description": "Convert the filename to camelCase.",
+          "description": "将文件名转换为camelCase",
           "type": "string",
           "enum": [
             "camel-case"
@@ -738,7 +738,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable hover.",
+          "description": "是否启用悬停",
           "default": true,
           "type": "boolean"
         }
@@ -748,27 +748,27 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable inlay hints.",
+          "description": "是否启用内联提示",
           "default": true,
           "type": "boolean"
         },
         "indexHint": {
-          "description": "Whether to enable index hints.",
+          "description": "是否启用索引提示",
           "default": true,
           "type": "boolean"
         },
         "localHint": {
-          "description": "Whether to enable local hints. Whether to enable override hints.",
+          "description": "是否启用局部提示。是否启用覆盖提示",
           "default": true,
           "type": "boolean"
         },
         "overrideHint": {
-          "description": "Whether to enable override hints.",
+          "description": "是否启用覆盖提示",
           "default": true,
           "type": "boolean"
         },
         "paramHint": {
-          "description": "Whether to enable parameter hints.",
+          "description": "是否启用参数提示",
           "default": true,
           "type": "boolean"
         }
@@ -819,7 +819,7 @@
           ]
         },
         {
-          "description": "Lua Latest",
+          "description": "Lua 最新版",
           "type": "string",
           "enum": [
             "LuaLatest"
@@ -831,17 +831,17 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable reference search.",
+          "description": "是否启用引用搜索",
           "default": true,
           "type": "boolean"
         },
         "fuzzySearch": {
-          "description": "Determines whether to enable fuzzy searching for fields where references cannot be found.",
+          "description": "确定是否为无法找到引用的字段启用模糊搜索",
           "default": true,
           "type": "boolean"
         },
         "shortStringSearch": {
-          "description": "Cache Short string for search",
+          "description": "缓存短字符串用于搜索",
           "default": false,
           "type": "boolean"
         }
@@ -876,7 +876,7 @@
           ]
         },
         "extensions": {
-          "description": "file Extensions. eg: .lua, .lua.txt",
+          "description": "文件扩展名。例如：.lua, .lua.txt",
           "default": [],
           "type": "array",
           "items": {
@@ -884,7 +884,7 @@
           }
         },
         "frameworkVersions": {
-          "description": "Framework versions.",
+          "description": "框架版本",
           "default": [],
           "type": "array",
           "items": {
@@ -892,7 +892,7 @@
           }
         },
         "requireLikeFunction": {
-          "description": "Functions that like require.",
+          "description": "类似require的函数",
           "default": [],
           "type": "array",
           "items": {
@@ -900,7 +900,7 @@
           }
         },
         "requirePattern": {
-          "description": "Require pattern. eg. \"?.lua\", \"?/init.lua\"",
+          "description": "Require模式。例如：\"?.lua\", \"?/init.lua\"",
           "default": [],
           "type": "array",
           "items": {
@@ -908,7 +908,7 @@
           }
         },
         "version": {
-          "description": "Lua version.",
+          "description": "Lua版本",
           "default": "LuaLatest",
           "allOf": [
             {
@@ -922,7 +922,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable semantic token.",
+          "description": "是否启用语义标记",
           "default": true,
           "type": "boolean"
         }
@@ -932,7 +932,7 @@
       "type": "object",
       "properties": {
         "detailSignatureHelper": {
-          "description": "Whether to enable signature help.",
+          "description": "是否启用签名帮助",
           "default": true,
           "type": "boolean"
         }
@@ -942,7 +942,7 @@
       "type": "object",
       "properties": {
         "arrayIndex": {
-          "description": "Whether to enable strict mode array indexing.",
+          "description": "是否启用严格模式数组索引",
           "default": true,
           "type": "boolean"
         },
@@ -952,12 +952,12 @@
           "type": "boolean"
         },
         "metaOverrideFileDefine": {
-          "description": "meta define overrides file define",
+          "description": "元定义覆盖文件定义",
           "default": true,
           "type": "boolean"
         },
         "requirePath": {
-          "description": "Whether to enable strict mode require path.",
+          "description": "是否启用严格模式require路径",
           "default": false,
           "type": "boolean"
         },
@@ -971,17 +971,17 @@
       "type": "object",
       "properties": {
         "enableReindex": {
-          "description": "Enable reindex.",
+          "description": "启用重新索引",
           "default": false,
           "type": "boolean"
         },
         "encoding": {
-          "description": "Encoding. eg: \"utf-8\"",
+          "description": "编码。例如：\"utf-8\"",
           "default": "utf-8",
           "type": "string"
         },
         "ignoreDir": {
-          "description": "Ignore directories.",
+          "description": "忽略目录",
           "default": [],
           "type": "array",
           "items": {
@@ -989,7 +989,7 @@
           }
         },
         "ignoreGlobs": {
-          "description": "Ignore globs. eg: [\"**/*.lua\"]",
+          "description": "忽略glob模式。例如：[\"**/*.lua\"]",
           "default": [],
           "type": "array",
           "items": {
@@ -997,7 +997,7 @@
           }
         },
         "library": {
-          "description": "Library paths. eg: \"/usr/local/share/lua/5.1\"",
+          "description": "库路径。例如：\"/usr/local/share/lua/5.1\"",
           "default": [],
           "type": "array",
           "items": {
@@ -1005,7 +1005,7 @@
           }
         },
         "moduleMap": {
-          "description": "Module map. key is regex, value is new module regex eg: { \"^(.*)$\": \"module_$1\" \"^lib(.*)$\": \"script$1\" }",
+          "description": "模块映射。键是正则表达式，值是新的模块正则表达式。例如：{ \"^(.*)$\": \"module_$1\" \"^lib(.*)$\": \"script$1\" }",
           "default": [],
           "type": "array",
           "items": {
@@ -1018,14 +1018,14 @@
           "format": "int32"
         },
         "reindexDuration": {
-          "description": "when save a file, ls will reindex the workspace after reindex_duration milliseconds.",
+          "description": "保存文件时，语言服务器将在reindex_duration毫秒后重新索引工作区",
           "default": 5000,
           "type": "integer",
           "format": "uint64",
-          "minimum": 0.0
+          "minimum": 0
         },
         "workspaceRoots": {
-          "description": "Workspace roots. eg: [\"src\", \"test\"]",
+          "description": "工作区根目录。例如：[\"src\", \"test\"]",
           "default": [],
           "type": "array",
           "items": {
