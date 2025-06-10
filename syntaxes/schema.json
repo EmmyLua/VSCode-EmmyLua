@@ -159,7 +159,7 @@
     "strict": {
       "default": {
         "arrayIndex": true,
-        "docIntegerMatchInt": true,
+        "docIntegerConstMatchInt": true,
         "metaOverrideFileDefine": true,
         "requirePath": false,
         "typeCall": false
@@ -268,13 +268,6 @@
           ]
         },
         {
-          "description": "Inject field fail",
-          "type": "string",
-          "enum": [
-            "inject-field-fail"
-          ]
-        },
-        {
           "description": "Unreachable code",
           "type": "string",
           "enum": [
@@ -317,13 +310,6 @@
           ]
         },
         {
-          "description": "Disable global define",
-          "type": "string",
-          "enum": [
-            "disable-global-define"
-          ]
-        },
-        {
           "description": "Undefined field",
           "type": "string",
           "enum": [
@@ -363,13 +349,6 @@
           "type": "string",
           "enum": [
             "redefined-label"
-          ]
-        },
-        {
-          "description": "Name Style check",
-          "type": "string",
-          "enum": [
-            "name-style-check"
           ]
         },
         {
@@ -946,8 +925,8 @@
           "default": true,
           "type": "boolean"
         },
-        "docIntegerMatchInt": {
-          "description": "`doc_integer` type can match `int` type.",
+        "docIntegerConstMatchInt": {
+          "description": "`doc_integer_const` type can match `int` type.",
           "default": false,
           "type": "boolean"
         },

@@ -159,7 +159,7 @@
     "strict": {
       "default": {
         "arrayIndex": true,
-        "docIntegerMatchInt": true,
+        "docIntegerConstMatchInt": true,
         "metaOverrideFileDefine": true,
         "requirePath": false,
         "typeCall": false
@@ -194,17 +194,17 @@
       "type": "object",
       "properties": {
         "forceNonColon": {
-          "description": "Mandatory non`:` definition. When `function_name` is not empty, it takes effect.",
+          "description": "强制非冒号定义。当 `function_name` 不为空时，生效。",
           "default": true,
           "type": "boolean"
         },
         "forceReturnSelf": {
-          "description": "Force to return `self`.",
+          "description": "强制返回 `self`。",
           "default": true,
           "type": "boolean"
         },
         "functionName": {
-          "description": "class default overload function. eg. \"__init\".",
+          "description": "类默认重载函数。例如：\"__init\"。",
           "default": "",
           "type": "string"
         }
@@ -219,315 +219,294 @@
           ]
         },
         {
-          "description": "语法错误",
+          "description": "语法错误。",
           "type": "string",
           "enum": [
             "syntax-error"
           ]
         },
         {
-          "description": "文档语法错误",
+          "description": "注解语法错误。",
           "type": "string",
           "enum": [
             "doc-syntax-error"
           ]
         },
         {
-          "description": "类型未找到",
+          "description": "类型未找到。",
           "type": "string",
           "enum": [
             "type-not-found"
           ]
         },
         {
-          "description": "缺少返回语句",
+          "description": "缺少返回语句。",
           "type": "string",
           "enum": [
             "missing-return"
           ]
         },
         {
-          "description": "参数类型不匹配",
+          "description": "参数类型不匹配。",
           "type": "string",
           "enum": [
             "param-type-not-match"
           ]
         },
         {
-          "description": "缺少参数",
+          "description": "缺少参数。",
           "type": "string",
           "enum": [
             "missing-parameter"
           ]
         },
         {
-          "description": "多余的参数",
+          "description": "冗余参数。",
           "type": "string",
           "enum": [
             "redundant-parameter"
           ]
         },
         {
-          "description": "注入字段失败",
-          "type": "string",
-          "enum": [
-            "inject-field-fail"
-          ]
-        },
-        {
-          "description": "不可达代码",
+          "description": "不可达的代码。",
           "type": "string",
           "enum": [
             "unreachable-code"
           ]
         },
         {
-          "description": "未使用",
+          "description": "未使用的变量。",
           "type": "string",
           "enum": [
             "unused"
           ]
         },
         {
-          "description": "未定义的全局变量",
+          "description": "未定义的全局变量。",
           "type": "string",
           "enum": [
             "undefined-global"
           ]
         },
         {
-          "description": "已弃用",
+          "description": "已弃用。",
           "type": "string",
           "enum": [
             "deprecated"
           ]
         },
         {
-          "description": "访问不可见",
+          "description": "成员可见性检查。",
           "type": "string",
           "enum": [
             "access-invisible"
           ]
         },
         {
-          "description": "丢弃返回值",
+          "description": "不可丢弃返回值。",
           "type": "string",
           "enum": [
             "discard-returns"
           ]
         },
         {
-          "description": "禁用全局定义",
-          "type": "string",
-          "enum": [
-            "disable-global-define"
-          ]
-        },
-        {
-          "description": "未定义的字段",
+          "description": "未定义的字段。",
           "type": "string",
           "enum": [
             "undefined-field"
           ]
         },
         {
-          "description": "局部常量重新赋值",
+          "description": "局部常量重新赋值。",
           "type": "string",
           "enum": [
             "local-const-reassign"
           ]
         },
         {
-          "description": "迭代变量重新赋值",
+          "description": "迭代变量重新赋值。",
           "type": "string",
           "enum": [
             "iter-variable-reassign"
           ]
         },
         {
-          "description": "重复类型",
+          "description": "重复定义的类型。",
           "type": "string",
           "enum": [
             "duplicate-type"
           ]
         },
         {
-          "description": "重新定义的局部变量",
+          "description": "重复定义的局部变量。",
           "type": "string",
           "enum": [
             "redefined-local"
           ]
         },
         {
-          "description": "重新定义的标签",
+          "description": "重复定义的标签。",
           "type": "string",
           "enum": [
             "redefined-label"
           ]
         },
         {
-          "description": "命名风格检查",
-          "type": "string",
-          "enum": [
-            "name-style-check"
-          ]
-        },
-        {
-          "description": "代码风格检查",
+          "description": "代码风格检查。",
           "type": "string",
           "enum": [
             "code-style-check"
           ]
         },
         {
-          "description": "需要检查nil",
+          "description": "需要检查 nil。",
           "type": "string",
           "enum": [
             "need-check-nil"
           ]
         },
         {
-          "description": "在同步中等待",
+          "description": "在同步上下文中使用 await。",
           "type": "string",
           "enum": [
             "await-in-sync"
           ]
         },
         {
-          "description": "文档标签使用错误",
+          "description": "注解使用错误。",
           "type": "string",
           "enum": [
             "annotation-usage-error"
           ]
         },
         {
-          "description": "返回类型不匹配",
+          "description": "返回类型不匹配。",
           "type": "string",
           "enum": [
             "return-type-mismatch"
           ]
         },
         {
-          "description": "缺少返回值",
+          "description": "缺少返回值。",
           "type": "string",
           "enum": [
             "missing-return-value"
           ]
         },
         {
-          "description": "多余的返回值",
+          "description": "冗余的返回值。",
           "type": "string",
           "enum": [
             "redundant-return-value"
           ]
         },
         {
-          "description": "未定义的文档参数",
+          "description": "未使用注解定义的参数。",
           "type": "string",
           "enum": [
             "undefined-doc-param"
           ]
         },
         {
-          "description": "重复的文档字段",
+          "description": "重复定义的字段(注解)。",
           "type": "string",
           "enum": [
             "duplicate-doc-field"
           ]
         },
         {
-          "description": "缺少字段",
+          "description": "缺少字段。",
           "type": "string",
           "enum": [
             "missing-fields"
           ]
         },
         {
-          "description": "注入字段",
+          "description": "注入字段。",
           "type": "string",
           "enum": [
             "inject-field"
           ]
         },
         {
-          "description": "循环文档类",
+          "description": "类型循环依赖。",
           "type": "string",
           "enum": [
             "circle-doc-class"
           ]
         },
         {
-          "description": "不完整的签名文档",
+          "description": "不完整的签名文档。",
           "type": "string",
           "enum": [
             "incomplete-signature-doc"
           ]
         },
         {
-          "description": "缺少全局文档",
+          "description": "全局变量缺少文档。",
           "type": "string",
           "enum": [
             "missing-global-doc"
           ]
         },
         {
-          "description": "赋值类型不匹配",
+          "description": "赋值类型不匹配。",
           "type": "string",
           "enum": [
             "assign-type-mismatch"
           ]
         },
         {
-          "description": "重复require",
+          "description": "重复的 require 导入。",
           "type": "string",
           "enum": [
             "duplicate-require"
           ]
         },
         {
-          "description": "断言中的非字面表达式",
+          "description": "在 assert 中使用了非字面量表达式。",
           "type": "string",
           "enum": [
             "non-literal-expressions-in-assert"
           ]
         },
         {
-          "description": "不平衡的赋值",
+          "description": "不平衡的赋值。",
           "type": "string",
           "enum": [
             "unbalanced-assignments"
           ]
         },
         {
-          "description": "不必要的断言",
+          "description": "不必要的 assert。",
           "type": "string",
           "enum": [
             "unnecessary-assert"
           ]
         },
         {
-          "description": "不必要的if",
+          "description": "不必要的 if。",
           "type": "string",
           "enum": [
             "unnecessary-if"
           ]
         },
         {
-          "description": "重复设置字段",
+          "description": "重复定义的字段(实际代码)。",
           "type": "string",
           "enum": [
             "duplicate-set-field"
           ]
         },
         {
-          "description": "重复索引",
+          "description": "重复的索引。",
           "type": "string",
           "enum": [
             "duplicate-index"
           ]
         },
         {
-          "description": "泛型约束不匹配",
+          "description": "泛型约束不匹配。",
           "type": "string",
           "enum": [
             "generic-constraint-mismatch"
@@ -538,28 +517,28 @@
     "DiagnosticSeveritySetting": {
       "oneOf": [
         {
-          "description": "表示错误诊断严重性",
+          "description": "诊断严重性: 错误。",
           "type": "string",
           "enum": [
             "error"
           ]
         },
         {
-          "description": "表示警告诊断严重性",
+          "description": "诊断严重性: 警告。",
           "type": "string",
           "enum": [
             "warning"
           ]
         },
         {
-          "description": "表示信息诊断严重性",
+          "description": "诊断严重性: 信息。",
           "type": "string",
           "enum": [
             "information"
           ]
         },
         {
-          "description": "表示提示诊断严重性",
+          "description": "诊断严重性: 提示。",
           "type": "string",
           "enum": [
             "hint"
@@ -571,7 +550,7 @@
       "type": "object",
       "properties": {
         "insertSpace": {
-          "description": "是否在'---'后插入空格",
+          "description": "是否在 '---' 后插入空格。",
           "default": false,
           "type": "boolean"
         }
@@ -581,28 +560,28 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "是否启用代码透镜",
+          "description": "是否启用代码透镜(Code Lens)。",
           "default": true,
           "type": "boolean"
         }
       }
     },
     "EmmyrcCompletion": {
-      "description": "EmmyLua代码补全配置",
+      "description": "EmmyLua 代码补全配置。",
       "type": "object",
       "properties": {
         "autoRequire": {
-          "description": "是否自动require模块",
+          "description": "自动补全 require 语句。",
           "default": true,
           "type": "boolean"
         },
         "autoRequireFunction": {
-          "description": "自动require模块使用的函数",
+          "description": "自动补全 require 语句时使用的函数名。",
           "default": "require",
           "type": "string"
         },
         "autoRequireNamingConvention": {
-          "description": "自动require文件名的命名约定",
+          "description": "自动补全 require 语句时使用的命名规范。",
           "default": "keep",
           "allOf": [
             {
@@ -611,33 +590,33 @@
           ]
         },
         "autoRequireSeparator": {
-          "description": "自动require路径中使用的分隔符",
+          "description": "自动补全 require 语句时使用的分隔符。",
           "default": ".",
           "type": "string"
         },
         "callSnippet": {
-          "description": "是否在补全中使用调用片段",
+          "description": "是否使用代码片段补全函数调用。",
           "default": false,
           "type": "boolean"
         },
         "enable": {
-          "description": "是否启用代码补全",
+          "description": "是否启用代码补全。",
           "default": true,
           "type": "boolean"
         },
         "postfix": {
-          "description": "补全中使用的后缀触发器",
+          "description": "后缀补全触发关键词。",
           "default": "@",
           "type": "string"
         }
       }
     },
     "EmmyrcDiagnostic": {
-      "description": "Emmyrc的诊断配置",
+      "description": "Emmyrc 诊断配置。",
       "type": "object",
       "properties": {
         "diagnosticInterval": {
-          "description": "执行诊断的间隔时间（毫秒）",
+          "description": "诊断间隔时间(毫秒)。",
           "type": [
             "integer",
             "null"
@@ -646,7 +625,7 @@
           "minimum": 0
         },
         "disable": {
-          "description": "禁用的诊断代码列表",
+          "description": "禁用的诊断代码列表。",
           "default": [],
           "type": "array",
           "items": {
@@ -654,12 +633,12 @@
           }
         },
         "enable": {
-          "description": "是否启用诊断",
+          "description": "是否启用诊断。",
           "default": true,
           "type": "boolean"
         },
         "enables": {
-          "description": "启用的诊断代码列表",
+          "description": "启用的诊断代码列表。",
           "default": [],
           "type": "array",
           "items": {
@@ -667,7 +646,7 @@
           }
         },
         "globals": {
-          "description": "全局变量列表",
+          "description": "全局变量列表，在该列表中的全局变量不会被诊断为未定义。",
           "default": [],
           "type": "array",
           "items": {
@@ -675,7 +654,7 @@
           }
         },
         "globalsRegex": {
-          "description": "全局变量的正则表达式列表",
+          "description": "全局变量正则表达式列表，符合正则表达式的全局变量不会被诊断为未定义。",
           "default": [],
           "type": "array",
           "items": {
@@ -683,7 +662,7 @@
           }
         },
         "severity": {
-          "description": "诊断代码到严重性设置的映射",
+          "description": "诊断代码与严重性设置的映射。",
           "default": {},
           "type": "object",
           "additionalProperties": {
@@ -696,7 +675,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "是否启用文档颜色",
+          "description": "是否启用文档颜色。",
           "default": true,
           "type": "boolean"
         }
@@ -705,28 +684,28 @@
     "EmmyrcFilenameConvention": {
       "oneOf": [
         {
-          "description": "保持原始文件名",
+          "description": "保持原始文件名。",
           "type": "string",
           "enum": [
             "keep"
           ]
         },
         {
-          "description": "将文件名转换为snake_case",
+          "description": "将文件名转换为蛇形(snake_case)命名。",
           "type": "string",
           "enum": [
             "snake-case"
           ]
         },
         {
-          "description": "将文件名转换为PascalCase",
+          "description": "将文件名转换为帕斯卡(PascalCase)命名。",
           "type": "string",
           "enum": [
             "pascal-case"
           ]
         },
         {
-          "description": "将文件名转换为camelCase",
+          "description": "将文件名转换为驼峰(camelCase)命名。",
           "type": "string",
           "enum": [
             "camel-case"
@@ -738,7 +717,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "是否启用悬停",
+          "description": "是否启用悬浮提示。",
           "default": true,
           "type": "boolean"
         }
@@ -748,27 +727,27 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "是否启用内联提示",
+          "description": "是否启用内联提示。",
           "default": true,
           "type": "boolean"
         },
         "indexHint": {
-          "description": "是否启用索引提示",
+          "description": "在索引表达式跨行时，显示提示。",
           "default": true,
           "type": "boolean"
         },
         "localHint": {
-          "description": "是否启用局部提示。是否启用覆盖提示",
+          "description": "是否启用局部变量提示。",
           "default": true,
           "type": "boolean"
         },
         "overrideHint": {
-          "description": "是否启用覆盖提示",
+          "description": "是否启用重写提示。",
           "default": true,
           "type": "boolean"
         },
         "paramHint": {
-          "description": "是否启用参数提示",
+          "description": "是否启用参数提示。",
           "default": true,
           "type": "boolean"
         }
@@ -819,7 +798,7 @@
           ]
         },
         {
-          "description": "Lua 最新版",
+          "description": "最新版本的 Lua。",
           "type": "string",
           "enum": [
             "LuaLatest"
@@ -831,17 +810,17 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "是否启用引用搜索",
+          "description": "是否启用引用搜索。",
           "default": true,
           "type": "boolean"
         },
         "fuzzySearch": {
-          "description": "确定是否为无法找到引用的字段启用模糊搜索",
+          "description": "是否启用模糊搜索。",
           "default": true,
           "type": "boolean"
         },
         "shortStringSearch": {
-          "description": "缓存短字符串用于搜索",
+          "description": "缓存短字符串用于搜索。",
           "default": false,
           "type": "boolean"
         }
@@ -863,7 +842,7 @@
       "type": "object",
       "properties": {
         "classDefaultCall": {
-          "description": "class default overload function.",
+          "description": "类默认重载函数。",
           "default": {
             "forceNonColon": false,
             "forceReturnSelf": false,
@@ -884,7 +863,7 @@
           }
         },
         "frameworkVersions": {
-          "description": "框架版本",
+          "description": "框架版本列表。",
           "default": [],
           "type": "array",
           "items": {
@@ -892,7 +871,7 @@
           }
         },
         "requireLikeFunction": {
-          "description": "类似require的函数",
+          "description": "类似 require 的函数列表。",
           "default": [],
           "type": "array",
           "items": {
@@ -900,7 +879,7 @@
           }
         },
         "requirePattern": {
-          "description": "Require模式。例如：\"?.lua\", \"?/init.lua\"",
+          "description": "require 模式。例如：\"?.lua\", \"?/init.lua\"",
           "default": [],
           "type": "array",
           "items": {
@@ -908,7 +887,7 @@
           }
         },
         "version": {
-          "description": "Lua版本",
+          "description": "Lua 版本。",
           "default": "LuaLatest",
           "allOf": [
             {
@@ -922,7 +901,7 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "是否启用语义标记",
+          "description": "是否启用语义标记。",
           "default": true,
           "type": "boolean"
         }
@@ -932,7 +911,7 @@
       "type": "object",
       "properties": {
         "detailSignatureHelper": {
-          "description": "是否启用签名帮助",
+          "description": "是否启用签名帮助。",
           "default": true,
           "type": "boolean"
         }
@@ -942,22 +921,22 @@
       "type": "object",
       "properties": {
         "arrayIndex": {
-          "description": "是否启用严格模式数组索引",
+          "description": "是否启用严格模式数组索引，严格模式下数组取值返回将包含 nil。",
           "default": true,
           "type": "boolean"
         },
-        "docIntegerMatchInt": {
-          "description": "`doc_integer` type can match `int` type.",
+        "docIntegerConstMatchInt": {
+          "description": "注解声明的`doc_integer_const`类型可以匹配`int`类型。用于`---@alias 1|2|3` 等场景。",
           "default": false,
           "type": "boolean"
         },
         "metaOverrideFileDefine": {
-          "description": "元定义覆盖文件定义",
+          "description": "`---@meta`文件的定义完全覆盖真实文件的定义。",
           "default": true,
           "type": "boolean"
         },
         "requirePath": {
-          "description": "是否启用严格模式require路径",
+          "description": "是否启用严格模式 require 路径。严格模式时 require 必须从指定的根目录开始。",
           "default": false,
           "type": "boolean"
         },
@@ -971,7 +950,7 @@
       "type": "object",
       "properties": {
         "enableReindex": {
-          "description": "启用重新索引",
+          "description": "启用重新索引。",
           "default": false,
           "type": "boolean"
         },
@@ -981,7 +960,7 @@
           "type": "string"
         },
         "ignoreDir": {
-          "description": "忽略目录",
+          "description": "忽略的目录。",
           "default": [],
           "type": "array",
           "items": {
@@ -989,7 +968,7 @@
           }
         },
         "ignoreGlobs": {
-          "description": "忽略glob模式。例如：[\"**/*.lua\"]",
+          "description": "忽略的文件。例如：[\"**/*.lua\"]",
           "default": [],
           "type": "array",
           "items": {
@@ -1005,7 +984,7 @@
           }
         },
         "moduleMap": {
-          "description": "模块映射。键是正则表达式，值是新的模块正则表达式。例如：{ \"^(.*)$\": \"module_$1\" \"^lib(.*)$\": \"script$1\" }",
+          "description": "模块映射列表。key 是正则表达式，value 是新的模块正则表达式。例如：{ \"^(.*)$\": \"module_$1\" \"^lib(.*)$\": \"script$1\" }",
           "default": [],
           "type": "array",
           "items": {
@@ -1018,14 +997,14 @@
           "format": "int32"
         },
         "reindexDuration": {
-          "description": "保存文件时，语言服务器将在reindex_duration毫秒后重新索引工作区",
+          "description": "当保存文件时，ls 将在指定毫秒后重新索引工作区。",
           "default": 5000,
           "type": "integer",
           "format": "uint64",
           "minimum": 0
         },
         "workspaceRoots": {
-          "description": "工作区根目录。例如：[\"src\", \"test\"]",
+          "description": "工作区根目录列表。例如：[\"src\", \"test\"]",
           "default": [],
           "type": "array",
           "items": {
