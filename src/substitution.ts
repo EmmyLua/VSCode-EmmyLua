@@ -1,12 +1,11 @@
 import * as path from "path";
-import {workspace} from "vscode";
+import { workspace } from "vscode";
 
 function getWorkspaceFolderByName(workspaceName?: string): string | null {
     const ws = workspace.workspaceFolders;
-    if(ws)
-    {
+    if (ws) {
         let workspace = ws.find(w => w.name === workspaceName);
-        if(workspace) {
+        if (workspace) {
             return workspace.uri.fsPath;
         } else {
             return ws[0].uri.fsPath;
@@ -19,9 +18,9 @@ export function substituteFolder(oriPath: string): string {
     let ret = oriPath;
     let pattern = /(?:\$\{workspaceFolder(?:\:([^\.]+))?\})/;
     let innerMatch = pattern.exec(oriPath);
-    if(innerMatch !== null) {
+    if (innerMatch !== null) {
         let path = getWorkspaceFolderByName(innerMatch[1]);
-        if(path) {
+        if (path) {
             ret = oriPath.replace(pattern, path);
         }
     }

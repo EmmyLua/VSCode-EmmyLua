@@ -1,6 +1,81 @@
 # Change Log
 
-# 0.9.21
+# 0.9.22
+
+`CHG` 泛型约束（StrTplRef）移除了对字符串的保护：
+```lua
+---@generic T: string -- 需要移除 `: string`
+---@param a `T`
+---@return T
+local function class(a)
+end
+
+---@class A
+
+local A = class("A") -- 错误
+```
+
+`NEW` 显式声明的 `Tuple` 是不可变的。
+```lua
+---@type [1, 2]
+local a = {1, 2}
+
+a[1] = 3 -- 错误
+```
+
+`FIX` 悬停在 `function` 上现在可以显示相应的文档注释。
+
+`FIX` 修复在成员的 `转到定义` 时可能出现的崩溃问题
+
+`NEW` 添加了配置项 `classDefaultCall`，用于声明指定名称的方法作为类的默认 `__call`。效果等同于 `---@overload fun()`，但优先级较低。如果存在显式声明的 `---@overload fun()`，则 `classDefaultCall` 对该类不生效。
+
+```json
+{
+  "runtime": {
+    "classDefaultCall": {
+      "functionName": "__init",
+      "forceNonColon": true,
+      "forceReturnSelf": true
+    }
+  },
+}
+```
+
+```lua
+---@class MyClass
+local M = {}
+
+-- `functionName` 是 `__init`，所以调用将被视为 `__init`
+function M:__init(a)
+    -- `forceReturnSelf` 为 `true`，所以调用将返回 `self`。即使该方法没有返回 `self` 或返回了其它值。
+end
+
+
+-- `forceNonColon` 为 `true`，所以调用可以不使用 `:` 且不传递 `self`
+-- `forceReturnSelf` 为 `true`，所以调用将返回 `self`
+A = M() -- `A` 是 `MyClass`
+```
+
+`NEW` 添加了 `docBaseConstMatchBaseType` 配置项，默认为 `false`。doc 中定义的基础常量类型可以匹配基础类型，允许 int 匹配 `---@alias id 1|2|3`，字符串同理。
+
+```json
+{
+  "strict": {
+    "docBaseConstMatchBaseType": true
+  },
+}
+```
+
+`FIX` 当 `enum` 被用作函数参数时，它被视为值而不是 `enum` 本身。
+
+`FIX` 当表字段的预期类型是函数时，可以使用函数补全。
+
+`NEW` `inlay_hint` 参数提示现在可以跳转到实际类型定义。
+
+`NEW` 关闭不在工作区或库中的文件时，将移除它们的影响
+
+`NEW` 增强了忽略相关功能。配置为忽略的文件即使被打开也不会被解析，但由于技术限制，启动编辑器时已经打开的文件仍会被解析（将在未来更新中修复）
+
 # 0.9.21
 
 `NEW` 实现 `std.Unpack` 类型以提升 `unpack` 函数的类型推断，以及 `std.Rawget` 类型以提升 `rawget` 函数的类型推断

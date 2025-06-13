@@ -1,72 +1,140 @@
-![logo](/res/logo.png)
 # EmmyLua for VSCode
 
-QQ交流群：`29850775` (最新版本以及部分视频演示在群文件中下载)
+![logo](/res/logo.png)
+
+EmmyLua is a powerful Lua language support extension for Visual Studio Code, providing intelligent code completion, debugging, and analysis capabilities.
+
+## 📋 Quick Links
+
+- 📖 [Documentation](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md)
+- 📝 [Changelog (English)](CHANGELOG.md)
+- 📝 [更新日志 (中文)](CHANGELOG_CN.md)
+- 🔧 [Language Server (Rust)](https://github.com/CppCXY/emmylua-analyzer-rust)
+- 💬 QQ Group: `29850775`
 
 [![Online EmmyLua Doc](https://img.shields.io/badge/emmy-doc-46BC99.svg?style=flat-square)](https://emmylua.github.io)
 [![donate](https://img.shields.io/badge/donate-emmy-FF69B4.svg?style=flat-square)](https://emmylua.github.io/donate.html)
 [![加入QQ群](https://img.shields.io/badge/chat-QQ群-46BC99.svg?style=flat-square)](//shang.qq.com/wpa/qunwpa?idkey=f1acce081c45fbb5670ed5f880f7578df7a8b84caa5d2acec230ac957f0c1716)
 
-[更新日志](CHANGELOG_CN.md)
+## 🚀 Features
 
-[CHANGELOG](CHANGELOG.md)
+- **Smart Code Completion**: Intelligent auto-completion with type inference
+- **Real-time Diagnostics**: Error detection and warnings as you type
+- **Advanced Debugging**: Support for attach, launch, and remote debugging
+- **Cross-platform**: Works on Windows, macOS, and Linux
+- **LSP-based**: Built on Language Server Protocol for reliability
 
-[EmmyLua Langauge Server](https://github.com/CppCXY/emmylua-analyzer-rust)
+## 📦 Related Extensions
 
-## FAQ (中文 & English)
+Enhance your Lua development experience with these complementary extensions:
 
-**Q (中文)**: vscode-emmylua 全家桶还有哪些？  
-**Q (English)**: Which other extensions are included in the vscode-emmylua suite?  
-**A (中文)**: [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle), [EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)  
-**A (English)**: Install [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle) and [EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity)  
+- [EmmyLuaCodeStyle](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-codestyle) - Code formatting and style enforcement
+- [EmmyLuaUnity](https://marketplace.visualstudio.com/items?itemName=CppCXY.emmylua-unity) - Unity3D integration
 
-**Q (中文)**: 为什么附加调试没有作用？  
-**Q (English)**: Why doesn't attach debugging work?  
-**A (中文)**: 调试会尝试获取进程中的 Lua 符号，因此需要进程导出 Lua 符号  
-**A (English)**: The debugger needs Lua symbols from the process, so the process must export them  
+## 🔧 Configuration
 
-**Q (中文)**: Emmy New Debug 为什么连不上目标？  
-**Q (English)**: Why does Emmy New Debug fail to connect?  
-**A (中文)**: 可能是插入代码 require 失败或返回 true，表明可执行文件未导出 Lua 符号  
-**A (English)**: Usually the injected require code fails or returns true, indicating missing Lua symbols  
+### Project Configuration
 
-**Q (中文)**: 为什么打开项目后会有大量未定义变量警告？  
-**Q (English)**: Why do many undefined variable warnings appear after opening the project?  
-**A (中文)**: 未定义的全局变量会触发提示，可在项目根目录创建 .emmyrc.json 并禁用 undefined-global  
-**A (English)**: Undefined globals trigger warnings; create .emmyrc.json in your project root and disable undefined-global  
+Create a `.emmyrc.json` file in your project root to customize behavior:
 
-**Q (中文)**: 我能否在其他平台使用 vscode-emmylua 的代码分析？  
-**Q (English)**: Can I use vscode-emmylua’s code analysis on other platforms?  
-**A (中文)**: 可以，它基于 [emmylua-analyzer-rust](https://github.com/CppCXY/emmylua-analyzer-rust)，兼容支持 LSP 的客户端  
-**A (English)**: Yes, it uses [emmylua-analyzer-rust](https://github.com/CppCXY/emmylua-analyzer-rust), which is a standard LSP  
+```json
+{
+  "diagnostics": {
+    "undefined-global": false
+  }
+}
+```
 
-**Q (中文)**: 为什么不用 VSCode 配置，而是用 .emmyrc.json？  
-**Q (English)**: Why use .emmyrc.json instead of VSCode settings?  
-**A (中文)**: 方便在其他平台上使用，无需在每个 IDE 中重复配置  
-**A (English)**: It works across platforms without extra IDE configuration  
+For detailed configuration options, see:
+- [English Documentation](https://github.com/CppCXY/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md)
+- [中文文档](https://github.com/CppCXY/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_CN.md)
 
-**Q (中文)**: 为什么用 Rust 重写语言服务器？放弃.net和java语言服务器 
-**Q (English)**: Why rewrite the language server in Rust? and abandon the .NET and Java servers?
-**A (中文)**: 因为我想试试 rust
-**A (English)**: I want to try rust
+## 🐛 Debugging
 
-**Q (中文)**: 为什么没有文档？  
-**Q (English)**: Why is there no documentation?  
-**A (中文)**: 配置文件文档见 https://github.com/CppCXY/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_CN.md  
-**A (English)**: See configuration docs at https://github.com/CppCXY/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md  
+### Remote Debug Setup
 
-## FAQ – Debugging (中文 & English)
+1. **Insert Debugger Code**
+   - Use command: `EmmyLua: Insert Emmy Debugger Code`
+   - Or manually add:
+   ```lua
+   package.cpath = package.cpath .. ";path/to/emmy/debugger/?.dll"
+   local dbg = require('emmy_core')
+   dbg.tcpListen('localhost', 9966)
+   dbg.waitIDE()
+   ```
 
-**Remote Debug Setup (中文)**  
-1) 在 VSCode 中打开 Lua 文件  
-2) 插入调试库路径并 require  
-3) 在需要断点处添加 dbg.waitIDE(); dbg.breakHere()  
-4) 运行外部程序等待连接  
-5) 启动 “EmmyLua New Debug” 与目标调试  
+2. **Set Breakpoints**
+   - Add `dbg.breakHere()` where you want to pause execution
+   - Or use VSCode's built-in breakpoint system
 
-**Remote Debug Setup (English)**  
-1) Load your Lua file in VSCode  
-2) Inject the debugger path and require it  
-3) Add dbg.waitIDE(); dbg.breakHere() where you want to break  
-4) Run your external program, which waits for a debugger  
-5) Launch “EmmyLua New Debug” to connect and debug  
+3. **Start Debugging**
+   - Run your Lua application
+   - Launch "EmmyLua New Debug" configuration in VSCode
+   - The debugger will connect automatically
+
+### Debug Types
+
+- **EmmyLua New Debug**: Modern debugging with better performance
+- **EmmyLua Attach**: Attach to running processes (requires exported Lua symbols)
+- **EmmyLua Launch**: Direct launch debugging
+
+## ❓ Frequently Asked Questions
+
+<details>
+<summary><strong>Why doesn't attach debugging work?</strong></summary>
+
+**English**: The debugger needs access to Lua symbols from the target process. Ensure your executable exports Lua symbols.
+
+**中文**: 调试器需要获取进程中的 Lua 符号，因此需要进程导出 Lua 符号。
+</details>
+
+<details>
+<summary><strong>Why do I see many "undefined variable" warnings?</strong></summary>
+
+**English**: Create `.emmyrc.json` in your project root and disable the `undefined-global` diagnostic:
+```json
+{
+  "diagnostics": {
+    "undefined-global": false
+  }
+}
+```
+
+**中文**: 在项目根目录创建 `.emmyrc.json` 文件并禁用 `undefined-global` 诊断。
+</details>
+
+<details>
+<summary><strong>Can I use EmmyLua analysis in other editors?</strong></summary>
+
+**English**: Yes! EmmyLua uses a standard Language Server Protocol implementation. Any LSP-compatible editor can use it.
+
+**中文**: 可以！EmmyLua 基于标准的语言服务器协议，任何支持 LSP 的编辑器都可以使用。
+</details>
+
+<details>
+<summary><strong>Why use .emmyrc.json instead of VSCode settings?</strong></summary>
+
+**English**: Project-specific configuration files work across different editors and platforms without requiring IDE-specific setup.
+
+**中文**: 项目配置文件可以跨平台和编辑器使用，无需在每个 IDE 中重复配置。
+</details>
+
+<details>
+<summary><strong>Why was the language server rewritten in Rust?</strong></summary>
+
+**English**: The Rust implementation provides better performance, memory safety, and cross-platform compatibility compared to the previous .NET and Java versions.
+
+**中文**: Rust 实现提供了更好的性能、内存安全性和跨平台兼容性。（作者说：因为我想试试 rust 😄）
+</details>
+
+## 🤝 Contributing
+
+We welcome contributions! Please feel free to:
+- Report bugs and issues
+- Suggest new features
+- Submit pull requests
+- Join our QQ group for discussions
+
+## 📄 License
+
+This project is licensed under the MIT License.
