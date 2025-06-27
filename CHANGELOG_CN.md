@@ -1,8 +1,107 @@
-# Change Log
+# 🚀 Change Log
 
-# 0.9.22
+## [0.9.23] - 2025-06-27
 
-`CHG` 泛型约束（StrTplRef）移除了对字符串的保护：
+### ✨ 新功能
+
+#### 📝 标签描述增强
+- **支持标签上方和后方的描述**: 现在可以在标签上方（作为前置注释）和标签后方（内联）添加描述。描述将与相应的标签关联。
+  ```lua
+  ---@class A
+  --- 下方描述（适用于 @field a）
+  ---@field a integer 内联描述
+  ---@field b integer # 井号后的描述
+  --- 上方描述（适用于 @field b）
+  ---@field c integer 内联描述
+  local a = {}
+  ```
+
+#### ⚡ 元调用提示
+- **添加调用 `__call` 提示**: 添加调用 `__call` 提示，通过 `hint.metaCallHint` 启用
+  ```lua
+  ---@class A
+  ---@overload fun(a: integer): integer
+  local A
+  A(1) -- 在 `A` 和 `(` 之间会有闪电提示或在 `A` 前会有 `new` 提示
+  ```
+
+#### 🔄 类型转换语法
+- **支持语法 `--[[@cast -?]]`**: 当 `@cast` 后跟操作符而不是名称时，它将转换前一个表达式的类型，但目前仅对函数调用有效！
+
+#### 🛠️ 快速修复
+- **移除 Nil 的快速修复**: 为 `NeedCheckNil` 诊断添加快速修复操作，建议使用 `@cast` 移除 nil 类型
+  ```lua
+  ---@class Cast1
+  ---@field get fun(self: self, a: number): Cast1?
+  local A
+
+  local _a = A:get(1) --[[@cast -?]]:get(2):get(3) -- 快速修复会提示是否自动添加 `--[[@cast -?]]`
+  ```
+
+#### 📝 函数名补全
+- **基础函数名补全**: 添加 `completion.baseFunctionIncludesName` 配置来控制基础函数补全是否包含函数名
+  ```json
+  {
+    "completion": {
+      "baseFunctionIncludesName": true
+    }
+  }
+  ```
+  启用时，函数补全将包含函数名：`function name() end` 而不是 `function () end`
+
+#### 🔍 类型检查增强
+- **转换类型不匹配诊断**: 添加新的诊断 `CastTypeMismatch` 来检测转换操作中的类型不匹配
+  ```lua
+  ---@type string
+  local a = "hello"
+  --[[@cast a int]] -- 警告
+  ```
+
+#### 📦 自动导入配置
+- **自动 Require 命名约定配置**: 添加 `completion.autoRequireNamingConvention.keep-class` 配置选项。导入模块时，如果返回值是类定义，将使用类名；否则使用文件名
+  ```json
+  {
+    "completion": {
+      "autoRequireNamingConvention": "keep-class"
+    }
+  }
+  ```
+
+#### 📁 文件重构提示
+- **文件重命名提示是否更新 `require` 路径**: 重命名文件时添加提示，询问是否更新对应的导入语句
+
+### 🔧 改进优化
+
+#### 🎯 函数跳转优化
+- **类方法补全**: 函数调用跳转时，如果有多个声明，将尝试返回最匹配的定义以及所有实际代码声明，而不是返回所有定义。
+
+#### 🔍 定义跳转增强
+- **定义跳转增强**: 从函数调用跳转到定义时，如果目标位于返回语句中，语言服务器现在会尝试找到原始定义。例如：
+  ```lua
+  -- test.lua
+  local function test()
+  end
+  return {
+      test = test,
+  }
+  ```
+  ```lua
+  local t = require("test")
+  local test = t.test -- 之前跳转到：test = test,
+  test() -- 现在跳转到：local function test()
+  ```
+
+### 🐛 问题修复
+- **枚举变量参数问题**: 修复检查枚举变量作为参数时的崩溃问题
+- **循环文档类问题**: 修复导致语言服务器挂起的错误
+- **修复调试器崩溃**: 修复调试器中的崩溃问题
+
+---
+
+## [0.9.22] - 2025-06-14
+
+### ⚠️ 重要变更
+**泛型约束修改** - 泛型约束（StrTplRef）移除了对字符串的保护：
 ```lua
 ---@generic T: string -- 需要移除 `: string`
 ---@param a `T`
@@ -15,320 +114,396 @@ end
 local A = class("A") -- 错误
 ```
 
-`NEW` 显式声明的 `Tuple` 是不可变的。
-```lua
----@type [1, 2]
-local a = {1, 2}
+### ✨ 新功能
+- **🔒 元组不可变性**: 显式声明的 `Tuple` 是不可变的
+  ```lua
+  ---@type [1, 2]
+  local a = {1, 2}
 
-a[1] = 3 -- 错误
-```
+  a[1] = 3 -- 错误
+  ```
 
-`FIX` 悬停在 `function` 上现在可以显示相应的文档注释。
-
-`FIX` 修复在成员的 `转到定义` 时可能出现的崩溃问题
-
-`NEW` 添加了配置项 `classDefaultCall`，用于声明指定名称的方法作为类的默认 `__call`。效果等同于 `---@overload fun()`，但优先级较低。如果存在显式声明的 `---@overload fun()`，则 `classDefaultCall` 对该类不生效。
-
-```json
-{
-  "runtime": {
-    "classDefaultCall": {
-      "functionName": "__init",
-      "forceNonColon": true,
-      "forceReturnSelf": true
+- **📋 类默认调用配置**: 添加了配置项 `classDefaultCall`，用于声明指定名称的方法作为类的默认 `__call`
+  ```json
+  {
+    "runtime": {
+      "classDefaultCall": {
+        "functionName": "__init",
+        "forceNonColon": true,
+        "forceReturnSelf": true
+      }
     }
-  },
-}
-```
+  }
+  ```
+  ```lua
+  ---@class MyClass
+  local M = {}
+
+  -- `functionName` 是 `__init`，所以调用将被视为 `__init`
+  function M:__init(a)
+      -- `forceReturnSelf` 为 `true`，所以调用将返回 `self`
+  end
+
+  -- `forceNonColon` 为 `true`，所以调用可以不使用 `:` 且不传递 `self`
+  A = M() -- `A` 是 `MyClass`
+  ```
+
+- **🎯 文档常量匹配**: 添加了 `docBaseConstMatchBaseType` 配置项，默认为 `false`。doc 中定义的基础常量类型可以匹配基础类型
+  ```json
+  {
+    "strict": {
+      "docBaseConstMatchBaseType": true
+    }
+  }
+  ```
+
+### 🐛 问题修复
+- **📚 函数文档显示**: 悬停在 `function` 上现在可以显示相应的文档注释
+- **🔍 定义跳转修复**: 修复在成员的 `转到定义` 时可能出现的崩溃问题
+- **🔢 枚举参数处理**: 当 `enum` 被用作函数参数时，它被视为值而不是 `enum` 本身
+- **🔧 函数补全优化**: 当表字段的预期类型是函数时，可以使用函数补全
+
+### 🔧 功能改进
+- **💡 参数提示跳转**: `inlay_hint` 参数提示现在可以跳转到实际类型定义
+- **📁 文件管理优化**: 关闭不在工作区或库中的文件时，将移除它们的影响
+- **🚫 忽略功能增强**: 增强了忽略相关功能。配置为忽略的文件即使被打开也不会被解析
+
+---
+
+## [0.9.21]
+
+### ✨ 新功能
+
+#### 🔧 标准库类型支持
+- **`std.Unpack` 类型**: 实现 `std.Unpack` 类型以提升 `unpack` 函数的类型推断
+- **`std.Rawget` 类型**: 实现 `std.Rawget` 类型以提升 `rawget` 函数的类型推断
+
+#### 🌟 生成器支持
+- **支持类似 `luals` 的 `generator` 实现**: 增强代码生成能力
+
+#### 🧠 智能类型推断
+- **改进 lambda 函数泛型推断**: 现在能更好地推断 lambda 函数的参数类型
+- **优化可变泛型返回值推断**: 现在可用于异步库返回值推断
+  ```lua
+  --- @generic T, R
+  --- @param argc integer
+  --- @param func fun(...:T..., cb: fun(...:R...))
+  --- @return async fun(...:T...):R...
+  local function wrap(argc, func) end
+
+  --- @param a string
+  --- @param b string
+  --- @param callback fun(out: string)
+  local function system(a, b, callback) end
+
+  local wrapped = wrap(3, system)
+  ```
+
+#### 📝 文档支持
+- **模块和类型文档提示**: 在代码补全中添加了模块和类型的文档提示
+- **交集类型检查**: 添加了交集类型的类型检查
+
+#### 🎯 泛型约束
+- **泛型约束检查**: 支持泛型约束检查、字符串模板参数类型检查和代码补全
+
+### 🔧 改进优化
+- **`math.huge` 类型修正**: 将 `math.huge` 改为数字类型
+- **类型提示渲染**: 优化了某些类型提示的渲染
+
+### 🐛 问题修复
+- **嵌套闭包类型窄化**: 修复在嵌套闭包中丢失类型窄化的问题
+- **性能优化**: 修复当项目中存在大型 Lua 表时类型检查严重降低性能的问题
+
+---
+
+
+## [0.9.20]
+
+### ✨ 新功能
+
+#### 🔄 返回值类型转换
+- **函数 `@return_cast` 注解**: 支持函数的 `@return_cast` 注解。当函数的返回值是布尔值时，可以添加额外的注解来转换参数类型
+  ```lua
+  ---@return boolean
+  ---@return_cast n integer
+  local function isInteger(n)
+    return n == math.floor(n)
+  end
+
+  local a ---@type integer | string
+
+  if isInteger(a) then
+    print(a) -- a: integer
+  else
+    print(a) -- a: string
+  end
+  ```
+
+#### 🎯 Self 参数转换
+- **`@return_cast` 支持 self**: `@return_cast` 支持 self 参数
+  ```lua
+  ---@class My2
+  ---@class My1
+  ---@class My3:My2,My1
+  local m = {}
+
+  ---@return boolean
+  ---@return_cast self My1
+  function m:isMy1()
+  end
 
-```lua
----@class MyClass
-local M = {}
+  ---@return boolean
+  ---@return_cast self My2
+  function m:isMy2()
+  end
 
--- `functionName` 是 `__init`，所以调用将被视为 `__init`
-function M:__init(a)
-    -- `forceReturnSelf` 为 `true`，所以调用将返回 `self`。即使该方法没有返回 `self` 或返回了其它值。
-end
+  if m:isMy1() then
+    print(m) -- m: My1
+  elseif m:isMy2() then
+    print(m) -- m: My2
+  end
+  ```
 
+#### 🔒 TypeGuard 支持
+- **支持 `TypeGuard<T>` 返回类型**: 
+  ```lua
+  ---@return TypeGuard<string>
+  local function is_string(value)
+    return type(value) == "string"
+  end
 
--- `forceNonColon` 为 `true`，所以调用可以不使用 `:` 且不传递 `self`
--- `forceReturnSelf` 为 `true`，所以调用将返回 `self`
-A = M() -- `A` 是 `MyClass`
-```
+  local a
 
-`NEW` 添加了 `docBaseConstMatchBaseType` 配置项，默认为 `false`。doc 中定义的基础常量类型可以匹配基础类型，允许 int 匹配 `---@alias id 1|2|3`，字符串同理。
+  if is_string(a) then
+    print(a:sub(1, 1))
+  else
+    print("a is not a string")
+  end
+  ```
 
-```json
-{
-  "strict": {
-    "docBaseConstMatchBaseType": true
-  },
-}
-```
+#### 🌍 Lua 5.5 支持
+- **支持 `Lua 5.5` 全局声明语法**: 添加对最新 Lua 版本语法的支持
 
-`FIX` 当 `enum` 被用作函数参数时，它被视为值而不是 `enum` 本身。
+### 🔧 改进优化
+- **诊断整合**: 移除诊断 `lua-syntax-error`，合并到 `syntax-error` 中，并添加 `doc-syntax-error` 用于文档语法错误
+- **require 类型限制**: 当 require 函数返回的对象是类/枚举时，禁止在其上定义新成员，而表则不受限制
 
-`FIX` 当表字段的预期类型是函数时，可以使用函数补全。
+### 🐛 问题修复
+- **格式化修复**: 修复格式化问题，现在当存在 `syntax-error` 时，格式化将不返回值
+- **性能优化**: 修复性能问题：防止函数返回表时产生大量联合类型
 
-`NEW` `inlay_hint` 参数提示现在可以跳转到实际类型定义。
+---
 
-`NEW` 关闭不在工作区或库中的文件时，将移除它们的影响
+## [0.9.19]
 
-`NEW` 增强了忽略相关功能。配置为忽略的文件即使被打开也不会被解析，但由于技术限制，启动编辑器时已经打开的文件仍会被解析（将在未来更新中修复）
+### ✨ 新功能
 
-# 0.9.21
+#### 📞 调用层次结构
+- **支持调用层次结构功能**: 实现调用层次结构功能，但目前仅支持传入调用
+
+#### 🔒 内部成员标记
+- **`@internal` 标签支持**: 支持新标签 `@internal` 用于成员或声明。当成员或声明被标记为 `@internal` 时，它仅在当前库内可见
+
+#### 🎯 转到实现
+- **支持转到实现功能**: 实现转到实现功能，可以跳转到接口的具体实现
+
+#### ⚠️ 不丢弃标记
+- **`@nodiscard` 支持**: 支持 `@nodiscard` 并可提供原因
 
-`NEW` 实现 `std.Unpack` 类型以提升 `unpack` 函数的类型推断，以及 `std.Rawget` 类型以提升 `rawget` 函数的类型推断
+### 🔧 改进优化
+- **配置文件编码支持**: 修复读取 UTF-8 BOM 编码的配置文件的问题
+- **调试器构建优化**: 调试器使用 zig 构建，现在可以在 glibc-2.17 系统上使用
 
-`NEW` 支持类似 `luals` 的 `generator` 实现
+### 🐛 问题修复
+- **性能问题修复**: 修复一些性能问题
 
-`FIX` 修复在嵌套闭包中丢失类型窄化的问题
+---
+
+## [0.9.18]
+
+### ✨ 新功能
+
+#### ⚙️ 全局配置支持
+- **全局配置文件**: 现在可以通过以下方式在全局提供语言服务器的配置：
+  - `<os-specific home dir>/.emmyrc.json`
+  - `<os-specific config dir>/emmylua_ls/.emmyrc.json`
+  - 环境变量 `EMMYLUALS_CONFIG`（指向 JSON 配置文件的路径）
+  
+  全局配置优先级低于本地配置。
+
+#### 🧠 泛型类推断
+- **泛型类型补全**: 现在类也可以从泛型类型中推断，并提供相应的补全
 
-`NEW` 改进了 lambda 函数的泛型参数推断，现在能更好地推断 lambda 函数的参数类型
+#### 🔍 数组索引安全
+- **数组返回值可空**: 数组返回值现在被视为可空类型。如果不想要这种行为，可以在配置文件中将 `strict.arrayIndex` 设置为 `false`
 
-`CHG` 将 `math.huge` 改为数字类型
+### 🔧 重构优化
+- **流程分析重构**: 重构了流程分析算法
 
-`FIX` 优化了可变泛型返回值的推断，现在可用于异步库返回值推断：
-```lua
---- @generic T, R
---- @param argc integer
---- @param func fun(...:T..., cb: fun(...:R...))
---- @return async fun(...:T...):R...
-local function wrap(argc, func) end
+### 🐛 问题修复
+- **Self 推断**: 修复了一些 self 推断的问题
+- **诊断动作**: 修复了一些诊断动作的问题
+- **类型检查优化**: 优化了一些类型检查
+- **补全功能优化**: 优化了一些补全功能
 
---- @param a string
---- @param b string
---- @param callback fun(out: string)
-local function system(a, b, callback) end
+---
 
-local wrapped = wrap(3, system)
-```
+## [0.9.17]
 
-`FIX` 优化了某些类型提示的渲染
+### 🔧 重构优化
 
-`NEW` 在代码补全中添加了模块和类型的文档提示
+#### 🧠 核心系统重构
+- **类型推断重构**: 重构类型推断系统
+- **成员推断重构**: 重构成员推断系统
 
-`NEW` 添加了交集类型的类型检查
+#### 📝 元组类型支持
+- **元组类型检查**: 优化并修复元组类型检查
+- **可变元组**: 支持在元组中使用可变类型，例如: `[string, integer...]`
 
-`NEW` 支持泛型约束检查、字符串模板参数类型检查和代码补全
+### ✨ 新功能
 
-`FIX` 修复当项目中存在大型 Lua 表时类型检查严重降低性能的问题，之前这会导致整个项目变得无响应
+#### 🔧 标准库优化
+- **pcall 推断优化**: 优化 pcall 推断，现在可以匹配 self 和别名
+- **range 迭代优化**: 对于 range 迭代变量，现在会去除 nil 类型
+- **标准库类型检查**: 优化部分标准库的类型检查
 
+#### 🎯 类型推断增强
+- **setmetatable 推断**: 支持从 setmetatable 中推断类型
+- **子类类型检查**: 优化子类与父类之间的类型检查规则
 
-# 0.9.20
+### 🔧 工具改进
+- **文档导出**: emmylua_doc_cli 将导出更多信息
+- **描述支持**: 允许 '-' 作为描述
 
-`FIX` 修复一个崩溃问题
+---
 
-`NEW` 支持函数的`@return_cast`注解。当函数的返回值是布尔值（必须标注为布尔值）时，可以添加额外的注解`---@return_cast <param> <cast op>`，表示当函数返回true时，参数`<param>`将根据转换操作转为相应类型。例如：
-```lua
----@return boolean
----@return_cast n integer
-local function isInteger(n)
-  return n == math.floor(n)
-end
+## [0.9.16]
 
-local a ---@type integer | string
+### 🔧 配置优化
 
-if isInteger(a) then
-  print(a) -- a: integer
-else
-  print(a) -- a: string
-end
-```
+#### 🔄 重新索引
+- **默认禁用重新索引**: 重新索引现在默认禁用，需要通过 `workspace.enableReindex` 启用
 
-`@return_cast`支持self参数。例如：
-```lua
----@class My2
+#### 🚨 诊断功能增强
+- **新增诊断类型**: 添加多种新的诊断：
+  - `inject_field` - 注入字段检查
+  - `missing_fields` - 缺失字段检查
+  - `redefined_local` - 重定义本地变量检查
+  - `undefined_field` - 未定义字段检查
+  - `inject-field` - 注入字段检查
+  - `missing-global-doc` - 缺失全局文档检查
+  - `incomplete-signature-doc` - 不完整签名文档检查
+  - `circle-doc-class` - 循环文档类检查
+  - `assign-type-mismatch` - 赋值类型不匹配检查
+  - `unbalanced_assignments` - 不平衡赋值检查
+  - `check_return_count` - 返回值数量检查
+  - `duplicate_require` - 重复 require 检查
+  - `circle_doc_class` - 循环文档类检查
+  - `incomplete_signature_doc` - 不完整签名文档检查
+  - `unnecessary_assert` - 不必要的断言检查
 
----@class My1
+### ✨ 新功能
 
----@class My3:My2,My1
-local m = {}
+#### 🔢 布尔类型支持
+- **布尔字面量类型**: 支持将 `true` 和 `false` 作为类型
 
+#### 🎨 语法兼容性
+- **LuaLS 函数返回语法**: 兼容格式化 luals 函数返回语法，如：`(name: string, age: number)`
 
----@return boolean
----@return_cast self My1
-function m:isMy1()
-end
+#### 🔄 迭代器增强
+- **迭代器类型推断**: 迭代器函数的别名和重载（例如 `fun(v: any): (K, V)`，其中 `K` 为键类型，`V` 为值类型）现用于推断 `for` 循环中的类型
 
----@return boolean
----@return_cast self My2
-function m:isMy2()
-end
+#### 📝 字符串模板
+- **LuaLS 字符串模板语法**: 兼容格式化 luals 字符串模板语法，如：xxx`T`、`T`、`T`XXX
+  ```lua
+  ---@generic T
+  ---@class aaa.`T`.bbb
+  ---@return T
+  function get_type(a)
+  end
 
-if m:isMy1() then
-  print(m) -- m: My1
-elseif m:isMy2() then
-  print(m) -- m: My2
-end
-```
+  local d = get_type('xxx') --- aaa.xxx.bbb
+  ```
 
-`CHG` 移除诊断`lua-syntax-error`，合并到`syntax-error`中，并添加`doc-syntax-error`用于文档语法错误
+#### 📚 文档功能
+- **`@see` 支持**: 支持 `@see` 任意内容
+- **模块文档导出**: 加强模块文档导出
+- **`@module` 用法**: 支持 `@module` 用法：`---@module "module path"`
 
-`FIX` 修复格式化问题，现在当存在`syntax-error`时，格式化将不返回值
+### 🐛 问题修复
+- **调试器更新**: 调试器更新, 修复一个可能的崩溃问题 (由 `@mxyf` 修复)
 
-`FIX` 修复性能问题：防止函数返回表时产生大量联合类型
+---
 
-`CHG` 当require函数返回的对象是类/枚举时，禁止在其上定义新成员，而表则不受限制
+## [0.9.15]
 
-`NEW` 支持`Lua 5.5`全局声明语法
+### ✨ 新功能
 
-`NEW` 支持`TypeGuard<T>`作为返回类型。例如：
-```lua
+#### 🔧 变量配置
+- **下划线变量配置**: 允许禁用可变变量的下划线显示
 
----@return TypeGuard<string>
-local function is_string(value)
-  return type(value) == "string"
-end
+#### 🔢 类型支持
+- **负整数类型**: 支持负整数类型
 
-local a
+#### 🎯 参数检查
+- **参数数量检查**: 函数参数检查将会检查参数数量是否过少，如果参数过少而后续参数没有显示标记可空则会报错
+- **可空参数描述**: 新增函数参数上的可空描述，比如 `---@param a? number`
 
-if is_string(a) then
-  print(a:sub(1, 1))
-else
-  print("a is not a string")
-end
-```
+#### 🔍 代码补全
+- **过滤补全项**: 支持过滤补全项
 
-# 0.9.19
+#### 📁 项目管理
+- **文件保存重新索引**: 在保存文件时支持重新索引项目
+- **模块导入增强**: 更好地支持在其他编辑器中 require 模块
 
-`FIX` 修复读取 UTF-8 BOM 编码的配置文件的问题
+#### 📝 字段继承
+- **字段函数定义继承**: 支持从 `@field` 注解继承函数定义的参数类型
 
-`NEW` 支持`调用层次结构`功能，但目前仅支持传入调用
+### 🔧 改进优化
+- **别名类型检查**: 修复别名类型检查问题
+- **流程分析重构**: 重构流程分析算法
+- **属性解包**: 修复属性解包问题
 
-`NEW` 支持新标签 `@internal` 用于成员或声明。当成员或声明被标记为 `@internal` 时，它仅在当前库内可见。这意味着如果你在一个库中使用 `@internal`，其他库或工作区无法访问此成员或声明。
+### 🚨 诊断增强
+- **新增诊断**: 支持检查 `redundant_parameter`、`redundant_return_value`、`missing_return_value`、`return_type_mismatch`
 
-`NEW` 支持`转到实现`功能
+---
 
-`NEW` 支持 `@nodiscard` 并可提供原因
+## [0.9.14]
 
-`FIX` 修复一些性能问题
+### 🔧 重构优化
 
-`NEW` 调试器使用 zig 构建，现在可以在 glibc-2.17 系统上使用
+#### 📁 代码折叠
+- **重构 `folding range`**: 重构代码折叠功能
 
-# 0.9.18
+### ✨ 新功能
 
-`NEW` 现在可以通过 `<os-specific home dir>/.emmyrc.json`、`<os-specific config dir>/emmylua_ls/.emmyrc.json`，或者设置环境变量 `EMMYLUALS_CONFIG`（指向 JSON 配置文件的路径）在全局提供语言服务器的配置。全局配置优先级低于本地配置。
+#### 🔧 字段函数重载
+- **`@field` 函数重载**: 支持 `@field` 函数重载
+  ```lua
+  ---@class AAA
+  ---@field event fun(s:string):string
+  ---@field event fun(s:number):number
+  ```
 
-`NEW` 现在类也可以从泛型类型中推断，并提供相应的补全。
+#### 🎯 类型系统增强
+- **联合类型重构**: 重构联合类型系统
+- **类型描述**: 为类型添加描述
+- **多联合类型描述**: 支持多联合类型中不带 `#` 的描述
 
-`CHG` 重构了流程分析算法
+#### 🌐 国际化
+- **标准库翻译**: 添加标准库翻译
 
-`NEW` 数组返回值现在被视为可空类型。如果不想要这种行为，可以在配置文件中将 `strict.arrayIndex` 设置为 `false`。
+#### 💡 智能提示
+- **参数内嵌提示优化**: 优化参数内嵌提示：如果参数名与变量名相同，则不显示参数名称
 
-`FIX` 修复了一些 self 推断的问题
+### 🐛 问题修复
+- **超类补全**: 修复超类补全问题
+- **枚举类型检查**: 修复枚举类型检查
+- **自定义运算符**: 修复自定义运算符推断
+- **select 函数**: 修复 select 函数并添加 std.Select 类型
 
-`FIX` 修复了一些诊断动作的问题
-
-`FIX` 优化了一些类型检查
-
-`FIX` 优化了一些补全功能
-
-# 0.9.17
-
-`CHG` 重构类型推断
-
-`CHG` 重构成员推断
-
-`FIX` 优化并修复元组类型检查
-
-`NEW` 支持在元组中使用可变类型，例如: `[string, integer...]`
-
-`FIX` 优化 pcall 推断，现在可以匹配 self 和别名
-
-`FIX` 对于 range 迭代变量，现在会去除 nil 类型
-
-`FIX` 优化部分标准库的类型检查
-
-`NEW` 支持从 setmetatable 中推断类型
-
-`NEW` emmylua_doc_cli 将导出更多信息
-
-`NEW` 优化子类与父类之间的类型检查规则
-
-`NEW` 允许 '-' 作为描述
-
-# 0.9.16
-
-`NEW` 默认禁用重新索引，需要通过 `workspace.enableReindex` 启用
-
-`NEW` 添加新的诊断：`inject_field`、`missing_fields`、`redefined_local`、`undefined_field`、`inject-field`、`missing-global-doc`、 
-`incomplete-signature-doc`、`circle-doc-class`、`assign-type-mismatch`、`unbalanced_assignments`、`check_return_count`、`duplicate_require`、`circle_doc_class`、`incomplete_signature_doc`、`unnecessary_assert`
-
-`NEW` 支持将 `true` 和 `false` 作为类型
-
-`NEW` 兼容格式化 luals 函数返回语法，如：`(name: string, age: number)`
-
-`NEW` 迭代器函数的别名和重载（例如 `fun(v: any): (K, V)`，其中 `K` 为键类型，`V` 为值类型）现用于推断 `for` 循环中的类型
-
-`NEW` 兼容格式化 luals 字符串模板语法，如：xxx`T`、`T`、`T`XXX，示例用法：
-```lua
----@generic T
----@class aaa.`T`.bbb
----@return T
-function get_type(a)
-end
-
-local d = get_type('xxx') --- aaa.xxx.bbb
-```
-
-`NEW` 支持 `@see` 任意内容
-
-`NEW` 加强模块文档导出
-
-`NEW` 支持 `@module` 用法：`---@module "module path"`
-
-`NEW` 调试器更新, 修复一个可能的崩溃问题 fixed by `@mxyf`
-
-# 0.9.15
-
-`NEW` 允许禁用可变变量的下划线
-
-`NEW` 支持负整数类型
-
-`Fix` 修复别名类型检查问题
-
-`CHG` 重构流程分析算法
-
-`FIX` 修复属性解包问题
-
-`NEW` 支持过滤补全项
-
-`NEW` 在保存文件时支持重新索引项目
-
-`NEW` 支持检查 `redundant_parameter`、`redundant_return_value`、`missing_return_value`、`return_type_mismatch`
-
-`NEW` 更好地支持在其他编辑器中 require 模块
-
-`NEW` 支持从 `@field` 注解继承函数定义的参数类型
-
-# 0.9.14
-`CHG` 重构 `folding range`
-
-`FIX` 修复超类补全问题
-
-`NEW` 支持 `@field` 函数重载，例如：
-```lua
----@class AAA
----@field event fun(s:string):string
----@field event fun(s:number):number
-```
-
-`FIX` 修复枚举类型检查
-
-`FIX` 自定义运算符推断
-
-`FIX` 修复 select 函数并添加 std.Select 类型
-
-`CHG` 重构联合类型
-
-`NEW` 为类型添加描述
-
-`NEW` 支持多联合类型中不带 `#` 的描述
-
-`NEW` 添加标准库翻译
-
-`NEW` 优化参数内嵌提示：如果参数名与变量名相同，则不显示参数名称
+---
 
 # 0.9.13
 `FIX` 修复 Unix 系统下 `emmylua_ls` 可能无法退出的问题。

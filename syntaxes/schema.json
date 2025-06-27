@@ -35,6 +35,7 @@
         "autoRequireFunction": "require",
         "autoRequireNamingConvention": "keep",
         "autoRequireSeparator": ".",
+        "baseFunctionIncludesName": true,
         "callSnippet": false,
         "enable": true,
         "postfix": "@"
@@ -76,6 +77,7 @@
         "enable": true,
         "indexHint": true,
         "localHint": true,
+        "metaCallHint": true,
         "overrideHint": true,
         "paramHint": true
       },
@@ -92,6 +94,16 @@
       "allOf": [
         {
           "$ref": "#/definitions/EmmyrcHover"
+        }
+      ]
+    },
+    "inlineValues": {
+      "default": {
+        "enable": true
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/EmmyrcInlineValues"
         }
       ]
     },
@@ -511,6 +523,13 @@
           "enum": [
             "generic-constraint-mismatch"
           ]
+        },
+        {
+          "description": "cast-type-mismatch",
+          "type": "string",
+          "enum": [
+            "cast-type-mismatch"
+          ]
         }
       ]
     },
@@ -593,6 +612,11 @@
           "description": "A separator used in auto-require paths.",
           "default": ".",
           "type": "string"
+        },
+        "baseFunctionIncludesName": {
+          "description": "Whether to include the name in the base function completion. effect: `function () end` -> `function name() end`.",
+          "default": true,
+          "type": "boolean"
         },
         "callSnippet": {
           "description": "Whether to use call snippets in completions.",
@@ -710,6 +734,13 @@
           "enum": [
             "camel-case"
           ]
+        },
+        {
+          "description": "When returning class definition, use class name, otherwise keep original name.",
+          "type": "string",
+          "enum": [
+            "keep-class"
+          ]
         }
       ]
     },
@@ -741,6 +772,11 @@
           "default": true,
           "type": "boolean"
         },
+        "metaCallHint": {
+          "description": "Whether to enable meta __call operator hints.",
+          "default": true,
+          "type": "boolean"
+        },
         "overrideHint": {
           "description": "Whether to enable override hints.",
           "default": true,
@@ -748,6 +784,16 @@
         },
         "paramHint": {
           "description": "Whether to enable parameter hints.",
+          "default": true,
+          "type": "boolean"
+        }
+      }
+    },
+    "EmmyrcInlineValues": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "description": "Whether to enable inline values.",
           "default": true,
           "type": "boolean"
         }

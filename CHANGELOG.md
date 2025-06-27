@@ -2,6 +2,89 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.23] - 2025-6-27
+
+### ✨ Added
+- **Support for Descriptions Above and After Tags**: You can now add descriptions both above a tag (as a preceding comment) and after a tag (inline). The description will be associated with the corresponding tag.
+  ```lua
+  ---@class A
+  --- Description below (applies to the @field a)
+  ---@field a integer inline-description
+  ---@field b integer # description after hash
+  --- Description above (applies to the @field b)
+  ---@field c integer inline-description
+  local a = {}
+  ```
+- **Add call `__call` hint**: Add call `__call` hint, enable by `hint.metaCallHint`
+  ```lua
+  ---@class A
+  ---@overload fun(a: integer): integer
+  local A
+  A(1) -- There will be a lightning prompt between `A` and `(` or a `new` prompt before `A`
+  ```
+
+- **Support syntax`--[[@cast -?]]`**: When `@cast` is followed by an operator instead of a name, it will convert the type of the previous expression, but currently only works for function calls!
+
+- **Quick Fix for Nil Removal**: Added quick fix action for `NeedCheckNil` diagnostic that suggests using `@cast` to remove nil type
+  ```lua
+  ---@class Cast1
+  ---@field get fun(self: self, a: number): Cast1?
+  local A
+
+  local _a = A:get(1) --[[@cast -?]]:get(2):get(3) -- Quick fix will prompt whether to automatically add `--[[@cast -?]]`
+  ```
+- **Base Function Name Completion**: Added `completion.baseFunctionIncludesName` configuration to control whether function names are included in base function completions
+  ```json
+  {
+    "completion": {
+      "baseFunctionIncludesName": true
+    }
+  }
+  ```
+  When enabled, function completions will include the function name: `function name() end` instead of `function () end`
+
+- **Cast Type Mismatch Diagnostic**: Added new diagnostic `CastTypeMismatch` to detect type mismatches in cast operations
+  ```lua
+  ---@type string
+  local a = "hello"
+  --[[@cast a int]] -- Warning
+  ```
+
+- **Auto Require Naming Convention Configuration**: Added `completion.autoRequireNamingConvention.keep-class` configuration option. When importing modules, if the return value is a class definition, the class name will be used; otherwise, the file name will be used
+  ```json
+  {
+    "completion": {
+      "autoRequireNamingConvention": "keep-class"
+    }
+  }
+  ```
+
+- **File rename prompts whether to update `require` paths**: Added prompt when renaming files to ask whether to update corresponding import statements
+
+
+### 🔧 Changed
+- **Class Method Completion**: When a function call jumps, if there are multiple declarations, It will then attempt to return the most matching definition along with all actual code declarations, rather than returning all definitions.
+
+- **Definition Jump Enhancement**: When jumping to definition from function calls, if the target is located in a return statement, the language server will now attempt to find the original definition. For example:
+  ```lua
+  -- test.lua
+  local function test()
+  end
+  return {
+      test = test,
+  }
+  ```
+  ```lua
+  local t = require("test")
+  local test = t.test -- Previously jumped to: test = test,
+  test() -- Now jumps to: local function test()
+  ```
+
+### 🐛 Fixed
+- **Enum Variable Parameter Issue**: Fixed a crash issue when checking enum variable as parameter
+- **Circle Doc Class Issue**: Fixed a bug that caused the language server to hang when
+- **Fix debugger crash**: Fixed a crash issue in the debugger
+
 # 0.9.22
 
 `CHG` Generic constraint (StrTplRef) removes the protection for string: 
