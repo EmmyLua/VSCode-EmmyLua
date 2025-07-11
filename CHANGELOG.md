@@ -2,6 +2,22 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.24] - 2025-7-11
+### 🔧 Changed
+
+- **Flow Inference Refactor**: Refactored flow analysis algorithm, now uses a TypeScript-like flow analysis approach for better handling of complex scenarios.
+- **Doc CLI**: Changed export format, now supports multiple `@see` and other tag flags.
+
+### ✨ Added
+
+- **TypeGuard Now Supports Generics**: You can now use generic parameters in TypeGuard, e.g. `TypeGuard<T>`.
+- **Type Narrowing by Constant Fields**: Supports type narrowing using constant fields.
+- **Basic Range Checking**: Array type indexing is now less frequently nullable.
+
+### 🐛 Fixed
+
+- **Bug Fixes**: Fixed various bugs.
+
 ## [0.9.23] - 2025-6-27
 
 ### ✨ Added
