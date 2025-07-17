@@ -149,7 +149,7 @@ async function doStartServer() {
         serverOptions = {
             command: configExecutablePath,
             args: [],
-            options: { env: {} }
+            options: { env: process.env }
         };
 
         let parameters = config.get<string[]>("emmylua.ls.startParameters");
