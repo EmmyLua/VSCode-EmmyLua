@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Emmyrc",
   "type": "object",
   "properties": {
@@ -10,26 +10,19 @@
       ]
     },
     "codeAction": {
+      "$ref": "#/$defs/EmmyrcCodeAction",
       "default": {
         "insertSpace": false
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcCodeAction"
-        }
-      ]
+      }
     },
     "codeLens": {
+      "$ref": "#/$defs/EmmyrcCodeLen",
       "default": {
         "enable": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcCodeLen"
-        }
-      ]
+      }
     },
     "completion": {
+      "$ref": "#/$defs/EmmyrcCompletion",
       "default": {
         "autoRequire": true,
         "autoRequireFunction": "require",
@@ -39,14 +32,10 @@
         "callSnippet": false,
         "enable": true,
         "postfix": "@"
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcCompletion"
-        }
-      ]
+      }
     },
     "diagnostics": {
+      "$ref": "#/$defs/EmmyrcDiagnostic",
       "default": {
         "diagnosticInterval": 500,
         "disable": [],
@@ -55,81 +44,61 @@
         "globals": [],
         "globalsRegex": [],
         "severity": {}
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcDiagnostic"
-        }
-      ]
+      }
+    },
+    "doc": {
+      "$ref": "#/$defs/EmmyrcDoc",
+      "default": {
+        "knownTags": [],
+        "privateName": []
+      }
     },
     "documentColor": {
+      "$ref": "#/$defs/EmmyrcDocumentColor",
       "default": {
         "enable": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcDocumentColor"
-        }
-      ]
+      }
     },
     "hint": {
+      "$ref": "#/$defs/EmmyrcInlayHint",
       "default": {
         "enable": true,
+        "enumParamHint": false,
         "indexHint": true,
         "localHint": true,
         "metaCallHint": true,
         "overrideHint": true,
         "paramHint": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcInlayHint"
-        }
-      ]
+      }
     },
     "hover": {
+      "$ref": "#/$defs/EmmyrcHover",
       "default": {
         "enable": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcHover"
-        }
-      ]
+      }
     },
     "inlineValues": {
+      "$ref": "#/$defs/EmmyrcInlineValues",
       "default": {
         "enable": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcInlineValues"
-        }
-      ]
+      }
     },
     "references": {
+      "$ref": "#/$defs/EmmyrcReference",
       "default": {
         "enable": true,
         "fuzzySearch": true,
         "shortStringSearch": false
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcReference"
-        }
-      ]
+      }
     },
     "resource": {
+      "$ref": "#/$defs/EmmyrcResource",
       "default": {
         "paths": []
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcResource"
-        }
-      ]
+      }
     },
     "runtime": {
+      "$ref": "#/$defs/EmmyrcRuntime",
       "default": {
         "classDefaultCall": {
           "forceNonColon": false,
@@ -141,48 +110,32 @@
         "requireLikeFunction": [],
         "requirePattern": [],
         "version": "LuaLatest"
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcRuntime"
-        }
-      ]
+      }
     },
     "semanticTokens": {
+      "$ref": "#/$defs/EmmyrcSemanticToken",
       "default": {
         "enable": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcSemanticToken"
-        }
-      ]
+      }
     },
     "signature": {
+      "$ref": "#/$defs/EmmyrcSignature",
       "default": {
         "detailSignatureHelper": true
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcSignature"
-        }
-      ]
+      }
     },
     "strict": {
+      "$ref": "#/$defs/EmmyrcStrict",
       "default": {
         "arrayIndex": true,
         "docBaseConstMatchBaseType": true,
         "metaOverrideFileDefine": true,
         "requirePath": false,
         "typeCall": false
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcStrict"
-        }
-      ]
+      }
     },
     "workspace": {
+      "$ref": "#/$defs/EmmyrcWorkspace",
       "default": {
         "enableReindex": false,
         "encoding": "utf-8",
@@ -193,32 +146,27 @@
         "preloadFileSize": 0,
         "reindexDuration": 5000,
         "workspaceRoots": []
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EmmyrcWorkspace"
-        }
-      ]
+      }
     }
   },
-  "definitions": {
+  "$defs": {
     "ClassDefaultCall": {
       "type": "object",
       "properties": {
         "forceNonColon": {
           "description": "Mandatory non`:` definition. When `function_name` is not empty, it takes effect.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "forceReturnSelf": {
           "description": "Force to return `self`.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "functionName": {
           "description": "class default overload function. eg. \"__init\".",
-          "default": "",
-          "type": "string"
+          "type": "string",
+          "default": ""
         }
       }
     },
@@ -233,303 +181,232 @@
         {
           "description": "Syntax error",
           "type": "string",
-          "enum": [
-            "syntax-error"
-          ]
+          "const": "syntax-error"
         },
         {
           "description": "Doc syntax error",
           "type": "string",
-          "enum": [
-            "doc-syntax-error"
-          ]
+          "const": "doc-syntax-error"
         },
         {
           "description": "Type not found",
           "type": "string",
-          "enum": [
-            "type-not-found"
-          ]
+          "const": "type-not-found"
         },
         {
           "description": "Missing return statement",
           "type": "string",
-          "enum": [
-            "missing-return"
-          ]
+          "const": "missing-return"
         },
         {
           "description": "Param Type not match",
           "type": "string",
-          "enum": [
-            "param-type-not-match"
-          ]
+          "const": "param-type-not-match"
         },
         {
           "description": "Missing parameter",
           "type": "string",
-          "enum": [
-            "missing-parameter"
-          ]
+          "const": "missing-parameter"
         },
         {
           "description": "Redundant parameter",
           "type": "string",
-          "enum": [
-            "redundant-parameter"
-          ]
+          "const": "redundant-parameter"
         },
         {
           "description": "Unreachable code",
           "type": "string",
-          "enum": [
-            "unreachable-code"
-          ]
+          "const": "unreachable-code"
         },
         {
           "description": "Unused",
           "type": "string",
-          "enum": [
-            "unused"
-          ]
+          "const": "unused"
         },
         {
           "description": "Undefined global",
           "type": "string",
-          "enum": [
-            "undefined-global"
-          ]
+          "const": "undefined-global"
         },
         {
           "description": "Deprecated",
           "type": "string",
-          "enum": [
-            "deprecated"
-          ]
+          "const": "deprecated"
         },
         {
           "description": "Access invisible",
           "type": "string",
-          "enum": [
-            "access-invisible"
-          ]
+          "const": "access-invisible"
         },
         {
           "description": "Discard return value",
           "type": "string",
-          "enum": [
-            "discard-returns"
-          ]
+          "const": "discard-returns"
         },
         {
           "description": "Undefined field",
           "type": "string",
-          "enum": [
-            "undefined-field"
-          ]
+          "const": "undefined-field"
         },
         {
           "description": "Local const reassign",
           "type": "string",
-          "enum": [
-            "local-const-reassign"
-          ]
+          "const": "local-const-reassign"
         },
         {
           "description": "Iter variable reassign",
           "type": "string",
-          "enum": [
-            "iter-variable-reassign"
-          ]
+          "const": "iter-variable-reassign"
         },
         {
           "description": "Duplicate type",
           "type": "string",
-          "enum": [
-            "duplicate-type"
-          ]
+          "const": "duplicate-type"
         },
         {
           "description": "Redefined local",
           "type": "string",
-          "enum": [
-            "redefined-local"
-          ]
+          "const": "redefined-local"
         },
         {
           "description": "Redefined label",
           "type": "string",
-          "enum": [
-            "redefined-label"
-          ]
+          "const": "redefined-label"
         },
         {
           "description": "Code style check",
           "type": "string",
-          "enum": [
-            "code-style-check"
-          ]
+          "const": "code-style-check"
         },
         {
           "description": "Need check nil",
           "type": "string",
-          "enum": [
-            "need-check-nil"
-          ]
+          "const": "need-check-nil"
         },
         {
           "description": "Await in sync",
           "type": "string",
-          "enum": [
-            "await-in-sync"
-          ]
+          "const": "await-in-sync"
         },
         {
           "description": "Doc tag usage error",
           "type": "string",
-          "enum": [
-            "annotation-usage-error"
-          ]
+          "const": "annotation-usage-error"
         },
         {
           "description": "Return type mismatch",
           "type": "string",
-          "enum": [
-            "return-type-mismatch"
-          ]
+          "const": "return-type-mismatch"
         },
         {
           "description": "Missing return value",
           "type": "string",
-          "enum": [
-            "missing-return-value"
-          ]
+          "const": "missing-return-value"
         },
         {
           "description": "Redundant return value",
           "type": "string",
-          "enum": [
-            "redundant-return-value"
-          ]
+          "const": "redundant-return-value"
         },
         {
           "description": "Undefined Doc Param",
           "type": "string",
-          "enum": [
-            "undefined-doc-param"
-          ]
+          "const": "undefined-doc-param"
         },
         {
           "description": "Duplicate doc field",
           "type": "string",
-          "enum": [
-            "duplicate-doc-field"
-          ]
+          "const": "duplicate-doc-field"
+        },
+        {
+          "description": "Unknown doc annotation",
+          "type": "string",
+          "const": "unknown-doc-tag"
         },
         {
           "description": "Missing fields",
           "type": "string",
-          "enum": [
-            "missing-fields"
-          ]
+          "const": "missing-fields"
         },
         {
           "description": "Inject Field",
           "type": "string",
-          "enum": [
-            "inject-field"
-          ]
+          "const": "inject-field"
         },
         {
           "description": "Circle Doc Class",
           "type": "string",
-          "enum": [
-            "circle-doc-class"
-          ]
+          "const": "circle-doc-class"
         },
         {
           "description": "Incomplete signature doc",
           "type": "string",
-          "enum": [
-            "incomplete-signature-doc"
-          ]
+          "const": "incomplete-signature-doc"
         },
         {
           "description": "Missing global doc",
           "type": "string",
-          "enum": [
-            "missing-global-doc"
-          ]
+          "const": "missing-global-doc"
         },
         {
           "description": "Assign type mismatch",
           "type": "string",
-          "enum": [
-            "assign-type-mismatch"
-          ]
+          "const": "assign-type-mismatch"
         },
         {
           "description": "Duplicate require",
           "type": "string",
-          "enum": [
-            "duplicate-require"
-          ]
+          "const": "duplicate-require"
         },
         {
           "description": "non-literal-expressions-in-assert",
           "type": "string",
-          "enum": [
-            "non-literal-expressions-in-assert"
-          ]
+          "const": "non-literal-expressions-in-assert"
         },
         {
           "description": "Unbalanced assignments",
           "type": "string",
-          "enum": [
-            "unbalanced-assignments"
-          ]
+          "const": "unbalanced-assignments"
         },
         {
           "description": "unnecessary-assert",
           "type": "string",
-          "enum": [
-            "unnecessary-assert"
-          ]
+          "const": "unnecessary-assert"
         },
         {
           "description": "unnecessary-if",
           "type": "string",
-          "enum": [
-            "unnecessary-if"
-          ]
+          "const": "unnecessary-if"
         },
         {
           "description": "duplicate-set-field",
           "type": "string",
-          "enum": [
-            "duplicate-set-field"
-          ]
+          "const": "duplicate-set-field"
         },
         {
           "description": "duplicate-index",
           "type": "string",
-          "enum": [
-            "duplicate-index"
-          ]
+          "const": "duplicate-index"
         },
         {
           "description": "generic-constraint-mismatch",
           "type": "string",
-          "enum": [
-            "generic-constraint-mismatch"
-          ]
+          "const": "generic-constraint-mismatch"
         },
         {
           "description": "cast-type-mismatch",
           "type": "string",
-          "enum": [
-            "cast-type-mismatch"
-          ]
+          "const": "cast-type-mismatch"
+        },
+        {
+          "description": "require-module-not-visible",
+          "type": "string",
+          "const": "require-module-not-visible"
+        },
+        {
+          "description": "enum-value-mismatch",
+          "type": "string",
+          "const": "enum-value-mismatch"
         }
       ]
     },
@@ -538,30 +415,22 @@
         {
           "description": "Represents an error diagnostic severity.",
           "type": "string",
-          "enum": [
-            "error"
-          ]
+          "const": "error"
         },
         {
           "description": "Represents a warning diagnostic severity.",
           "type": "string",
-          "enum": [
-            "warning"
-          ]
+          "const": "warning"
         },
         {
           "description": "Represents an information diagnostic severity.",
           "type": "string",
-          "enum": [
-            "information"
-          ]
+          "const": "information"
         },
         {
           "description": "Represents a hint diagnostic severity.",
           "type": "string",
-          "enum": [
-            "hint"
-          ]
+          "const": "hint"
         }
       ]
     },
@@ -570,8 +439,8 @@
       "properties": {
         "insertSpace": {
           "description": "Whether to insert space after '---'",
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -580,8 +449,8 @@
       "properties": {
         "enable": {
           "description": "Whether to enable code lens.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -591,47 +460,43 @@
       "properties": {
         "autoRequire": {
           "description": "Whether to automatically require modules.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "autoRequireFunction": {
           "description": "The function used for auto-requiring modules.",
-          "default": "require",
-          "type": "string"
+          "type": "string",
+          "default": "require"
         },
         "autoRequireNamingConvention": {
           "description": "The naming convention for auto-required filenames.",
-          "default": "keep",
-          "allOf": [
-            {
-              "$ref": "#/definitions/EmmyrcFilenameConvention"
-            }
-          ]
+          "$ref": "#/$defs/EmmyrcFilenameConvention",
+          "default": "keep"
         },
         "autoRequireSeparator": {
           "description": "A separator used in auto-require paths.",
-          "default": ".",
-          "type": "string"
+          "type": "string",
+          "default": "."
         },
         "baseFunctionIncludesName": {
           "description": "Whether to include the name in the base function completion. effect: `function () end` -> `function name() end`.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "callSnippet": {
           "description": "Whether to use call snippets in completions.",
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "enable": {
           "description": "Whether to enable code completion.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "postfix": {
           "description": "The postfix trigger used in completions.",
-          "default": "@",
-          "type": "string"
+          "type": "string",
+          "default": "@"
         }
       }
     },
@@ -646,51 +511,72 @@
             "null"
           ],
           "format": "uint64",
-          "minimum": 0.0
+          "minimum": 0
         },
         "disable": {
           "description": "A list of diagnostic codes that are disabled.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
-            "$ref": "#/definitions/DiagnosticCode"
+            "$ref": "#/$defs/DiagnosticCode"
           }
         },
         "enable": {
           "description": "A flag indicating whether diagnostics are enabled.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "enables": {
           "description": "A list of diagnostic codes that are enabled.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
-            "$ref": "#/definitions/DiagnosticCode"
+            "$ref": "#/$defs/DiagnosticCode"
           }
         },
         "globals": {
           "description": "A list of global variables.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "globalsRegex": {
           "description": "A list of regular expressions for global variables.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "severity": {
           "description": "A map of diagnostic codes to their severity settings.",
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/DiagnosticSeveritySetting"
+            "$ref": "#/$defs/DiagnosticSeveritySetting"
+          },
+          "default": {}
+        }
+      }
+    },
+    "EmmyrcDoc": {
+      "type": "object",
+      "properties": {
+        "knownTags": {
+          "description": "List of known documentation tags.",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "privateName": {
+          "description": "Treat specific field names as private, e.g. `m_*` means `XXX.m_id` and `XXX.m_type` are private, witch can only be accessed in the class where the definition is located.",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
           }
         }
       }
@@ -700,8 +586,8 @@
       "properties": {
         "enable": {
           "description": "Whether to enable document color.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -710,37 +596,27 @@
         {
           "description": "Keep the original filename.",
           "type": "string",
-          "enum": [
-            "keep"
-          ]
+          "const": "keep"
         },
         {
           "description": "Convert the filename to snake_case.",
           "type": "string",
-          "enum": [
-            "snake-case"
-          ]
+          "const": "snake-case"
         },
         {
           "description": "Convert the filename to PascalCase.",
           "type": "string",
-          "enum": [
-            "pascal-case"
-          ]
+          "const": "pascal-case"
         },
         {
           "description": "Convert the filename to camelCase.",
           "type": "string",
-          "enum": [
-            "camel-case"
-          ]
+          "const": "camel-case"
         },
         {
           "description": "When returning class definition, use class name, otherwise keep original name.",
           "type": "string",
-          "enum": [
-            "keep-class"
-          ]
+          "const": "keep-class"
         }
       ]
     },
@@ -749,8 +625,8 @@
       "properties": {
         "enable": {
           "description": "Whether to enable hover.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -759,33 +635,38 @@
       "properties": {
         "enable": {
           "description": "Whether to enable inlay hints.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
+        },
+        "enumParamHint": {
+          "description": "Whether to enable enum parameter hints.",
+          "type": "boolean",
+          "default": false
         },
         "indexHint": {
           "description": "Whether to enable index hints.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "localHint": {
-          "description": "Whether to enable local hints. Whether to enable override hints.",
-          "default": true,
-          "type": "boolean"
+          "description": "Whether to enable local hints.\nWhether to enable override hints.",
+          "type": "boolean",
+          "default": true
         },
         "metaCallHint": {
           "description": "Whether to enable meta __call operator hints.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "overrideHint": {
           "description": "Whether to enable override hints.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "paramHint": {
           "description": "Whether to enable parameter hints.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -794,8 +675,8 @@
       "properties": {
         "enable": {
           "description": "Whether to enable inline values.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -804,51 +685,37 @@
         {
           "description": "Lua 5.1",
           "type": "string",
-          "enum": [
-            "Lua5.1"
-          ]
+          "const": "Lua5.1"
         },
         {
           "description": "LuaJIT",
           "type": "string",
-          "enum": [
-            "LuaJIT"
-          ]
+          "const": "LuaJIT"
         },
         {
           "description": "Lua 5.2",
           "type": "string",
-          "enum": [
-            "Lua5.2"
-          ]
+          "const": "Lua5.2"
         },
         {
           "description": "Lua 5.3",
           "type": "string",
-          "enum": [
-            "Lua5.3"
-          ]
+          "const": "Lua5.3"
         },
         {
           "description": "Lua 5.4",
           "type": "string",
-          "enum": [
-            "Lua5.4"
-          ]
+          "const": "Lua5.4"
         },
         {
           "description": "Lua 5.5",
           "type": "string",
-          "enum": [
-            "Lua5.5"
-          ]
+          "const": "Lua5.5"
         },
         {
           "description": "Lua Latest",
           "type": "string",
-          "enum": [
-            "LuaLatest"
-          ]
+          "const": "LuaLatest"
         }
       ]
     },
@@ -857,18 +724,18 @@
       "properties": {
         "enable": {
           "description": "Whether to enable reference search.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "fuzzySearch": {
           "description": "Determines whether to enable fuzzy searching for fields where references cannot be found.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "shortStringSearch": {
           "description": "Cache Short string for search",
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -876,8 +743,8 @@
       "type": "object",
       "properties": {
         "paths": {
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
@@ -889,57 +756,49 @@
       "properties": {
         "classDefaultCall": {
           "description": "class default overload function.",
+          "$ref": "#/$defs/ClassDefaultCall",
           "default": {
             "forceNonColon": false,
             "forceReturnSelf": false,
             "functionName": ""
-          },
-          "allOf": [
-            {
-              "$ref": "#/definitions/ClassDefaultCall"
-            }
-          ]
+          }
         },
         "extensions": {
           "description": "file Extensions. eg: .lua, .lua.txt",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "frameworkVersions": {
           "description": "Framework versions.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "requireLikeFunction": {
           "description": "Functions that like require.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "requirePattern": {
           "description": "Require pattern. eg. \"?.lua\", \"?/init.lua\"",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "version": {
           "description": "Lua version.",
-          "default": "LuaLatest",
-          "allOf": [
-            {
-              "$ref": "#/definitions/EmmyrcLuaVersion"
-            }
-          ]
+          "$ref": "#/$defs/EmmyrcLuaVersion",
+          "default": "LuaLatest"
         }
       }
     },
@@ -948,8 +807,8 @@
       "properties": {
         "enable": {
           "description": "Whether to enable semantic token.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -958,8 +817,8 @@
       "properties": {
         "detailSignatureHelper": {
           "description": "Whether to enable signature help.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         }
       }
     },
@@ -968,27 +827,27 @@
       "properties": {
         "arrayIndex": {
           "description": "Whether to enable strict mode array indexing.",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "docBaseConstMatchBaseType": {
           "description": "Base constant types defined in doc can match base types, allowing int to match `---@alias id 1|2|3`, same for string.",
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "metaOverrideFileDefine": {
           "description": "meta define overrides file define",
-          "default": true,
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "requirePath": {
           "description": "Whether to enable strict mode require path.",
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "typeCall": {
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -997,62 +856,62 @@
       "properties": {
         "enableReindex": {
           "description": "Enable reindex.",
-          "default": false,
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         },
         "encoding": {
           "description": "Encoding. eg: \"utf-8\"",
-          "default": "utf-8",
-          "type": "string"
+          "type": "string",
+          "default": "utf-8"
         },
         "ignoreDir": {
           "description": "Ignore directories.",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "ignoreGlobs": {
           "description": "Ignore globs. eg: [\"**/*.lua\"]",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "library": {
           "description": "Library paths. eg: \"/usr/local/share/lua/5.1\"",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
         },
         "moduleMap": {
-          "description": "Module map. key is regex, value is new module regex eg: { \"^(.*)$\": \"module_$1\" \"^lib(.*)$\": \"script$1\" }",
-          "default": [],
+          "description": "Module map. key is regex, value is new module regex\neg: {\n    \"^(.*)$\": \"module_$1\"\n    \"^lib(.*)$\": \"script$1\"\n}",
           "type": "array",
+          "default": [],
           "items": {
-            "$ref": "#/definitions/EmmyrcWorkspaceModuleMap"
+            "$ref": "#/$defs/EmmyrcWorkspaceModuleMap"
           }
         },
         "preloadFileSize": {
-          "default": 0,
           "type": "integer",
-          "format": "int32"
+          "format": "int32",
+          "default": 0
         },
         "reindexDuration": {
           "description": "when save a file, ls will reindex the workspace after reindex_duration milliseconds.",
-          "default": 5000,
           "type": "integer",
           "format": "uint64",
-          "minimum": 0.0
+          "default": 5000,
+          "minimum": 0
         },
         "workspaceRoots": {
           "description": "Workspace roots. eg: [\"src\", \"test\"]",
-          "default": [],
           "type": "array",
+          "default": [],
           "items": {
             "type": "string"
           }
@@ -1061,10 +920,6 @@
     },
     "EmmyrcWorkspaceModuleMap": {
       "type": "object",
-      "required": [
-        "pattern",
-        "replace"
-      ],
       "properties": {
         "pattern": {
           "type": "string"
@@ -1072,7 +927,11 @@
         "replace": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "pattern",
+        "replace"
+      ]
     }
   }
 }

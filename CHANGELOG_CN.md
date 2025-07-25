@@ -1,5 +1,42 @@
 # 🚀 Change Log
 
+## [0.9.25] - 2025-7-25
+### 🔧 Changed
+- **Refactor generic function inference**: Lambda function parameters now use deferred matching, allowing generic types to be inferred from other parameters first. For example:
+```lua
+---@generic T
+---@param f1 fun(...: T...): any
+---@param ... T...
+function invoke(f1, ...)
+    
+end
+
+invoke(function(a, b, c) -- infer as: integer, integer, integer
+    print(a, b, c)
+end, 1, 2, 3)
+```
+
+- **Generic Type Decay**: Now, generic types that match constants of integer, string, float, or boolean will be directly converted to their corresponding general types.
+
+### ✨ Added
+- **Use Mimalloc**: Mimalloc is now the default memory allocator, improving performance and memory management. Startup performance is increased by about 50%.
+- **Lua 5.5 Syntax Support**: More complete support for Lua 5.5 syntax, including `global` declarations, `table.create`, and the new attribute syntax. For example:
+```lua
+local <const> a, b, c = 1, 2, 3
+global <const> d, e, f
+```
+Also supports immutability checks for iterator variables in for loop statements.
+
+
+- **Doc Cli Modification**: Improved the documentation CLI to better handle various edge cases and provide more accurate suggestions.
+
+### 🐛 Fixed
+
+- **Fix load order**: Fixed an issue where the order of loading files could lead to incorrect type inference.
+- **Fix Unpack infer**: Fixed an issue where unpacking a table in a table.
+- **Fix rename in @param**: Fixed an issue where renaming a parameter in a function param.
+
+
 ## [0.9.24] - 2025-7-11
 ### 🔧 改进优化
 
