@@ -2,6 +2,12 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.26] - 2025-7-27
+### 🐛 Fixed
+- **Fix create an empty directory**:  Fixed an issue where the language server would create an empty directory.
+### 🔧 Changed
+- **Rust Edition 2024**: The language server is now built with Rust Edition 2024, which brings various performance and stability improvements.
+
 ## [0.9.25] - 2025-7-25
 ### 🔧 Changed
 - **Refactor generic function inference**: Lambda function parameters now use deferred matching, allowing generic types to be inferred from other parameters first. For example:

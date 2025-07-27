@@ -1,40 +1,45 @@
 # 🚀 Change Log
 
+## [0.9.26] - 2025-7-27
+### 🐛 问题修复
+- **修复创建空目录问题**：修复了语言服务器会创建空目录的问题。
+### 🔧 变更
+- **Rust 2024 版本**：语言服务器现已使用 Rust Edition 2024 构建，带来多项性能和稳定性提升。
+
 ## [0.9.25] - 2025-7-25
-### 🔧 Changed
-- **Refactor generic function inference**: Lambda function parameters now use deferred matching, allowing generic types to be inferred from other parameters first. For example:
+### 🔧 变更
+- **重构泛型函数推断**：Lambda 函数参数现在采用延迟匹配，允许泛型类型优先从其他参数推断。例如：
 ```lua
 ---@generic T
 ---@param f1 fun(...: T...): any
 ---@param ... T...
 function invoke(f1, ...)
-    
+  
 end
 
-invoke(function(a, b, c) -- infer as: integer, integer, integer
-    print(a, b, c)
+invoke(function(a, b, c) -- 推断为：integer, integer, integer
+  print(a, b, c)
 end, 1, 2, 3)
 ```
 
-- **Generic Type Decay**: Now, generic types that match constants of integer, string, float, or boolean will be directly converted to their corresponding general types.
+- **泛型类型衰减**：现在，泛型类型如果匹配到 integer、string、float 或 boolean 常量，将直接转换为对应的基础类型。
 
-### ✨ Added
-- **Use Mimalloc**: Mimalloc is now the default memory allocator, improving performance and memory management. Startup performance is increased by about 50%.
-- **Lua 5.5 Syntax Support**: More complete support for Lua 5.5 syntax, including `global` declarations, `table.create`, and the new attribute syntax. For example:
+### ✨ 新增
+- **默认使用 Mimalloc**：Mimalloc 现为默认内存分配器，提升了性能和内存管理，启动性能提升约 50%。
+- **Lua 5.5 语法支持**：更完整地支持 Lua 5.5 语法，包括 `global` 声明、`table.create` 以及新的属性语法。例如：
 ```lua
 local <const> a, b, c = 1, 2, 3
 global <const> d, e, f
 ```
-Also supports immutability checks for iterator variables in for loop statements.
+同时支持 for 循环语句中迭代变量的不可变性检查。
 
+- **文档 CLI 优化**：改进了文档 CLI，更好地处理各种边界情况并提供更准确的建议。
 
-- **Doc Cli Modification**: Improved the documentation CLI to better handle various edge cases and provide more accurate suggestions.
+### 🐛 问题修复
 
-### 🐛 Fixed
-
-- **Fix load order**: Fixed an issue where the order of loading files could lead to incorrect type inference.
-- **Fix Unpack infer**: Fixed an issue where unpacking a table in a table.
-- **Fix rename in @param**: Fixed an issue where renaming a parameter in a function param.
+- **修复加载顺序问题**：修复了文件加载顺序可能导致类型推断错误的问题。
+- **修复 Unpack 推断**：修复了解包表时的推断问题。
+- **修复 @param 重命名**：修复了函数参数重命名时 @param 注释未同步的问题。
 
 
 ## [0.9.24] - 2025-7-11
