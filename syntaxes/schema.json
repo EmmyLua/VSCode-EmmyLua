@@ -16,7 +16,7 @@
       }
     },
     "codeLens": {
-      "$ref": "#/$defs/EmmyrcCodeLen",
+      "$ref": "#/$defs/EmmyrcCodeLens",
       "default": {
         "enable": true
       }
@@ -438,19 +438,21 @@
       "type": "object",
       "properties": {
         "insertSpace": {
-          "description": "Whether to insert space after '---'",
+          "description": "Add space after `---` comments when inserting `@diagnostic disable-next-line`.",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "x-vscode-setting": true
         }
       }
     },
-    "EmmyrcCodeLen": {
+    "EmmyrcCodeLens": {
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable code lens.",
+          "description": "Enable code lens.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         }
       }
     },
@@ -459,9 +461,10 @@
       "type": "object",
       "properties": {
         "autoRequire": {
-          "description": "Whether to automatically require modules.",
+          "description": "Automatically insert call to `require` when autocompletion\ninserts objects from other modules.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "autoRequireFunction": {
           "description": "The function used for auto-requiring modules.",
@@ -479,9 +482,10 @@
           "default": "."
         },
         "baseFunctionIncludesName": {
-          "description": "Whether to include the name in the base function completion. effect: `function () end` -> `function name() end`.",
+          "description": "Whether to include the name in the base function completion. Effect: `function () end` -> `function name() end`.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "callSnippet": {
           "description": "Whether to use call snippets in completions.",
@@ -489,14 +493,34 @@
           "default": false
         },
         "enable": {
-          "description": "Whether to enable code completion.",
+          "description": "Enable autocompletion.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "postfix": {
-          "description": "The postfix trigger used in completions.",
+          "description": "Symbol that's used to trigger postfix autocompletion.",
           "type": "string",
-          "default": "@"
+          "default": "@",
+          "x-vscode-setting": {
+            "default": null,
+            "enum": [
+              null,
+              "@",
+              ".",
+              ":"
+            ],
+            "enumItemLabels": [
+              "Default"
+            ],
+            "markdownEnumDescriptions": [
+              "%config.common.enum.default.description%"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          }
         }
       }
     },
@@ -505,13 +529,14 @@
       "type": "object",
       "properties": {
         "diagnosticInterval": {
-          "description": "The interval in milliseconds to perform diagnostics.",
+          "description": "Delay between opening/changing a file and scanning it for errors, in milliseconds.",
           "type": [
             "integer",
             "null"
           ],
           "format": "uint64",
-          "minimum": 0
+          "minimum": 0,
+          "x-vscode-setting": true
         },
         "disable": {
           "description": "A list of diagnostic codes that are disabled.",
@@ -585,9 +610,10 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable document color.",
+          "description": "Enable parsing strings for color tags and showing a color picker next to them.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         }
       }
     },
@@ -624,9 +650,10 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable hover.",
+          "description": "Enable showing documentation on hover.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         }
       }
     },
@@ -634,39 +661,46 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable inlay hints.",
+          "description": "Enable inlay hints.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "enumParamHint": {
-          "description": "Whether to enable enum parameter hints.",
+          "description": "Show name of enumerator when passing a literal value to a function\nthat expects an enum.\n\nExample:\n\n```lua\n--- @enum Level\nlocal Foo = {\n   Info = 1,\n   Error = 2,\n}\n\n--- @param l Level\nfunction print_level(l) end\n\nprint_level(1 --[[ Hint: Level.Info ]])\n```",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "x-vscode-setting": true
         },
         "indexHint": {
-          "description": "Whether to enable index hints.",
+          "description": "Show named array indexes.\n\nExample:\n\n```lua\nlocal array = {\n   [1] = 1, -- [name]\n}\n\nprint(array[1] --[[ Hint: name ]])\n```",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "localHint": {
-          "description": "Whether to enable local hints.\nWhether to enable override hints.",
+          "description": "Show types of local variables.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "metaCallHint": {
-          "description": "Whether to enable meta __call operator hints.",
+          "description": "Show hint when calling an object results in a call to\nits meta table's `__call` function.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "overrideHint": {
-          "description": "Whether to enable override hints.",
+          "description": "Show methods that override functions from base class.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "paramHint": {
-          "description": "Whether to enable parameter hints.",
+          "description": "Show parameter names in function calls and parameter types in function definitions.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         }
       }
     },
@@ -674,9 +708,10 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable inline values.",
+          "description": "Show inline values during debug.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         }
       }
     },
@@ -723,19 +758,22 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable reference search.",
+          "description": "Enable searching for symbol usages.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "fuzzySearch": {
-          "description": "Determines whether to enable fuzzy searching for fields where references cannot be found.",
+          "description": "Use fuzzy search when searching for symbol usages\nand normal search didn't find anything.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         },
         "shortStringSearch": {
-          "description": "Cache Short string for search",
+          "description": "Also search for usages in strings.",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "x-vscode-setting": true
         }
       }
     },
@@ -806,9 +844,10 @@
       "type": "object",
       "properties": {
         "enable": {
-          "description": "Whether to enable semantic token.",
+          "description": "Enable semantic tokens.",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "x-vscode-setting": true
         }
       }
     },
@@ -855,9 +894,10 @@
       "type": "object",
       "properties": {
         "enableReindex": {
-          "description": "Enable reindex.",
+          "description": "Enable full project reindex after changing a file.",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "x-vscode-setting": true
         },
         "encoding": {
           "description": "Encoding. eg: \"utf-8\"",
@@ -902,11 +942,12 @@
           "default": 0
         },
         "reindexDuration": {
-          "description": "when save a file, ls will reindex the workspace after reindex_duration milliseconds.",
+          "description": "Delay between changing a file and full project reindex, in milliseconds.",
           "type": "integer",
           "format": "uint64",
           "default": 5000,
-          "minimum": 0
+          "minimum": 0,
+          "x-vscode-setting": true
         },
         "workspaceRoots": {
           "description": "Workspace roots. eg: [\"src\", \"test\"]",

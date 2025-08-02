@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { AnnotatorType } from './lspExt';
 import { LanguageClient } from 'vscode-languageclient/node';
 import * as notifications from "./lspExt";
+import { get } from './configRenames';
 
 
 let D_PARAM: vscode.TextEditorDecorationType;
@@ -55,8 +56,12 @@ function updateDecorations() {
     D_PARAM = createDecoration("colors.parameter");
     D_GLOBAL = createDecoration("colors.global");
     D_LOCAL = createDecoration("colors.local");
-    let mutable_underline = vscode.workspace.getConfiguration("emmylua").get("colors.mutable_underline");
-    if (mutable_underline) {
+    let config = vscode.workspace.getConfiguration(
+        undefined,
+        vscode.workspace.workspaceFolders?.[0]
+    );
+    let mutableUnderline = get<string>(config, "emmylua.colors.mutableUnderline");
+    if (mutableUnderline) {
         D_MUT_LOCAL = createDecorationUnderline("colors.local");
         D_MUT_PARAM = createDecorationUnderline("colors.parameter");
     }

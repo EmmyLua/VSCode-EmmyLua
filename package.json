@@ -261,70 +261,670 @@
                 ]
             }
         ],
-        "configuration": {
-            "title": "EmmyLua",
-            "properties": {
-                "emmylua.colors.parameter": {
-                    "type": "string",
-                    "default": "#9FFC"
-                },
-                "emmylua.colors.global": {
-                    "type": "string",
-                    "default": "#FF6699"
-                },
-                "emmylua.colors.local": {
-                    "type": "string",
-                    "default": ""
-                },
-                "emmylua.colors.mutable_underline": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Mutable variable underline"
-                },
-                "emmylua.develop.port" : {
-                    "type": "number",
-                    "default": 5007,
-                    "description": "%config.develop.port%"
-                },
-                "emmylua.ls.startParameters": {
-                    "type": "array",
-                    "default": []
-                },
-                "emmylua.misc.autoInsertTripleDash": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "%config.autoInsertTripleDash.description%"
-                },
-                "emmylua.misc.executablePath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "%config.misc.executablePath%"
-                },
-                "emmylua.misc.globalConfigPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "%config.misc.globalConfigPath%"
-                },
-                "lua.trace.server": {
-                    "type": "string",
-                    "enum": [
-                        "off",
-                        "messages",
-                        "verbose"
-                    ],
-                    "default": "off",
-                    "markdownDescription": "Traces the communication between VS Code and the EmmyLua language server in the Output view. Default is `off`.",
-                    "scope": "window"
+        "configuration": [
+            {
+                "title": "Code Action",
+                "order": 0,
+                "properties": {
+                    "emmylua.codeAction.insertSpace": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.codeAction.insertSpace.description%"
+                    }
+                }
+            },
+            {
+                "title": "Code Lens",
+                "order": 1,
+                "properties": {
+                    "emmylua.codeLens.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.codeLens.enable.description%"
+                    }
+                }
+            },
+            {
+                "title": "Completion",
+                "order": 2,
+                "properties": {
+                    "emmylua.completion.autoRequire": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.completion.autoRequire.description%"
+                    },
+                    "emmylua.completion.baseFunctionIncludesName": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.completion.baseFunctionIncludesName.description%"
+                    },
+                    "emmylua.completion.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.completion.enable.description%"
+                    },
+                    "emmylua.completion.postfix": {
+                        "default": null,
+                        "enum": [
+                            null,
+                            "@",
+                            ".",
+                            ":"
+                        ],
+                        "enumItemLabels": [
+                            "Default"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%"
+                        ],
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "markdownDescription": "%config.emmylua.completion.postfix.description%"
+                    }
+                }
+            },
+            {
+                "title": "Diagnostics",
+                "order": 3,
+                "properties": {
+                    "emmylua.diagnostics.diagnosticInterval": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "editPresentation": "singlelineText",
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.diagnostics.diagnosticInterval.description%"
+                    }
+                }
+            },
+            {
+                "title": "Document Color",
+                "order": 4,
+                "properties": {
+                    "emmylua.documentColor.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.documentColor.enable.description%"
+                    }
+                }
+            },
+            {
+                "title": "Hint",
+                "order": 5,
+                "properties": {
+                    "emmylua.hint.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.enable.description%"
+                    },
+                    "emmylua.hint.enumParamHint": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.enumParamHint.description%"
+                    },
+                    "emmylua.hint.indexHint": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.indexHint.description%"
+                    },
+                    "emmylua.hint.localHint": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.localHint.description%"
+                    },
+                    "emmylua.hint.metaCallHint": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.metaCallHint.description%"
+                    },
+                    "emmylua.hint.overrideHint": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.overrideHint.description%"
+                    },
+                    "emmylua.hint.paramHint": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hint.paramHint.description%"
+                    }
+                }
+            },
+            {
+                "title": "Hover",
+                "order": 6,
+                "properties": {
+                    "emmylua.hover.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.hover.enable.description%"
+                    }
+                }
+            },
+            {
+                "title": "Inline Values",
+                "order": 7,
+                "properties": {
+                    "emmylua.inlineValues.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.inlineValues.enable.description%"
+                    }
+                }
+            },
+            {
+                "title": "References",
+                "order": 8,
+                "properties": {
+                    "emmylua.references.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.references.enable.description%"
+                    },
+                    "emmylua.references.fuzzySearch": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.references.fuzzySearch.description%"
+                    },
+                    "emmylua.references.shortStringSearch": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.references.shortStringSearch.description%"
+                    }
+                }
+            },
+            {
+                "title": "Semantic Tokens",
+                "order": 9,
+                "properties": {
+                    "emmylua.semanticTokens.enable": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.semanticTokens.enable.description%"
+                    }
+                }
+            },
+            {
+                "title": "Workspace",
+                "order": 10,
+                "properties": {
+                    "emmylua.workspace.enableReindex": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.workspace.enableReindex.description%"
+                    },
+                    "emmylua.workspace.reindexDuration": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "editPresentation": "singlelineText",
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.workspace.reindexDuration.description%"
+                    }
+                }
+            },
+            {
+                "title": "Colors",
+                "order": 11,
+                "properties": {
+                    "emmylua.colors.parameter": {
+                        "type": "string",
+                        "default": "#99FFCC",
+                        "markdownDescription": "%config.emmylua.colors.parameter.description%"
+                    },
+                    "emmylua.colors.global": {
+                        "type": "string",
+                        "default": "#FF6699",
+                        "markdownDescription": "%config.emmylua.colors.global.description%"
+                    },
+                    "emmylua.colors.local": {
+                        "type": "string",
+                        "default": "",
+                        "markdownDescription": "%config.emmylua.colors.local.description%"
+                    },
+                    "emmylua.colors.mutable_underline": {
+                        "type": ["boolean", "null"],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.colors.mutableUnderline.description%",
+                        "markdownDeprecationMessage": "Use `emmylua.colors.mutableUnderline` instead"
+                    },
+                    "emmylua.colors.mutableUnderline": {
+                        "type": "boolean",
+                        "default": true,
+                        "markdownDescription": "%config.emmylua.colors.mutableUnderline.description%"
+                    }
+                }
+            },
+            {
+                "title": "Misc",
+                "order": 12,
+                "properties": {
+                    "emmylua.misc.autoInsertTripleDash": {
+                        "type": "boolean",
+                        "default": true,
+                        "markdownDescription": "%config.emmylua.misc.autoInsertTripleDash.description%"
+                    }
+                }
+            },
+            {
+                "title": "Language Server",
+                "order": 13,
+                "properties": {
+                    "emmylua.ls.startParameters": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "default": [],
+                        "markdownDescription": "%config.emmylua.ls.startParameters.description%"
+                    },
+                    "emmylua.ls.executablePath": {
+                        "type": "string",
+                        "default": "",
+                        "markdownDescription": "%config.emmylua.ls.executablePath.description%"
+                    },
+                    "emmylua.misc.executablePath": {
+                        "type": ["string", "null"],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.ls.executablePath.description%",
+                        "markdownDeprecationMessage": "Use `emmylua.ls.executablePath` instead"
+                    },
+                    "emmylua.ls.globalConfigPath": {
+                        "type": "string",
+                        "default": "",
+                        "markdownDescription": "%config.emmylua.ls.globalConfigPath.description%"
+                    },
+                    "emmylua.misc.globalConfigPath": {
+                        "type": ["string", "null"],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.ls.globalConfigPath.description%",
+                        "markdownDeprecationMessage": "Use `emmylua.ls.globalConfigPath` instead"
+                    },
+                    "lua.trace.server": {
+                        "type": "string",
+                        "enum": [
+                            "off",
+                            "messages",
+                            "verbose"
+                        ],
+                        "default": "off",
+                        "scope": "window",
+                        "markdownDescription": "%config.lua.trace.server.description%"
+                    }
                 }
             }
-        },
+        ],
         "configurationDefaults": {
             "[lua]": {
                 "editor.quickSuggestions": {
                     "other": true,
                     "comments": true,
                     "strings": true
-                }
+                },
+                "editor.wordBasedSuggestions": "off"
             }
         },
         "jsonValidation": [
