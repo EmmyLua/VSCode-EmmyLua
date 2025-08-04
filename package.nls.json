@@ -1,4 +1,7 @@
 {
+    "config.common.enum.default.description": "Use value from `.emmyrc.json` or fall back to default",
+    "config.common.enum.off.description": "Override `.emmyrc.json` and disable this option",
+    "config.common.enum.on.description": "Override `.emmyrc.json` and enable this option",
     "config.emmylua.codeAction.insertSpace.description": "Add space after `---` comments when inserting `@diagnostic disable-next-line`.",
     "config.emmylua.codeLens.enable.description": "Enable code lens.",
     "config.emmylua.colors.global.description": "If not empty, highlights global variables with the given color",
