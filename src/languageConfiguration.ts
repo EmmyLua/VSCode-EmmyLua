@@ -41,6 +41,10 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
         if (autoInsertTripleDash) {
             this.onEnterRules = [
                 {
+                    action: { indentAction: IndentAction.None, appendText: "--- " },
+                    beforeText: /^--- /,
+                },
+                {
                     action: { indentAction: IndentAction.None, appendText: "---" },
                     beforeText: /^---/,
                 },
