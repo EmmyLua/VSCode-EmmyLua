@@ -17,6 +17,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { IServerLocation, IServerPosition } from './lspExt';
 import { onDidChangeConfiguration } from './annotator';
+import { get } from './configRenames';
 
 export let ctx: EmmyContext;
 let activeEditor: vscode.TextEditor;
@@ -113,7 +114,7 @@ async function doStartServer() {
     };
 
     let serverOptions: ServerOptions;
-    if (ctx.debugMode) {
+    if (ctx.debugMode && false) { // TODO: Do NOT commit
         // The server is a started as a separate app and listens on port 5007
         const connectionInfo = {
             port: 5007
@@ -135,7 +136,7 @@ async function doStartServer() {
             undefined,
             vscode.workspace.workspaceFolders?.[0]
         );
-        let configExecutablePath = config.get<string>("emmylua.misc.executablePath")?.trim();
+        let configExecutablePath = get<string>(config, "emmylua.ls.executablePath")?.trim();
         if (!configExecutablePath || configExecutablePath.length == 0) {
             let platform = os.platform();
             let executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
@@ -157,7 +158,7 @@ async function doStartServer() {
             serverOptions.args = parameters;
         }
 
-        let globalConfigPath = config.get<string>("emmylua.misc.globalConfigPath")?.trim();
+        let globalConfigPath = get<string>(config, "emmylua.ls.globalConfigPath")?.trim();
         if (globalConfigPath && globalConfigPath.length > 0) {
             if (!serverOptions.options || !serverOptions.options.env) {
                 serverOptions.options = { env: {} }
