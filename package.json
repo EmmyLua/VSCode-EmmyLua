@@ -913,6 +913,11 @@
                         "default": "off",
                         "scope": "window",
                         "markdownDescription": "%config.lua.trace.server.description%"
+                    },
+                    "emmylua.ls.debugPort": {
+                        "type": ["integer", "null"],
+                        "default": null,
+                        "markdownDescription": "Look for language server on this port instead of starting it from an executable"
                     }
                 }
             }
