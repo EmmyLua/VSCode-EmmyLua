@@ -1,115 +1,145 @@
-'use strict';
-
 import * as vscode from 'vscode';
-import * as path from "path";
-import * as net from "net";
-import * as process from "process";
-import * as Annotator from "./annotator";
+import * as path from 'path';
+import * as net from 'net';
+import * as process from 'process';
+import * as os from 'os';
+import * as fs from 'fs';
 
-import { integer, LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient/node";
+import { integer, LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyNewDebuggerProvider } from './debugger/new_debugger/EmmyNewDebuggerProvider';
 import { EmmyAttachDebuggerProvider } from './debugger/attach/EmmyAttachDebuggerProvider';
 import { EmmyLaunchDebuggerProvider } from './debugger/launch/EmmyLaunchDebuggerProvider';
 import { EmmyContext } from './emmyContext';
-import { InlineDebugAdapterFactory } from './debugger/DebugFactory'
-import * as os from 'os';
-import * as fs from 'fs';
-import { IServerLocation, IServerPosition } from './lspExt';
+import { InlineDebugAdapterFactory } from './debugger/DebugFactory';
+import { IServerLocation, IServerPosition } from './lspExtension';
 import { onDidChangeConfiguration } from './annotator';
 import { get } from './configRenames';
+import * as Annotator from './annotator';
+interface DebuggerConfig {
+    readonly type: string;
+    readonly provider: vscode.DebugConfigurationProvider;
+}
 
-export let ctx: EmmyContext;
-let activeEditor: vscode.TextEditor;
+// Global state
+export let extensionContext: EmmyContext;
+let activeEditor: vscode.TextEditor | undefined;
 
-export function activate(context: vscode.ExtensionContext) {
-    console.log("emmy lua actived!");
-    ctx = new EmmyContext(
-        process.env['EMMY_DEV'] === "true",
+export async function activate(context: vscode.ExtensionContext) {
+    console.log('EmmyLua extension activated!');
+
+    extensionContext = new EmmyContext(
+        process.env['EMMY_DEV'] === 'true',
         context
     );
 
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.stopServer", stopServer));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.restartServer", restartServer));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.showReferences", showReferences));
-    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument, null, context.subscriptions));
-    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor, null, context.subscriptions));
-    context.subscriptions.push(vscode.commands.registerCommand("emmy.insertEmmyDebugCode", insertEmmyDebugCode));
-    context.subscriptions.push(vscode.languages.setLanguageConfiguration("lua", new LuaLanguageConfiguration()));
+    // Register commands
+    const commands = [
+        vscode.commands.registerCommand('emmy.stopServer', stopServer),
+        vscode.commands.registerCommand('emmy.restartServer', restartServer),
+        vscode.commands.registerCommand('emmy.showReferences', showReferences),
+        vscode.commands.registerCommand('emmy.insertEmmyDebugCode', insertEmmyDebugCode),
+    ];
+
+    // Register event listeners
+    const eventListeners = [
+        vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument),
+        vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor),
+        vscode.workspace.onDidChangeConfiguration(onConfigurationChanged),
+    ];
+
+    // Register language configuration
+    const languageConfig = vscode.languages.setLanguageConfiguration('lua', new LuaLanguageConfiguration());
+
+    // Add all subscriptions
     context.subscriptions.push(
-        vscode.workspace.onDidChangeConfiguration(e => {
-            if (e.affectsConfiguration("emmylua")) {
-                onDidChangeConfiguration()
-            }
-        })
+        ...commands,
+        ...eventListeners,
+        languageConfig,
+        extensionContext
     );
-    startServer();
+
+    // Initialize
+    await startServer();
     registerDebuggers();
-    return {
-        reportAPIDoc: (classDoc: any) => {
-            ctx?.client?.sendRequest("emmy/reportAPI", classDoc);
-        }
+}
+
+export function deactivate(): void {
+    extensionContext?.dispose();
+}
+
+function onConfigurationChanged(e: vscode.ConfigurationChangeEvent): void {
+    if (e.affectsConfiguration('emmylua')) {
+        onDidChangeConfiguration();
     }
 }
 
-export function deactivate() {
-    ctx.dispose();
-}
+function registerDebuggers(): void {
+    const context = extensionContext.vscodeContext;
 
-function registerDebuggers() {
-    const context = ctx.extensionContext;
-    const emmyProvider = new EmmyNewDebuggerProvider('emmylua_new', context);
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider("emmylua_new", emmyProvider));
-    context.subscriptions.push(emmyProvider);
-    const emmyAttachProvider = new EmmyAttachDebuggerProvider('emmylua_attach', context);
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_attach', emmyAttachProvider));
-    context.subscriptions.push(emmyAttachProvider);
-    const emmyLaunchProvider = new EmmyLaunchDebuggerProvider('emmylua_launch', context);
-    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('emmylua_launch', emmyLaunchProvider));
-    context.subscriptions.push(emmyLaunchProvider);
-    if (ctx.debugMode) {
-        const factory = new InlineDebugAdapterFactory();
-        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_new', factory));
-        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_attach', factory));
-        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('emmylua_launch', factory));
-    }
-}
+    const debuggerConfigs: DebuggerConfig[] = [
+        { type: 'emmylua_new', provider: new EmmyNewDebuggerProvider('emmylua_new', context) },
+        { type: 'emmylua_attach', provider: new EmmyAttachDebuggerProvider('emmylua_attach', context) },
+        { type: 'emmylua_launch', provider: new EmmyLaunchDebuggerProvider('emmylua_launch', context) },
+    ];
 
-function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent) {
-    if (activeEditor && activeEditor.document === event.document
-        && activeEditor.document.languageId === ctx.LANGUAGE_ID
-        && ctx.client != undefined
-    ) {
-        Annotator.requestAnnotators(activeEditor, ctx.client);
-    }
-}
+    debuggerConfigs.forEach(({ type, provider }) => {
+        context.subscriptions.push(
+            vscode.debug.registerDebugConfigurationProvider(type, provider)
+        );
+        // Only push provider if it's disposable
 
-function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined) {
-    if (editor
-        && editor.document.languageId === ctx.LANGUAGE_ID
-        && ctx.client != undefined) {
-        activeEditor = editor as vscode.TextEditor;
-        Annotator.requestAnnotators(activeEditor, ctx.client);
-    }
-}
-
-
-async function startServer() {
-    doStartServer().then(() => {
-        onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
-    }).catch(reason => {
-        ctx.setServerStatus({
-            health: "error",
-            message: `Failed to start "EmmyLua" language server!\n${reason}`,
-            command: "emmy.restartServer"
-        })
+        context.subscriptions.push(provider as vscode.Disposable);
     });
+
+    if (extensionContext.debugMode) {
+        const factory = new InlineDebugAdapterFactory();
+        debuggerConfigs.forEach(({ type }) => {
+            context.subscriptions.push(
+                vscode.debug.registerDebugAdapterDescriptorFactory(type, factory)
+            );
+        });
+    }
 }
 
-async function doStartServer() {
-    const context = ctx.extensionContext;
+function onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
+    if (activeEditor &&
+        activeEditor.document === event.document &&
+        activeEditor.document.languageId === extensionContext.LANGUAGE_ID &&
+        extensionContext.client
+    ) {
+        Annotator.requestAnnotators(activeEditor, extensionContext.client);
+    }
+}
+
+function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined): void {
+    if (editor &&
+        editor.document.languageId === extensionContext.LANGUAGE_ID &&
+        extensionContext.client
+    ) {
+        activeEditor = editor;
+        Annotator.requestAnnotators(activeEditor, extensionContext.client);
+    }
+}
+
+
+async function startServer(): Promise<void> {
+    try {
+        await doStartServer();
+        onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
+    } catch (reason) {
+        extensionContext.setServerStatus({
+            health: 'error',
+            message: `Failed to start "EmmyLua" language server!\n${reason}`,
+            command: 'emmy.restartServer'
+        });
+    }
+}
+
+async function doStartServer(): Promise<void> {
+    const context = extensionContext.vscodeContext;
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: ctx.LANGUAGE_ID }],
+        documentSelector: [{ scheme: 'file', language: extensionContext.LANGUAGE_ID }],
         initializationOptions: {},
     };
 
@@ -119,10 +149,10 @@ async function doStartServer() {
         vscode.workspace.workspaceFolders?.[0]
     );
     const debugPort = config.get<integer | null>("emmylua.ls.debugPort");
-    if (debugPort) {
+    if (debugPort || extensionContext.debugMode) {
         // The server is a started as a separate app and listens on port 5007
         const connectionInfo = {
-            port: debugPort
+            port: debugPort || 5007,
         };
         serverOptions = () => {
             // Connect to language server via socket
@@ -168,19 +198,23 @@ async function doStartServer() {
         }
     }
 
-    ctx.client = new LanguageClient(ctx.LANGUAGE_ID, "EmmyLua plugin for vscode.", serverOptions, clientOptions);
-    ctx.registerProtocol();
-    ctx.client.start().then(() => {
-        console.log("client ready");
-    })
+    extensionContext.client = new LanguageClient(
+        extensionContext.LANGUAGE_ID,
+        'EmmyLua plugin for vscode.',
+        serverOptions,
+        clientOptions
+    );
+
+    await extensionContext.client.start();
+    console.log('EmmyLua client ready');
 }
 
-function restartServer() {
-    const client = ctx.client;
+function restartServer(): void {
+    const client = extensionContext.client;
     if (!client) {
         startServer();
     } else {
-        client.stop().then(startServer);
+        client.stop().then(() => startServer());
     }
 }
 
@@ -198,11 +232,11 @@ function showReferences(uri: string, pos: IServerPosition, locations: IServerLoc
 }
 
 function stopServer() {
-    ctx.stopServer();
+    extensionContext.stopServer();
 }
 
 async function insertEmmyDebugCode() {
-    const context = ctx.extensionContext;
+    const context = extensionContext.vscodeContext;
     const activeEditor = vscode.window.activeTextEditor;
     if (!activeEditor) {
         return;

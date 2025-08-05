@@ -832,7 +832,7 @@
                 "properties": {
                     "emmylua.colors.parameter": {
                         "type": "string",
-                        "default": "#99FFCC",
+                        "default": "#00bfae",
                         "markdownDescription": "%config.emmylua.colors.parameter.description%"
                     },
                     "emmylua.colors.global": {

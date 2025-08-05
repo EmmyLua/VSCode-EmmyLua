@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 import { DebugConfigurationBase } from '../base/DebugConfigurationBase';
-import { ctx } from '../../extension';
+import { extensionContext } from '../../extension';
 import { DebuggerProvider } from '../base/DebuggerProvider';
 
 export interface EmmyDebugConfiguration extends DebugConfigurationBase {
@@ -15,7 +15,7 @@ export class EmmyNewDebuggerProvider extends DebuggerProvider {
     private showWaitConnectionToken = new vscode.CancellationTokenSource();
     
     resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: EmmyDebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
-        debugConfiguration.extensionPath = ctx.extensionContext.extensionPath;
+        debugConfiguration.extensionPath = extensionContext.vscodeContext.extensionPath;
         debugConfiguration.sourcePaths = this.getSourceRoots();
         if (!debugConfiguration.request) {
             debugConfiguration.request = "launch";

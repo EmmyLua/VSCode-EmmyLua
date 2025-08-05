@@ -1,99 +1,139 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { IProgressReport, ServerStatusParams } from './lspExt';
+import { IProgressReport, ServerStatusParams } from './lspExtension';
 
-export class EmmyContext {
-    public LANGUAGE_ID: string = "lua"; //EmmyLua
-    public client?: LanguageClient;
-    private readonly statusBar: vscode.StatusBarItem;
-    private loadBar: vscode.StatusBarItem;
+type ServerHealth = 'ok' | 'warning' | 'error' | 'stop';
+
+interface StatusBarConfig {
+    readonly icon: string;
+    readonly color?: vscode.ThemeColor;
+    readonly backgroundColor?: vscode.ThemeColor;
+    readonly command?: string;
+}
+
+export class EmmyContext implements vscode.Disposable {
+    public readonly LANGUAGE_ID = 'lua' as const;
+    
+    private _client?: LanguageClient;
+    private readonly _statusBar: vscode.StatusBarItem;
+    private readonly _loadBar: vscode.StatusBarItem;
+    private readonly _disposables: vscode.Disposable[] = [];
 
     constructor(
-        public debugMode: boolean,
-        public extensionContext: vscode.ExtensionContext,
+        public readonly debugMode: boolean,
+        public readonly vscodeContext: vscode.ExtensionContext,
     ) {
-        this.statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-        this.loadBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-        this.setServerStatus({
-            health: "ok"
-        })
+        this._statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+        this._loadBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+        
+        this._disposables.push(this._statusBar, this._loadBar);
+        
+        this.setServerStatus({ health: "ok" });
     }
 
-    setServerStatus(status: ServerStatusParams) {
-        let icon = "";
-        const statusBar = this.statusBar;
-        statusBar.show();
-        statusBar.tooltip = new vscode.MarkdownString("", true);
-        statusBar.tooltip.isTrusted = true;
-        switch (status.health) {
-            case "ok":
-                statusBar.tooltip.appendText(status.message ?? "");
-                statusBar.tooltip.appendMarkdown("\n\n[Stop EmmyLua](command:emmy.stopServer)");
-                statusBar.color = undefined;
-                statusBar.backgroundColor = undefined;
-                status.command = "emmy.stopServer"
-                break;
-            case "warning":
-                if (status.message) {
-                    statusBar.tooltip.appendText(status.message);
-                }
-                statusBar.color = new vscode.ThemeColor("statusBarItem.warningForeground");
-                statusBar.backgroundColor = new vscode.ThemeColor(
-                    "statusBarItem.warningBackground"
-                )
-                icon = "$(warning) ";
-                break;
-            case "error":
-                if (status.message) {
-                    statusBar.tooltip.appendText(status.message);
-                }
-                statusBar.color = new vscode.ThemeColor("statusBarItem.errorForeground");
-                statusBar.backgroundColor = new vscode.ThemeColor("statusBarItem.errorBackground");
-                icon = "$(error) ";
-                break;
-            case "stop":
-                statusBar.tooltip.appendText("EmmyLua is stopped");
-                statusBar.tooltip.appendMarkdown("\n\n[Restart EmmyLua](command:emmy.restartServer)");
-                statusBar.color = undefined;
-                statusBar.backgroundColor = undefined;
-                status.command = "emmy.restartServer"
-                icon = "$(stop-circle) "
-                break;
-        }
-        if (statusBar.tooltip.value) {
-            statusBar.tooltip.appendText("\n\n");
-        }
-        statusBar.command = status.command;
-        if (status.loading) icon = "$(sync~spin) ";
-        statusBar.text = `${icon}EmmyLua`;
+    get client(): LanguageClient | undefined {
+        return this._client;
     }
 
-    registerProtocol() {
-        this.client?.onNotification("emmy/progressReport", (d: IProgressReport) => {
-            this.loadBar.show();
-            this.loadBar.text = `$(sync~spin) ${d.text}`;
-            if (d.percent >= 1) {
-                setTimeout(() => {
-                    this.loadBar.hide();
-                }, 1000);
+    set client(value: LanguageClient | undefined) {
+        this._client = value;
+        if (value) {
+            this.registerProtocol();
+        }
+    }
+
+    setServerStatus(status: ServerStatusParams): void {
+        const statusBarConfig = this.getStatusBarConfig(status);
+        
+        this._statusBar.show();
+        this._statusBar.text = `${statusBarConfig.icon}EmmyLua`;
+        this._statusBar.color = statusBarConfig.color;
+        this._statusBar.backgroundColor = statusBarConfig.backgroundColor;
+        this._statusBar.command = statusBarConfig.command;
+        this._statusBar.tooltip = this.createTooltip(status);
+    }
+
+    private getStatusBarConfig(status: ServerStatusParams): StatusBarConfig {
+        const configs: Record<ServerHealth, StatusBarConfig> = {
+            ok: {
+                icon: status.loading ? '$(sync~spin) ' : '',
+                command: 'emmy.stopServer'
+            },
+            warning: {
+                icon: status.loading ? '$(sync~spin) ' : '$(warning) ',
+                color: new vscode.ThemeColor('statusBarItem.warningForeground'),
+                backgroundColor: new vscode.ThemeColor('statusBarItem.warningBackground')
+            },
+            error: {
+                icon: status.loading ? '$(sync~spin) ' : '$(error) ',
+                color: new vscode.ThemeColor('statusBarItem.errorForeground'),
+                backgroundColor: new vscode.ThemeColor('statusBarItem.errorBackground')
+            },
+            stop: {
+                icon: '$(stop-circle) ',
+                command: 'emmy.restartServer'
             }
-        });
+        };
 
-        this.client?.onNotification("emmy/setServerStatus", (param: ServerStatusParams) => {
-            this.setServerStatus(param);
-        });
+        return configs[status.health as ServerHealth];
     }
 
-    stopServer() {
-        this.client?.stop();
-        this.setServerStatus({
-            health: "stop"
-        });
+    private createTooltip(status: ServerStatusParams): vscode.MarkdownString {
+        const tooltip = new vscode.MarkdownString('', true);
+        tooltip.isTrusted = true;
+
+        if (status.message) {
+            tooltip.appendText(status.message);
+            tooltip.appendText('\n\n');
+        }
+
+        const commandLinks: Record<ServerHealth, string> = {
+            ok: '[Stop EmmyLua](command:emmy.stopServer)',
+            stop: '[Restart EmmyLua](command:emmy.restartServer)',
+            warning: '',
+            error: ''
+        };
+
+        const link = commandLinks[status.health as ServerHealth];
+        if (link) {
+            tooltip.appendMarkdown(link);
+        }
+
+        return tooltip;
     }
 
-    dispose() {
-        this.client?.stop();
-        this.statusBar.dispose();
-        this.loadBar.dispose();
+    private registerProtocol(): void {
+        if (!this._client) return;
+
+        this._disposables.push(
+            this._client.onNotification("emmy/progressReport", (data: IProgressReport) => {
+                this.handleProgressReport(data);
+            }),
+            
+            this._client.onNotification("emmy/setServerStatus", (param: ServerStatusParams) => {
+                this.setServerStatus(param);
+            })
+        );
+    }
+
+    private handleProgressReport(data: IProgressReport): void {
+        this._loadBar.show();
+        this._loadBar.text = `$(sync~spin) ${data.text}`;
+        
+        if (data.percent >= 1) {
+            setTimeout(() => {
+                this._loadBar.hide();
+            }, 1000);
+        }
+    }
+
+    stopServer(): void {
+        this._client?.stop();
+        this.setServerStatus({ health: "stop" });
+    }
+
+    dispose(): void {
+        this._client?.stop();
+        this._disposables.forEach(disposable => disposable.dispose());
     }
 }
