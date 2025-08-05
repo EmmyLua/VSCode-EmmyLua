@@ -95,7 +95,9 @@ For detailed configuration options, see:
 ```json
 {
   "diagnostics": {
-    "undefined-global": false
+    "disable" : [
+      "undefined-global"
+    ]
   }
 }
 ```
@@ -124,7 +126,7 @@ For detailed configuration options, see:
 
 **English**: The Rust implementation provides better performance, memory safety, and cross-platform compatibility compared to the previous .NET and Java versions.
 
-**中文**: Rust 实现提供了更好的性能、内存安全性和跨平台兼容性。（作者说：因为我想试试 rust 😄）
+**中文**: Rust 实现提供了更好的性能、内存安全性和跨平台兼容性。（因为我想试试 rust 😄）
 </details>
 
 ## 🤝 Contributing
