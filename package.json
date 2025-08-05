@@ -41,6 +41,52 @@
             {
                 "command": "emmy.stopServer",
                 "title": "EmmyLua: Stop EmmyLua Language Server"
+            },
+            {
+                "command": "emmylua.luarocks.searchPackages",
+                "title": "Search Packages",
+                "category": "LuaRocks",
+                "icon": "$(search)"
+            },
+            {
+                "command": "emmylua.luarocks.installPackage",
+                "title": "Install Package",
+                "category": "LuaRocks",
+                "icon": "$(cloud-download)"
+            },
+            {
+                "command": "emmylua.luarocks.uninstallPackage",
+                "title": "Uninstall Package",
+                "category": "LuaRocks",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "emmylua.luarocks.showPackageInfo",
+                "title": "Show Package Info",
+                "category": "LuaRocks",
+                "icon": "$(info)"
+            },
+            {
+                "command": "emmylua.luarocks.refreshPackages",
+                "title": "Refresh",
+                "category": "LuaRocks",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "emmylua.luarocks.showPackages",
+                "title": "Show LuaRocks Packages",
+                "category": "LuaRocks"
+            },
+            {
+                "command": "emmylua.luarocks.clearSearch",
+                "title": "Clear Search",
+                "category": "LuaRocks",
+                "icon": "$(clear-all)"
+            },
+            {
+                "command": "emmylua.luarocks.checkInstallation",
+                "title": "Check LuaRocks Installation",
+                "category": "LuaRocks"
             }
         ],
         "languages": [
@@ -261,6 +307,75 @@
                 ]
             }
         ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "emmylua.luarocks",
+                    "name": "LuaRocks",
+                    "when": "resourceExtname == .lua",
+                    "icon": "$(package)"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "emmylua-luarocks",
+                    "title": "LuaRocks",
+                    "icon": "$(package)"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "emmylua.luarocks.refreshPackages",
+                    "when": "view == emmylua.luarocks",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "emmylua.luarocks.searchPackages",
+                    "when": "view == emmylua.luarocks",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "emmylua.luarocks.clearSearch",
+                    "when": "view == emmylua.luarocks",
+                    "group": "navigation@3"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "emmylua.luarocks.showPackageInfo",
+                    "when": "view == emmylua.luarocks && (viewItem == installedPackage || viewItem == availablePackage)",
+                    "group": "1@1"
+                },
+                {
+                    "command": "emmylua.luarocks.installPackage",
+                    "when": "view == emmylua.luarocks && viewItem == availablePackage",
+                    "group": "inline@1"
+                },
+                {
+                    "command": "emmylua.luarocks.uninstallPackage",
+                    "when": "view == emmylua.luarocks && viewItem == installedPackage",
+                    "group": "inline@1"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "emmylua.luarocks.installPackage",
+                    "when": "resourceExtname == .lua"
+                },
+                {
+                    "command": "emmylua.luarocks.searchPackages",
+                    "when": "resourceExtname == .lua"
+                },
+                {
+                    "command": "emmylua.luarocks.checkInstallation",
+                    "when": "resourceExtname == .lua"
+                }
+            ]
+        },
         "configuration": [
             {
                 "title": "Code Action",
