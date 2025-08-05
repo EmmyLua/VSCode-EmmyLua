@@ -87,7 +87,6 @@ function registerDebuggers(): void {
         context.subscriptions.push(
             vscode.debug.registerDebugConfigurationProvider(type, provider)
         );
-        // Only push provider if it's disposable
 
         context.subscriptions.push(provider as vscode.Disposable);
     });
