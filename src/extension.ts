@@ -6,7 +6,7 @@ import * as net from "net";
 import * as process from "process";
 import * as Annotator from "./annotator";
 
-import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient/node";
+import { integer, LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from "vscode-languageclient/node";
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyNewDebuggerProvider } from './debugger/new_debugger/EmmyNewDebuggerProvider';
 import { EmmyAttachDebuggerProvider } from './debugger/attach/EmmyAttachDebuggerProvider';
@@ -114,10 +114,15 @@ async function doStartServer() {
     };
 
     let serverOptions: ServerOptions;
-    if (ctx.debugMode && false) { // TODO: Do NOT commit
+    const config = vscode.workspace.getConfiguration(
+        undefined,
+        vscode.workspace.workspaceFolders?.[0]
+    );
+    const debugPort = config.get<integer | null>("emmylua.ls.debugPort");
+    if (debugPort) {
         // The server is a started as a separate app and listens on port 5007
         const connectionInfo = {
-            port: 5007
+            port: debugPort
         };
         serverOptions = () => {
             // Connect to language server via socket
@@ -132,10 +137,6 @@ async function doStartServer() {
             return Promise.resolve(result);
         };
     } else {
-        const config = vscode.workspace.getConfiguration(
-            undefined,
-            vscode.workspace.workspaceFolders?.[0]
-        );
         let configExecutablePath = get<string>(config, "emmylua.ls.executablePath")?.trim();
         if (!configExecutablePath || configExecutablePath.length == 0) {
             let platform = os.platform();
