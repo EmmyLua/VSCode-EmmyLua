@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export interface AnnotatorParams {
     uri: string;
@@ -10,6 +10,8 @@ export enum AnnotatorType {
     ReadOnlyLocal,
     MutLocal,
     MutParam,
+    DocEm,
+    DocStrong,
 }
 
 export interface IAnnotator {
