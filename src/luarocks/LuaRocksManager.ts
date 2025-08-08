@@ -77,6 +77,10 @@ export class LuaRocksManager {
             );
             
             workspace.hasRockspec = rockspecFiles.length > 0;
+            if (!workspace.hasRockspec) {
+                return workspace;
+            }
+
             workspace.rockspecFiles = rockspecFiles.map(uri => uri.fsPath);
 
             // 检查 .luarocks 配置文件

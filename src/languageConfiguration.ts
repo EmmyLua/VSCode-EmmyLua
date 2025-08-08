@@ -36,9 +36,9 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             undefined,
             workspace.workspaceFolders?.[0]
         );
-        const autoInsertTripleDash = config.get<boolean>('emmylua.misc.autoInsertTripleDash', true);
+        const completeAnnotation = config.get<boolean>('emmylua.language.completeAnnotation', true);
         // 第二个参数是默认值（当配置不存在时使用）
-        if (autoInsertTripleDash) {
+        if (completeAnnotation) {
             this.onEnterRules = [
                 {
                     action: { indentAction: IndentAction.None, appendText: "--- " },
