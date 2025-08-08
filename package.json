@@ -994,6 +994,12 @@
                         "type": "boolean",
                         "default": true,
                         "markdownDescription": "%config.emmylua.language.completeAnnotation.description%"
+                    },
+                    "emmylua.misc.autoInsertTripleDash": {
+                        "type": "boolean",
+                        "default": true,
+                        "markdownDescription": "%config.emmylua.language.completeAnnotation.description%",
+                        "deprecationMessage": "Use `emmylua.language.completeAnnotation` instead"
                     }
                 }
             },
