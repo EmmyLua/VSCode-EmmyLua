@@ -11,6 +11,8 @@ interface DecorationMap {
     [AnnotatorType.ReadOnlyLocal]: vscode.TextEditorDecorationType;
     [AnnotatorType.MutLocal]: vscode.TextEditorDecorationType;
     [AnnotatorType.MutParam]: vscode.TextEditorDecorationType;
+    [AnnotatorType.DocEm]: vscode.TextEditorDecorationType;
+    [AnnotatorType.DocStrong]: vscode.TextEditorDecorationType;
 }
 
 // 装饰器缓存
@@ -30,12 +32,12 @@ const createDecoration = (key: string): vscode.TextEditorDecorationType => {
 
     const config: vscode.DecorationRenderOptions = {};
     const color = vscode.workspace.getConfiguration("emmylua").get<string>(key);
-    
+
     if (color) {
         config.light = { color };
         config.dark = { color };
     }
-    
+
     const decoration = vscode.window.createTextEditorDecorationType(config);
     decorationCache.set(cacheKey, decoration);
     return decoration;
@@ -52,8 +54,8 @@ const createDecorationUnderline = (key: string): vscode.TextEditorDecorationType
 
     const config: vscode.DecorationRenderOptions = {};
     const color = vscode.workspace.getConfiguration("emmylua").get<string>(key);
-    
-    const textDecoration = color 
+
+    const textDecoration = color
         ? `underline;text-decoration-color:${color};text-underline-offset: 4px;`
         : 'underline;text-underline-offset: 4px;';
 
@@ -64,7 +66,45 @@ const createDecorationUnderline = (key: string): vscode.TextEditorDecorationType
         config.light = { textDecoration };
         config.dark = { textDecoration };
     }
-    
+
+    const decoration = vscode.window.createTextEditorDecorationType(config);
+    decorationCache.set(cacheKey, decoration);
+    return decoration;
+};
+
+const createDecorationDocEm = (): vscode.TextEditorDecorationType => {
+    const cacheKey = `decoration:doc.em`;
+    if (decorationCache.has(cacheKey)) {
+        return decorationCache.get(cacheKey)!;
+    }
+
+    const config: vscode.DecorationRenderOptions = {
+        light: {
+            fontStyle: "italic",
+        },
+        dark: {
+            fontStyle: "italic",
+        },
+    };
+    const decoration = vscode.window.createTextEditorDecorationType(config);
+    decorationCache.set(cacheKey, decoration);
+    return decoration;
+};
+
+const createDecorationDocStrong = (): vscode.TextEditorDecorationType => {
+    const cacheKey = `decoration:doc.strong`;
+    if (decorationCache.has(cacheKey)) {
+        return decorationCache.get(cacheKey)!;
+    }
+
+    const config: vscode.DecorationRenderOptions = {
+        light: {
+            fontWeight: "bold",
+        },
+        dark: {
+            fontWeight: "bold",
+        },
+    };
     const decoration = vscode.window.createTextEditorDecorationType(config);
     decorationCache.set(cacheKey, decoration);
     return decoration;
@@ -107,6 +147,9 @@ const updateDecorations = (): void => {
         decorations[AnnotatorType.MutLocal] = createDecoration("colors.local");
         decorations[AnnotatorType.MutParam] = createDecoration("colors.parameter");
     }
+
+    decorations[AnnotatorType.DocEm] = createDecorationDocEm();
+    decorations[AnnotatorType.DocStrong] = createDecorationDocStrong();
 };
 
 /**
@@ -142,13 +185,13 @@ const requestAnnotatorsImpl = async (editor: vscode.TextEditor, client: Language
         updateDecorations();
     }
 
-    const params: notifications.AnnotatorParams = { 
-        uri: editor.document.uri.toString() 
+    const params: notifications.AnnotatorParams = {
+        uri: editor.document.uri.toString()
     };
 
     try {
         const annotationList = await client.sendRequest<notifications.IAnnotator[]>("emmy/annotator", params);
-        
+
         if (!annotationList) {
             return;
         }
@@ -159,7 +202,9 @@ const requestAnnotatorsImpl = async (editor: vscode.TextEditor, client: Language
             [AnnotatorType.Global, []],
             [AnnotatorType.ReadOnlyLocal, []],
             [AnnotatorType.MutLocal, []],
-            [AnnotatorType.MutParam, []]
+            [AnnotatorType.MutParam, []],
+            [AnnotatorType.DocEm, []],
+            [AnnotatorType.DocStrong, []],
         ]);
 
         // 批量处理注释
@@ -183,8 +228,8 @@ const requestAnnotatorsImpl = async (editor: vscode.TextEditor, client: Language
  * 更新编辑器中特定类型的注释器
  */
 const updateAnnotators = (
-    editor: vscode.TextEditor, 
-    type: AnnotatorType, 
+    editor: vscode.TextEditor,
+    type: AnnotatorType,
     ranges: vscode.Range[]
 ): void => {
     const decoration = decorations[type];
@@ -206,7 +251,7 @@ export const dispose = (): void => {
     // 清理所有装饰器
     disposeDecorations(...Object.values(decorations));
     decorations = {};
-    
+
     // 清理缓存中的装饰器
     decorationCache.forEach(decoration => decoration.dispose());
     decorationCache.clear();
