@@ -910,6 +910,29 @@
                         ],
                         "default": null,
                         "markdownDescription": "%config.emmylua.semanticTokens.enable.description%"
+                    },
+                    "emmylua.semanticTokens.renderDocumentationMarkup": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.semanticTokens.renderDocumentationMarkup.description%"
                     }
                 }
             },

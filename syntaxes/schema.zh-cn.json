@@ -1,978 +1,1100 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Emmyrc",
-  "type": "object",
-  "properties": {
-    "$schema": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "codeAction": {
-      "$ref": "#/$defs/EmmyrcCodeAction",
-      "default": {
-        "insertSpace": false
-      }
-    },
-    "codeLens": {
-      "$ref": "#/$defs/EmmyrcCodeLens",
-      "default": {
-        "enable": true
-      }
-    },
-    "completion": {
-      "$ref": "#/$defs/EmmyrcCompletion",
-      "default": {
-        "autoRequire": true,
-        "autoRequireFunction": "require",
-        "autoRequireNamingConvention": "keep",
-        "autoRequireSeparator": ".",
-        "baseFunctionIncludesName": true,
-        "callSnippet": false,
-        "enable": true,
-        "postfix": "@"
-      }
-    },
-    "diagnostics": {
-      "$ref": "#/$defs/EmmyrcDiagnostic",
-      "default": {
-        "diagnosticInterval": 500,
-        "disable": [],
-        "enable": true,
-        "enables": [],
-        "globals": [],
-        "globalsRegex": [],
-        "severity": {}
-      }
-    },
-    "doc": {
-      "$ref": "#/$defs/EmmyrcDoc",
-      "default": {
-        "knownTags": [],
-        "privateName": []
-      }
-    },
-    "documentColor": {
-      "$ref": "#/$defs/EmmyrcDocumentColor",
-      "default": {
-        "enable": true
-      }
-    },
-    "hint": {
-      "$ref": "#/$defs/EmmyrcInlayHint",
-      "default": {
-        "enable": true,
-        "enumParamHint": false,
-        "indexHint": true,
-        "localHint": true,
-        "metaCallHint": true,
-        "overrideHint": true,
-        "paramHint": true
-      }
-    },
-    "hover": {
-      "$ref": "#/$defs/EmmyrcHover",
-      "default": {
-        "enable": true
-      }
-    },
-    "inlineValues": {
-      "$ref": "#/$defs/EmmyrcInlineValues",
-      "default": {
-        "enable": true
-      }
-    },
-    "references": {
-      "$ref": "#/$defs/EmmyrcReference",
-      "default": {
-        "enable": true,
-        "fuzzySearch": true,
-        "shortStringSearch": false
-      }
-    },
-    "resource": {
-      "$ref": "#/$defs/EmmyrcResource",
-      "default": {
-        "paths": []
-      }
-    },
-    "runtime": {
-      "$ref": "#/$defs/EmmyrcRuntime",
-      "default": {
-        "classDefaultCall": {
-          "forceNonColon": false,
-          "forceReturnSelf": false,
-          "functionName": ""
-        },
-        "extensions": [],
-        "frameworkVersions": [],
-        "requireLikeFunction": [],
-        "requirePattern": [],
-        "version": "LuaLatest"
-      }
-    },
-    "semanticTokens": {
-      "$ref": "#/$defs/EmmyrcSemanticToken",
-      "default": {
-        "enable": true
-      }
-    },
-    "signature": {
-      "$ref": "#/$defs/EmmyrcSignature",
-      "default": {
-        "detailSignatureHelper": true
-      }
-    },
-    "strict": {
-      "$ref": "#/$defs/EmmyrcStrict",
-      "default": {
-        "arrayIndex": true,
-        "docBaseConstMatchBaseType": true,
-        "metaOverrideFileDefine": true,
-        "requirePath": false,
-        "typeCall": false
-      }
-    },
-    "workspace": {
-      "$ref": "#/$defs/EmmyrcWorkspace",
-      "default": {
-        "enableReindex": false,
-        "encoding": "utf-8",
-        "ignoreDir": [],
-        "ignoreGlobs": [],
-        "library": [],
-        "moduleMap": [],
-        "preloadFileSize": 0,
-        "reindexDuration": 5000,
-        "workspaceRoots": []
-      }
-    }
-  },
-  "$defs": {
-    "ClassDefaultCall": {
-      "type": "object",
-      "properties": {
-        "forceNonColon": {
-          "description": "强制非冒号定义。当 `function_name` 不为空时生效。",
-          "type": "boolean",
-          "default": true
-        },
-        "forceReturnSelf": {
-          "description": "强制返回 `self`。",
-          "type": "boolean",
-          "default": true
-        },
-        "functionName": {
-          "description": "类默认重载函数。例如：\"__init\"。",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
-    "DiagnosticCode": {
-      "oneOf": [
-        {
-          "type": "string",
-          "enum": [
-            "none"
-          ]
-        },
-        {
-          "description": "语法错误。",
-          "type": "string",
-          "const": "syntax-error"
-        },
-        {
-          "description": "注解语法错误。",
-          "type": "string",
-          "const": "doc-syntax-error"
-        },
-        {
-          "description": "类型未找到。",
-          "type": "string",
-          "const": "type-not-found"
-        },
-        {
-          "description": "缺少返回语句。",
-          "type": "string",
-          "const": "missing-return"
-        },
-        {
-          "description": "参数类型不匹配。",
-          "type": "string",
-          "const": "param-type-not-match"
-        },
-        {
-          "description": "缺少参数。",
-          "type": "string",
-          "const": "missing-parameter"
-        },
-        {
-          "description": "冗余参数。",
-          "type": "string",
-          "const": "redundant-parameter"
-        },
-        {
-          "description": "不可达的代码。",
-          "type": "string",
-          "const": "unreachable-code"
-        },
-        {
-          "description": "未使用的变量。",
-          "type": "string",
-          "const": "unused"
-        },
-        {
-          "description": "未定义的全局变量。",
-          "type": "string",
-          "const": "undefined-global"
-        },
-        {
-          "description": "已弃用。",
-          "type": "string",
-          "const": "deprecated"
-        },
-        {
-          "description": "成员可见性检查。",
-          "type": "string",
-          "const": "access-invisible"
-        },
-        {
-          "description": "不可丢弃返回值。",
-          "type": "string",
-          "const": "discard-returns"
-        },
-        {
-          "description": "未定义的字段。",
-          "type": "string",
-          "const": "undefined-field"
-        },
-        {
-          "description": "局部常量重新赋值。",
-          "type": "string",
-          "const": "local-const-reassign"
-        },
-        {
-          "description": "迭代变量重新赋值。",
-          "type": "string",
-          "const": "iter-variable-reassign"
-        },
-        {
-          "description": "重复定义的类型。",
-          "type": "string",
-          "const": "duplicate-type"
-        },
-        {
-          "description": "重复定义的局部变量。",
-          "type": "string",
-          "const": "redefined-local"
-        },
-        {
-          "description": "重复定义的标签。",
-          "type": "string",
-          "const": "redefined-label"
-        },
-        {
-          "description": "代码风格检查。",
-          "type": "string",
-          "const": "code-style-check"
-        },
-        {
-          "description": "需要检查 nil。",
-          "type": "string",
-          "const": "need-check-nil"
-        },
-        {
-          "description": "在同步上下文中使用 await。",
-          "type": "string",
-          "const": "await-in-sync"
-        },
-        {
-          "description": "注解使用错误。",
-          "type": "string",
-          "const": "annotation-usage-error"
-        },
-        {
-          "description": "返回类型不匹配。",
-          "type": "string",
-          "const": "return-type-mismatch"
-        },
-        {
-          "description": "缺少返回值。",
-          "type": "string",
-          "const": "missing-return-value"
-        },
-        {
-          "description": "冗余的返回值。",
-          "type": "string",
-          "const": "redundant-return-value"
-        },
-        {
-          "description": "未使用注解定义的参数。",
-          "type": "string",
-          "const": "undefined-doc-param"
-        },
-        {
-          "description": "重复定义的字段(注解)。",
-          "type": "string",
-          "const": "duplicate-doc-field"
-        },
-        {
-          "description": "未知文档注解。",
-          "type": "string",
-          "const": "unknown-doc-tag"
-        },
-        {
-          "description": "缺少字段。",
-          "type": "string",
-          "const": "missing-fields"
-        },
-        {
-          "description": "注入字段。",
-          "type": "string",
-          "const": "inject-field"
-        },
-        {
-          "description": "类型循环依赖。",
-          "type": "string",
-          "const": "circle-doc-class"
-        },
-        {
-          "description": "不完整的签名文档。",
-          "type": "string",
-          "const": "incomplete-signature-doc"
-        },
-        {
-          "description": "全局变量缺少文档。",
-          "type": "string",
-          "const": "missing-global-doc"
-        },
-        {
-          "description": "赋值类型不匹配。",
-          "type": "string",
-          "const": "assign-type-mismatch"
-        },
-        {
-          "description": "重复的 require 导入。",
-          "type": "string",
-          "const": "duplicate-require"
-        },
-        {
-          "description": "在 assert 中使用了非字面量表达式。",
-          "type": "string",
-          "const": "non-literal-expressions-in-assert"
-        },
-        {
-          "description": "不平衡的赋值。",
-          "type": "string",
-          "const": "unbalanced-assignments"
-        },
-        {
-          "description": "不必要的 assert。",
-          "type": "string",
-          "const": "unnecessary-assert"
-        },
-        {
-          "description": "不必要的 if。",
-          "type": "string",
-          "const": "unnecessary-if"
-        },
-        {
-          "description": "重复定义的字段(实际代码)。",
-          "type": "string",
-          "const": "duplicate-set-field"
-        },
-        {
-          "description": "重复的索引。",
-          "type": "string",
-          "const": "duplicate-index"
-        },
-        {
-          "description": "泛型约束不匹配。",
-          "type": "string",
-          "const": "generic-constraint-mismatch"
-        },
-        {
-          "description": "cast-type-mismatch",
-          "type": "string",
-          "const": "cast-type-mismatch"
-        },
-        {
-          "description": "require 模块不可见。",
-          "type": "string",
-          "const": "require-module-not-visible"
-        },
-        {
-          "description": "枚举值不匹配。",
-          "type": "string",
-          "const": "enum-value-mismatch"
-        }
-      ]
-    },
-    "DiagnosticSeveritySetting": {
-      "oneOf": [
-        {
-          "description": "诊断严重性: 错误。",
-          "type": "string",
-          "const": "error"
-        },
-        {
-          "description": "诊断严重性: 警告。",
-          "type": "string",
-          "const": "warning"
-        },
-        {
-          "description": "诊断严重性: 信息。",
-          "type": "string",
-          "const": "information"
-        },
-        {
-          "description": "诊断严重性: 提示。",
-          "type": "string",
-          "const": "hint"
-        }
-      ]
-    },
-    "EmmyrcCodeAction": {
-      "type": "object",
-      "properties": {
-        "insertSpace": {
-          "description": "是否在 '---' 后插入空格。",
-          "type": "boolean",
-          "default": false,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcCodeLens": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "Enable code lens.",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcCompletion": {
-      "description": "EmmyLua 代码补全配置。",
-      "type": "object",
-      "properties": {
-        "autoRequire": {
-          "description": "自动补全 require 语句。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "autoRequireFunction": {
-          "description": "自动补全 require 语句时使用的函数名。",
-          "type": "string",
-          "default": "require"
-        },
-        "autoRequireNamingConvention": {
-          "description": "自动补全 require 语句时使用的命名规范。",
-          "$ref": "#/$defs/EmmyrcFilenameConvention",
-          "default": "keep"
-        },
-        "autoRequireSeparator": {
-          "description": "自动补全 require 语句时使用的分隔符。",
-          "type": "string",
-          "default": "."
-        },
-        "baseFunctionIncludesName": {
-          "description": "是否在基本函数补全中包含函数名。效果: `function () end` -> `function name() end`。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "callSnippet": {
-          "description": "是否使用代码片段补全函数调用。",
-          "type": "boolean",
-          "default": false
-        },
-        "enable": {
-          "description": "是否启用代码补全。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "postfix": {
-          "description": "后缀补全触发关键词。",
-          "type": "string",
-          "default": "@",
-          "x-vscode-setting": {
-            "default": null,
-            "enum": [
-              null,
-              "@",
-              ".",
-              ":"
-            ],
-            "enumItemLabels": [
-              "Default"
-            ],
-            "markdownEnumDescriptions": [
-              "%config.common.enum.default.description%"
-            ],
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Emmyrc",
+    "type": "object",
+    "properties": {
+        "$schema": {
             "type": [
-              "string",
-              "null"
+                "string",
+                "null"
             ]
-          }
+        },
+        "codeAction": {
+            "$ref": "#/$defs/EmmyrcCodeAction",
+            "default": {
+                "insertSpace": false
+            }
+        },
+        "codeLens": {
+            "$ref": "#/$defs/EmmyrcCodeLens",
+            "default": {
+                "enable": true
+            }
+        },
+        "completion": {
+            "$ref": "#/$defs/EmmyrcCompletion",
+            "default": {
+                "autoRequire": true,
+                "autoRequireFunction": "require",
+                "autoRequireNamingConvention": "keep",
+                "autoRequireSeparator": ".",
+                "baseFunctionIncludesName": true,
+                "callSnippet": false,
+                "enable": true,
+                "postfix": "@"
+            }
+        },
+        "diagnostics": {
+            "$ref": "#/$defs/EmmyrcDiagnostic",
+            "default": {
+                "diagnosticInterval": 500,
+                "disable": [],
+                "enable": true,
+                "enables": [],
+                "globals": [],
+                "globalsRegex": [],
+                "severity": {}
+            }
+        },
+        "doc": {
+            "$ref": "#/$defs/EmmyrcDoc",
+            "default": {
+                "knownTags": [],
+                "privateName": [],
+                "syntax": "none"
+            }
+        },
+        "documentColor": {
+            "$ref": "#/$defs/EmmyrcDocumentColor",
+            "default": {
+                "enable": true
+            }
+        },
+        "format": {
+            "$ref": "#/$defs/EmmyrcReformat",
+            "default": {
+                "externalTool": null,
+                "useDiff": false
+            }
+        },
+        "hint": {
+            "$ref": "#/$defs/EmmyrcInlayHint",
+            "default": {
+                "enable": true,
+                "enumParamHint": false,
+                "indexHint": true,
+                "localHint": true,
+                "metaCallHint": true,
+                "overrideHint": true,
+                "paramHint": true
+            }
+        },
+        "hover": {
+            "$ref": "#/$defs/EmmyrcHover",
+            "default": {
+                "enable": true
+            }
+        },
+        "inlineValues": {
+            "$ref": "#/$defs/EmmyrcInlineValues",
+            "default": {
+                "enable": true
+            }
+        },
+        "references": {
+            "$ref": "#/$defs/EmmyrcReference",
+            "default": {
+                "enable": true,
+                "fuzzySearch": true,
+                "shortStringSearch": false
+            }
+        },
+        "resource": {
+            "$ref": "#/$defs/EmmyrcResource",
+            "default": {
+                "paths": []
+            }
+        },
+        "runtime": {
+            "$ref": "#/$defs/EmmyrcRuntime",
+            "default": {
+                "classDefaultCall": {
+                    "forceNonColon": false,
+                    "forceReturnSelf": false,
+                    "functionName": ""
+                },
+                "extensions": [],
+                "frameworkVersions": [],
+                "nonstandardSymbol": [],
+                "requireLikeFunction": [],
+                "requirePattern": [],
+                "version": "LuaLatest"
+            }
+        },
+        "semanticTokens": {
+            "$ref": "#/$defs/EmmyrcSemanticToken",
+            "default": {
+                "enable": true,
+                "renderDocumentationMarkup": false
+            }
+        },
+        "signature": {
+            "$ref": "#/$defs/EmmyrcSignature",
+            "default": {
+                "detailSignatureHelper": true
+            }
+        },
+        "strict": {
+            "$ref": "#/$defs/EmmyrcStrict",
+            "default": {
+                "arrayIndex": true,
+                "docBaseConstMatchBaseType": true,
+                "metaOverrideFileDefine": true,
+                "requirePath": false,
+                "typeCall": false
+            }
+        },
+        "workspace": {
+            "$ref": "#/$defs/EmmyrcWorkspace",
+            "default": {
+                "enableReindex": false,
+                "encoding": "utf-8",
+                "ignoreDir": [],
+                "ignoreGlobs": [],
+                "library": [],
+                "moduleMap": [],
+                "preloadFileSize": 0,
+                "reindexDuration": 5000,
+                "workspaceRoots": []
+            }
         }
-      }
     },
-    "EmmyrcDiagnostic": {
-      "description": "Emmyrc 诊断配置。",
-      "type": "object",
-      "properties": {
-        "diagnosticInterval": {
-          "description": "诊断间隔时间(毫秒)。",
-          "type": [
-            "integer",
-            "null"
-          ],
-          "format": "uint64",
-          "minimum": 0,
-          "x-vscode-setting": true
+    "$defs": {
+        "ClassDefaultCall": {
+            "type": "object",
+            "properties": {
+                "forceNonColon": {
+                    "description": "强制非冒号定义。当 `function_name` 不为空时生效。",
+                    "type": "boolean",
+                    "default": true
+                },
+                "forceReturnSelf": {
+                    "description": "强制返回 `self`。",
+                    "type": "boolean",
+                    "default": true
+                },
+                "functionName": {
+                    "description": "类默认重载函数。例如：\"__init\"。",
+                    "type": "string",
+                    "default": ""
+                }
+            }
         },
-        "disable": {
-          "description": "禁用的诊断代码列表。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "$ref": "#/$defs/DiagnosticCode"
-          }
+        "DiagnosticCode": {
+            "oneOf": [
+                {
+                    "type": "string",
+                    "enum": [
+                        "none"
+                    ]
+                },
+                {
+                    "description": "语法错误。",
+                    "type": "string",
+                    "const": "syntax-error"
+                },
+                {
+                    "description": "注解语法错误。",
+                    "type": "string",
+                    "const": "doc-syntax-error"
+                },
+                {
+                    "description": "类型未找到。",
+                    "type": "string",
+                    "const": "type-not-found"
+                },
+                {
+                    "description": "缺少返回语句。",
+                    "type": "string",
+                    "const": "missing-return"
+                },
+                {
+                    "description": "参数类型不匹配。",
+                    "type": "string",
+                    "const": "param-type-not-match"
+                },
+                {
+                    "description": "缺少参数。",
+                    "type": "string",
+                    "const": "missing-parameter"
+                },
+                {
+                    "description": "冗余参数。",
+                    "type": "string",
+                    "const": "redundant-parameter"
+                },
+                {
+                    "description": "不可达的代码。",
+                    "type": "string",
+                    "const": "unreachable-code"
+                },
+                {
+                    "description": "未使用的变量。",
+                    "type": "string",
+                    "const": "unused"
+                },
+                {
+                    "description": "未定义的全局变量。",
+                    "type": "string",
+                    "const": "undefined-global"
+                },
+                {
+                    "description": "已弃用。",
+                    "type": "string",
+                    "const": "deprecated"
+                },
+                {
+                    "description": "成员可见性检查。",
+                    "type": "string",
+                    "const": "access-invisible"
+                },
+                {
+                    "description": "不可丢弃返回值。",
+                    "type": "string",
+                    "const": "discard-returns"
+                },
+                {
+                    "description": "未定义的字段。",
+                    "type": "string",
+                    "const": "undefined-field"
+                },
+                {
+                    "description": "局部常量重新赋值。",
+                    "type": "string",
+                    "const": "local-const-reassign"
+                },
+                {
+                    "description": "迭代变量重新赋值。",
+                    "type": "string",
+                    "const": "iter-variable-reassign"
+                },
+                {
+                    "description": "重复定义的类型。",
+                    "type": "string",
+                    "const": "duplicate-type"
+                },
+                {
+                    "description": "重复定义的局部变量。",
+                    "type": "string",
+                    "const": "redefined-local"
+                },
+                {
+                    "description": "重复定义的标签。",
+                    "type": "string",
+                    "const": "redefined-label"
+                },
+                {
+                    "description": "代码风格检查。",
+                    "type": "string",
+                    "const": "code-style-check"
+                },
+                {
+                    "description": "需要检查 nil。",
+                    "type": "string",
+                    "const": "need-check-nil"
+                },
+                {
+                    "description": "在同步上下文中使用 await。",
+                    "type": "string",
+                    "const": "await-in-sync"
+                },
+                {
+                    "description": "注解使用错误。",
+                    "type": "string",
+                    "const": "annotation-usage-error"
+                },
+                {
+                    "description": "返回类型不匹配。",
+                    "type": "string",
+                    "const": "return-type-mismatch"
+                },
+                {
+                    "description": "缺少返回值。",
+                    "type": "string",
+                    "const": "missing-return-value"
+                },
+                {
+                    "description": "冗余的返回值。",
+                    "type": "string",
+                    "const": "redundant-return-value"
+                },
+                {
+                    "description": "未使用注解定义的参数。",
+                    "type": "string",
+                    "const": "undefined-doc-param"
+                },
+                {
+                    "description": "重复定义的字段(注解)。",
+                    "type": "string",
+                    "const": "duplicate-doc-field"
+                },
+                {
+                    "description": "未知文档注解。",
+                    "type": "string",
+                    "const": "unknown-doc-tag"
+                },
+                {
+                    "description": "缺少字段。",
+                    "type": "string",
+                    "const": "missing-fields"
+                },
+                {
+                    "description": "注入字段。",
+                    "type": "string",
+                    "const": "inject-field"
+                },
+                {
+                    "description": "类型循环依赖。",
+                    "type": "string",
+                    "const": "circle-doc-class"
+                },
+                {
+                    "description": "不完整的签名文档。",
+                    "type": "string",
+                    "const": "incomplete-signature-doc"
+                },
+                {
+                    "description": "全局变量缺少文档。",
+                    "type": "string",
+                    "const": "missing-global-doc"
+                },
+                {
+                    "description": "赋值类型不匹配。",
+                    "type": "string",
+                    "const": "assign-type-mismatch"
+                },
+                {
+                    "description": "重复的 require 导入。",
+                    "type": "string",
+                    "const": "duplicate-require"
+                },
+                {
+                    "description": "在 assert 中使用了非字面量表达式。",
+                    "type": "string",
+                    "const": "non-literal-expressions-in-assert"
+                },
+                {
+                    "description": "不平衡的赋值。",
+                    "type": "string",
+                    "const": "unbalanced-assignments"
+                },
+                {
+                    "description": "不必要的 assert。",
+                    "type": "string",
+                    "const": "unnecessary-assert"
+                },
+                {
+                    "description": "不必要的 if。",
+                    "type": "string",
+                    "const": "unnecessary-if"
+                },
+                {
+                    "description": "重复定义的字段(实际代码)。",
+                    "type": "string",
+                    "const": "duplicate-set-field"
+                },
+                {
+                    "description": "重复的索引。",
+                    "type": "string",
+                    "const": "duplicate-index"
+                },
+                {
+                    "description": "泛型约束不匹配。",
+                    "type": "string",
+                    "const": "generic-constraint-mismatch"
+                },
+                {
+                    "description": "cast-type-mismatch",
+                    "type": "string",
+                    "const": "cast-type-mismatch"
+                },
+                {
+                    "description": "require 模块不可见。",
+                    "type": "string",
+                    "const": "require-module-not-visible"
+                },
+                {
+                    "description": "枚举值不匹配。",
+                    "type": "string",
+                    "const": "enum-value-mismatch"
+                }
+            ]
         },
-        "enable": {
-          "description": "是否启用诊断。",
-          "type": "boolean",
-          "default": true
+        "DiagnosticSeveritySetting": {
+            "oneOf": [
+                {
+                    "description": "诊断严重性: 错误。",
+                    "type": "string",
+                    "const": "error"
+                },
+                {
+                    "description": "诊断严重性: 警告。",
+                    "type": "string",
+                    "const": "warning"
+                },
+                {
+                    "description": "诊断严重性: 信息。",
+                    "type": "string",
+                    "const": "information"
+                },
+                {
+                    "description": "诊断严重性: 提示。",
+                    "type": "string",
+                    "const": "hint"
+                }
+            ]
         },
-        "enables": {
-          "description": "启用的诊断代码列表。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "$ref": "#/$defs/DiagnosticCode"
-          }
+        "DocSyntax": {
+            "type": "string",
+            "enum": [
+                "none",
+                "md",
+                "myst",
+                "rst"
+            ]
         },
-        "globals": {
-          "description": "全局变量列表，在该列表中的全局变量不会被诊断为未定义。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
+        "EmmyrcCodeAction": {
+            "type": "object",
+            "properties": {
+                "insertSpace": {
+                    "description": "是否在 '---' 后插入空格。",
+                    "type": "boolean",
+                    "default": false,
+                    "x-vscode-setting": true
+                }
+            }
         },
-        "globalsRegex": {
-          "description": "全局变量正则表达式列表，符合正则表达式的全局变量不会被诊断为未定义。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
+        "EmmyrcCodeLens": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "Enable code lens.",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                }
+            }
         },
-        "severity": {
-          "description": "诊断代码与严重性设置的映射。",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/$defs/DiagnosticSeveritySetting"
-          },
-          "default": {}
+        "EmmyrcCompletion": {
+            "description": "EmmyLua 代码补全配置。",
+            "type": "object",
+            "properties": {
+                "autoRequire": {
+                    "description": "自动补全 require 语句。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "autoRequireFunction": {
+                    "description": "自动补全 require 语句时使用的函数名。",
+                    "type": "string",
+                    "default": "require"
+                },
+                "autoRequireNamingConvention": {
+                    "description": "自动补全 require 语句时使用的命名规范。",
+                    "$ref": "#/$defs/EmmyrcFilenameConvention",
+                    "default": "keep"
+                },
+                "autoRequireSeparator": {
+                    "description": "自动补全 require 语句时使用的分隔符。",
+                    "type": "string",
+                    "default": "."
+                },
+                "baseFunctionIncludesName": {
+                    "description": "是否在基本函数补全中包含函数名。效果: `function () end` -> `function name() end`。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "callSnippet": {
+                    "description": "是否使用代码片段补全函数调用。",
+                    "type": "boolean",
+                    "default": false
+                },
+                "enable": {
+                    "description": "是否启用代码补全。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "postfix": {
+                    "description": "后缀补全触发关键词。",
+                    "type": "string",
+                    "default": "@",
+                    "x-vscode-setting": {
+                        "default": null,
+                        "enum": [
+                            null,
+                            "@",
+                            ".",
+                            ":"
+                        ],
+                        "enumItemLabels": [
+                            "Default"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%"
+                        ],
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                }
+            }
+        },
+        "EmmyrcDiagnostic": {
+            "description": "Emmyrc 诊断配置。",
+            "type": "object",
+            "properties": {
+                "diagnosticInterval": {
+                    "description": "诊断间隔时间(毫秒)。",
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "format": "uint64",
+                    "minimum": 0,
+                    "x-vscode-setting": true
+                },
+                "disable": {
+                    "description": "禁用的诊断代码列表。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/DiagnosticCode"
+                    }
+                },
+                "enable": {
+                    "description": "是否启用诊断。",
+                    "type": "boolean",
+                    "default": true
+                },
+                "enables": {
+                    "description": "启用的诊断代码列表。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/DiagnosticCode"
+                    }
+                },
+                "globals": {
+                    "description": "全局变量列表，在该列表中的全局变量不会被诊断为未定义。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "globalsRegex": {
+                    "description": "全局变量正则表达式列表，符合正则表达式的全局变量不会被诊断为未定义。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "severity": {
+                    "description": "诊断代码与严重性设置的映射。",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/$defs/DiagnosticSeveritySetting"
+                    },
+                    "default": {}
+                }
+            }
+        },
+        "EmmyrcDoc": {
+            "type": "object",
+            "properties": {
+                "knownTags": {
+                    "description": "已知文档标签列表。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "privateName": {
+                    "description": "将特定字段名视为私有，例如 `m_*` 表示 `XXX.m_id` 和 `XXX.m_type` 是私有字段，只能在定义所在的类中访问。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "rstDefaultRole": {
+                    "description": "When `syntax` is `Myst` or `Rst`, specifies default role used\nwith RST processor.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "rstPrimaryDomain": {
+                    "description": "When `syntax` is `Myst` or `Rst`, specifies primary domain used\nwith RST processor.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "syntax": {
+                    "description": "Syntax for highlighting documentation.",
+                    "$ref": "#/$defs/DocSyntax",
+                    "default": "none"
+                }
+            }
+        },
+        "EmmyrcDocumentColor": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "是否启用文档颜色。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                }
+            }
+        },
+        "EmmyrcExternalTool": {
+            "type": "object",
+            "properties": {
+                "args": {
+                    "description": "The arguments to pass to the external tool.",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "program": {
+                    "description": "The command to run the external tool.",
+                    "type": "string",
+                    "default": ""
+                },
+                "timeout": {
+                    "type": "integer",
+                    "format": "uint64",
+                    "default": 5000,
+                    "minimum": 0
+                }
+            }
+        },
+        "EmmyrcFilenameConvention": {
+            "oneOf": [
+                {
+                    "description": "保持原始文件名。",
+                    "type": "string",
+                    "const": "keep"
+                },
+                {
+                    "description": "将文件名转换为蛇形(snake_case)命名。",
+                    "type": "string",
+                    "const": "snake-case"
+                },
+                {
+                    "description": "将文件名转换为帕斯卡(PascalCase)命名。",
+                    "type": "string",
+                    "const": "pascal-case"
+                },
+                {
+                    "description": "将文件名转换为驼峰(camelCase)命名。",
+                    "type": "string",
+                    "const": "camel-case"
+                },
+                {
+                    "description": "返回类定义时，使用类名，否则保持原始名称。",
+                    "type": "string",
+                    "const": "keep-class"
+                }
+            ]
+        },
+        "EmmyrcHover": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "是否启用悬浮提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                }
+            }
+        },
+        "EmmyrcInlayHint": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "是否启用内联提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "enumParamHint": {
+                    "description": "是否启用枚举参数提示。",
+                    "type": "boolean",
+                    "default": false,
+                    "x-vscode-setting": true
+                },
+                "indexHint": {
+                    "description": "在索引表达式跨行时，显示提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "localHint": {
+                    "description": "是否启用局部变量提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "metaCallHint": {
+                    "description": "是否启用 `__call` 调用提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "overrideHint": {
+                    "description": "是否启用重写提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "paramHint": {
+                    "description": "是否启用参数提示。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                }
+            }
+        },
+        "EmmyrcInlineValues": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "是否启用内联值。用于在调试断点时显示变量值。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                }
+            }
+        },
+        "EmmyrcLuaVersion": {
+            "oneOf": [
+                {
+                    "description": "Lua 5.1",
+                    "type": "string",
+                    "const": "Lua5.1"
+                },
+                {
+                    "description": "LuaJIT",
+                    "type": "string",
+                    "const": "LuaJIT"
+                },
+                {
+                    "description": "Lua 5.2",
+                    "type": "string",
+                    "const": "Lua5.2"
+                },
+                {
+                    "description": "Lua 5.3",
+                    "type": "string",
+                    "const": "Lua5.3"
+                },
+                {
+                    "description": "Lua 5.4",
+                    "type": "string",
+                    "const": "Lua5.4"
+                },
+                {
+                    "description": "Lua 5.5",
+                    "type": "string",
+                    "const": "Lua5.5"
+                },
+                {
+                    "description": "Lua Latest",
+                    "type": "string",
+                    "const": "LuaLatest"
+                }
+            ]
+        },
+        "EmmyrcNonStdSymbol": {
+            "type": "string",
+            "enum": [
+                "//",
+                "/**/",
+                "`",
+                "+=",
+                "-=",
+                "*=",
+                "/=",
+                "%=",
+                "^=",
+                "//=",
+                "|=",
+                "&=",
+                "<<=",
+                ">>=",
+                "||",
+                "&&",
+                "!",
+                "!=",
+                "continue"
+            ]
+        },
+        "EmmyrcReference": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "是否启用引用搜索。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "fuzzySearch": {
+                    "description": "是否启用模糊搜索。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "shortStringSearch": {
+                    "description": "缓存短字符串用于搜索。",
+                    "type": "boolean",
+                    "default": false,
+                    "x-vscode-setting": true
+                }
+            }
+        },
+        "EmmyrcReformat": {
+            "type": "object",
+            "properties": {
+                "externalTool": {
+                    "description": "Whether to enable internal code reformatting.",
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/EmmyrcExternalTool"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null
+                },
+                "useDiff": {
+                    "description": "Whether to use the diff algorithm for formatting.",
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "EmmyrcResource": {
+            "type": "object",
+            "properties": {
+                "paths": {
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "EmmyrcRuntime": {
+            "type": "object",
+            "properties": {
+                "classDefaultCall": {
+                    "description": "类默认重载函数。",
+                    "$ref": "#/$defs/ClassDefaultCall",
+                    "default": {
+                        "forceNonColon": false,
+                        "forceReturnSelf": false,
+                        "functionName": ""
+                    }
+                },
+                "extensions": {
+                    "description": "文件扩展名。例如：.lua, .lua.txt",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "frameworkVersions": {
+                    "description": "框架版本列表。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "nonstandardSymbol": {
+                    "description": "Non-standard symbols.",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/EmmyrcNonStdSymbol"
+                    }
+                },
+                "requireLikeFunction": {
+                    "description": "类似 require 的函数列表。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requirePattern": {
+                    "description": "require 模式。例如：\"?.lua\", \"?/init.lua\"",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "version": {
+                    "description": "Lua 版本。",
+                    "$ref": "#/$defs/EmmyrcLuaVersion",
+                    "default": "LuaLatest"
+                }
+            }
+        },
+        "EmmyrcSemanticToken": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "description": "是否启用语义标记。",
+                    "type": "boolean",
+                    "default": true,
+                    "x-vscode-setting": true
+                },
+                "renderDocumentationMarkup": {
+                    "description": "Render Markdown/RST in documentation. Set `doc.syntax` for this option to have effect.",
+                    "type": "boolean",
+                    "default": false,
+                    "x-vscode-setting": true
+                }
+            }
+        },
+        "EmmyrcSignature": {
+            "type": "object",
+            "properties": {
+                "detailSignatureHelper": {
+                    "description": "是否启用签名帮助。",
+                    "type": "boolean",
+                    "default": true
+                }
+            }
+        },
+        "EmmyrcStrict": {
+            "type": "object",
+            "properties": {
+                "arrayIndex": {
+                    "description": "是否启用严格模式数组索引，严格模式下数组取值返回将包含 nil。",
+                    "type": "boolean",
+                    "default": true
+                },
+                "docBaseConstMatchBaseType": {
+                    "description": "doc定义的基础常量类型可以匹配基础类型，使 int 可以匹配 `---@alias id 1|2|3`，string 同理。",
+                    "type": "boolean",
+                    "default": false
+                },
+                "metaOverrideFileDefine": {
+                    "description": "`---@meta`文件的定义完全覆盖真实文件的定义。",
+                    "type": "boolean",
+                    "default": true
+                },
+                "requirePath": {
+                    "description": "是否启用严格模式 require 路径。严格模式时 require 必须从指定的根目录开始。",
+                    "type": "boolean",
+                    "default": false
+                },
+                "typeCall": {
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        },
+        "EmmyrcWorkspace": {
+            "type": "object",
+            "properties": {
+                "enableReindex": {
+                    "description": "启用重新索引。",
+                    "type": "boolean",
+                    "default": false,
+                    "x-vscode-setting": true
+                },
+                "encoding": {
+                    "description": "编码。例如：\"utf-8\"",
+                    "type": "string",
+                    "default": "utf-8"
+                },
+                "ignoreDir": {
+                    "description": "忽略的目录。",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ignoreGlobs": {
+                    "description": "忽略的文件。例如：[\"**/*.lua\"]",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "library": {
+                    "description": "库路径。例如：\"/usr/local/share/lua/5.1\"",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "moduleMap": {
+                    "description": "模块映射列表。key 是正则表达式，value 是新的模块正则表达式\n 例如：{\n    \"^(.*)$\": \"module_$1\"\n    \"^lib(.*)$\": \"script$1\"\n}",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "$ref": "#/$defs/EmmyrcWorkspaceModuleMap"
+                    }
+                },
+                "preloadFileSize": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 0
+                },
+                "reindexDuration": {
+                    "description": "当保存文件时，ls 将在指定毫秒后重新索引工作区。",
+                    "type": "integer",
+                    "format": "uint64",
+                    "default": 5000,
+                    "minimum": 0,
+                    "x-vscode-setting": true
+                },
+                "workspaceRoots": {
+                    "description": "工作区根目录列表。例如：[\"src\", \"test\"]",
+                    "type": "array",
+                    "default": [],
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "EmmyrcWorkspaceModuleMap": {
+            "type": "object",
+            "properties": {
+                "pattern": {
+                    "type": "string"
+                },
+                "replace": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "pattern",
+                "replace"
+            ]
         }
-      }
-    },
-    "EmmyrcDoc": {
-      "type": "object",
-      "properties": {
-        "knownTags": {
-          "description": "已知文档标签列表。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "privateName": {
-          "description": "将特定字段名视为私有，例如 `m_*` 表示 `XXX.m_id` 和 `XXX.m_type` 是私有字段，只能在定义所在的类中访问。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "EmmyrcDocumentColor": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "是否启用文档颜色。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcFilenameConvention": {
-      "oneOf": [
-        {
-          "description": "保持原始文件名。",
-          "type": "string",
-          "const": "keep"
-        },
-        {
-          "description": "将文件名转换为蛇形(snake_case)命名。",
-          "type": "string",
-          "const": "snake-case"
-        },
-        {
-          "description": "将文件名转换为帕斯卡(PascalCase)命名。",
-          "type": "string",
-          "const": "pascal-case"
-        },
-        {
-          "description": "将文件名转换为驼峰(camelCase)命名。",
-          "type": "string",
-          "const": "camel-case"
-        },
-        {
-          "description": "返回类定义时，使用类名，否则保持原始名称。",
-          "type": "string",
-          "const": "keep-class"
-        }
-      ]
-    },
-    "EmmyrcHover": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "是否启用悬浮提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcInlayHint": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "是否启用内联提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "enumParamHint": {
-          "description": "是否启用枚举参数提示。",
-          "type": "boolean",
-          "default": false,
-          "x-vscode-setting": true
-        },
-        "indexHint": {
-          "description": "在索引表达式跨行时，显示提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "localHint": {
-          "description": "是否启用局部变量提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "metaCallHint": {
-          "description": "是否启用 `__call` 调用提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "overrideHint": {
-          "description": "是否启用重写提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "paramHint": {
-          "description": "是否启用参数提示。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcInlineValues": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "是否启用内联值。用于在调试断点时显示变量值。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcLuaVersion": {
-      "oneOf": [
-        {
-          "description": "Lua 5.1",
-          "type": "string",
-          "const": "Lua5.1"
-        },
-        {
-          "description": "LuaJIT",
-          "type": "string",
-          "const": "LuaJIT"
-        },
-        {
-          "description": "Lua 5.2",
-          "type": "string",
-          "const": "Lua5.2"
-        },
-        {
-          "description": "Lua 5.3",
-          "type": "string",
-          "const": "Lua5.3"
-        },
-        {
-          "description": "Lua 5.4",
-          "type": "string",
-          "const": "Lua5.4"
-        },
-        {
-          "description": "Lua 5.5",
-          "type": "string",
-          "const": "Lua5.5"
-        },
-        {
-          "description": "Lua Latest",
-          "type": "string",
-          "const": "LuaLatest"
-        }
-      ]
-    },
-    "EmmyrcReference": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "是否启用引用搜索。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "fuzzySearch": {
-          "description": "是否启用模糊搜索。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        },
-        "shortStringSearch": {
-          "description": "缓存短字符串用于搜索。",
-          "type": "boolean",
-          "default": false,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcResource": {
-      "type": "object",
-      "properties": {
-        "paths": {
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "EmmyrcRuntime": {
-      "type": "object",
-      "properties": {
-        "classDefaultCall": {
-          "description": "类默认重载函数。",
-          "$ref": "#/$defs/ClassDefaultCall",
-          "default": {
-            "forceNonColon": false,
-            "forceReturnSelf": false,
-            "functionName": ""
-          }
-        },
-        "extensions": {
-          "description": "文件扩展名。例如：.lua, .lua.txt",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "frameworkVersions": {
-          "description": "框架版本列表。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "requireLikeFunction": {
-          "description": "类似 require 的函数列表。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "requirePattern": {
-          "description": "require 模式。例如：\"?.lua\", \"?/init.lua\"",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "version": {
-          "description": "Lua 版本。",
-          "$ref": "#/$defs/EmmyrcLuaVersion",
-          "default": "LuaLatest"
-        }
-      }
-    },
-    "EmmyrcSemanticToken": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "description": "是否启用语义标记。",
-          "type": "boolean",
-          "default": true,
-          "x-vscode-setting": true
-        }
-      }
-    },
-    "EmmyrcSignature": {
-      "type": "object",
-      "properties": {
-        "detailSignatureHelper": {
-          "description": "是否启用签名帮助。",
-          "type": "boolean",
-          "default": true
-        }
-      }
-    },
-    "EmmyrcStrict": {
-      "type": "object",
-      "properties": {
-        "arrayIndex": {
-          "description": "是否启用严格模式数组索引，严格模式下数组取值返回将包含 nil。",
-          "type": "boolean",
-          "default": true
-        },
-        "docBaseConstMatchBaseType": {
-          "description": "doc定义的基础常量类型可以匹配基础类型，使 int 可以匹配 `---@alias id 1|2|3`，string 同理。",
-          "type": "boolean",
-          "default": false
-        },
-        "metaOverrideFileDefine": {
-          "description": "`---@meta`文件的定义完全覆盖真实文件的定义。",
-          "type": "boolean",
-          "default": true
-        },
-        "requirePath": {
-          "description": "是否启用严格模式 require 路径。严格模式时 require 必须从指定的根目录开始。",
-          "type": "boolean",
-          "default": false
-        },
-        "typeCall": {
-          "type": "boolean",
-          "default": false
-        }
-      }
-    },
-    "EmmyrcWorkspace": {
-      "type": "object",
-      "properties": {
-        "enableReindex": {
-          "description": "启用重新索引。",
-          "type": "boolean",
-          "default": false,
-          "x-vscode-setting": true
-        },
-        "encoding": {
-          "description": "编码。例如：\"utf-8\"",
-          "type": "string",
-          "default": "utf-8"
-        },
-        "ignoreDir": {
-          "description": "忽略的目录。",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "ignoreGlobs": {
-          "description": "忽略的文件。例如：[\"**/*.lua\"]",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "library": {
-          "description": "库路径。例如：\"/usr/local/share/lua/5.1\"",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        },
-        "moduleMap": {
-          "description": "模块映射列表。key 是正则表达式，value 是新的模块正则表达式\n 例如：{\n    \"^(.*)$\": \"module_$1\"\n    \"^lib(.*)$\": \"script$1\"\n}",
-          "type": "array",
-          "default": [],
-          "items": {
-            "$ref": "#/$defs/EmmyrcWorkspaceModuleMap"
-          }
-        },
-        "preloadFileSize": {
-          "type": "integer",
-          "format": "int32",
-          "default": 0
-        },
-        "reindexDuration": {
-          "description": "当保存文件时，ls 将在指定毫秒后重新索引工作区。",
-          "type": "integer",
-          "format": "uint64",
-          "default": 5000,
-          "minimum": 0,
-          "x-vscode-setting": true
-        },
-        "workspaceRoots": {
-          "description": "工作区根目录列表。例如：[\"src\", \"test\"]",
-          "type": "array",
-          "default": [],
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "EmmyrcWorkspaceModuleMap": {
-      "type": "object",
-      "properties": {
-        "pattern": {
-          "type": "string"
-        },
-        "replace": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "pattern",
-        "replace"
-      ]
     }
-  }
 }
