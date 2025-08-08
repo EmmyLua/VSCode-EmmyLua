@@ -1,0 +1,469 @@
+{
+  "ClassDefaultCall.forceNonColon": {
+    "en": "Mandatory non`:` definition. When `function_name` is not empty, it takes effect.",
+    "zh-CN": "强制非冒号定义。当 `function_name` 不为空时生效。"
+  },
+  "ClassDefaultCall.forceReturnSelf": {
+    "en": "Force to return `self`.",
+    "zh-CN": "强制返回 `self`。"
+  },
+  "ClassDefaultCall.functionName": {
+    "en": "class default overload function. eg. \"__init\".",
+    "zh-CN": "类默认重载函数。例如：\"__init\"。"
+  },
+  "DiagnosticCode.access-invisible": {
+    "en": "Access invisible",
+    "zh-CN": "成员可见性检查。"
+  },
+  "DiagnosticCode.annotation-usage-error": {
+    "en": "Doc tag usage error",
+    "zh-CN": "注解使用错误。"
+  },
+  "DiagnosticCode.assign-type-mismatch": {
+    "en": "Assign type mismatch",
+    "zh-CN": "赋值类型不匹配。"
+  },
+  "DiagnosticCode.await-in-sync": {
+    "en": "Await in sync",
+    "zh-CN": "在同步上下文中使用 await。"
+  },
+  "DiagnosticCode.cast-type-mismatch": {
+    "en": "cast-type-mismatch"
+  },
+  "DiagnosticCode.circle-doc-class": {
+    "en": "Circle Doc Class",
+    "zh-CN": "类型循环依赖。"
+  },
+  "DiagnosticCode.code-style-check": {
+    "en": "Code style check",
+    "zh-CN": "代码风格检查。"
+  },
+  "DiagnosticCode.deprecated": {
+    "en": "Deprecated",
+    "zh-CN": "已弃用。"
+  },
+  "DiagnosticCode.discard-returns": {
+    "en": "Discard return value",
+    "zh-CN": "不可丢弃返回值。"
+  },
+  "DiagnosticCode.doc-syntax-error": {
+    "en": "Doc syntax error",
+    "zh-CN": "注解语法错误。"
+  },
+  "DiagnosticCode.duplicate-doc-field": {
+    "en": "Duplicate doc field",
+    "zh-CN": "重复定义的字段(注解)。"
+  },
+  "DiagnosticCode.duplicate-index": {
+    "en": "duplicate-index",
+    "zh-CN": "重复的索引。"
+  },
+  "DiagnosticCode.duplicate-require": {
+    "en": "Duplicate require",
+    "zh-CN": "重复的 require 导入。"
+  },
+  "DiagnosticCode.duplicate-set-field": {
+    "en": "duplicate-set-field",
+    "zh-CN": "重复定义的字段(实际代码)。"
+  },
+  "DiagnosticCode.duplicate-type": {
+    "en": "Duplicate type",
+    "zh-CN": "重复定义的类型。"
+  },
+  "DiagnosticCode.enum-value-mismatch": {
+    "en": "enum-value-mismatch",
+    "zh-CN": "枚举值不匹配。"
+  },
+  "DiagnosticCode.generic-constraint-mismatch": {
+    "en": "generic-constraint-mismatch",
+    "zh-CN": "泛型约束不匹配。"
+  },
+  "DiagnosticCode.incomplete-signature-doc": {
+    "en": "Incomplete signature doc",
+    "zh-CN": "不完整的签名文档。"
+  },
+  "DiagnosticCode.inject-field": {
+    "en": "Inject Field",
+    "zh-CN": "注入字段。"
+  },
+  "DiagnosticCode.iter-variable-reassign": {
+    "en": "Iter variable reassign",
+    "zh-CN": "迭代变量重新赋值。"
+  },
+  "DiagnosticCode.local-const-reassign": {
+    "en": "Local const reassign",
+    "zh-CN": "局部常量重新赋值。"
+  },
+  "DiagnosticCode.missing-fields": {
+    "en": "Missing fields",
+    "zh-CN": "缺少字段。"
+  },
+  "DiagnosticCode.missing-global-doc": {
+    "en": "Missing global doc",
+    "zh-CN": "全局变量缺少文档。"
+  },
+  "DiagnosticCode.missing-parameter": {
+    "en": "Missing parameter",
+    "zh-CN": "缺少参数。"
+  },
+  "DiagnosticCode.missing-return": {
+    "en": "Missing return statement",
+    "zh-CN": "缺少返回语句。"
+  },
+  "DiagnosticCode.missing-return-value": {
+    "en": "Missing return value",
+    "zh-CN": "缺少返回值。"
+  },
+  "DiagnosticCode.need-check-nil": {
+    "en": "Need check nil",
+    "zh-CN": "需要检查 nil。"
+  },
+  "DiagnosticCode.non-literal-expressions-in-assert": {
+    "en": "non-literal-expressions-in-assert",
+    "zh-CN": "在 assert 中使用了非字面量表达式。"
+  },
+  "DiagnosticCode.param-type-not-match": {
+    "en": "Param Type not match",
+    "zh-CN": "参数类型不匹配。"
+  },
+  "DiagnosticCode.redefined-label": {
+    "en": "Redefined label",
+    "zh-CN": "重复定义的标签。"
+  },
+  "DiagnosticCode.redefined-local": {
+    "en": "Redefined local",
+    "zh-CN": "重复定义的局部变量。"
+  },
+  "DiagnosticCode.redundant-parameter": {
+    "en": "Redundant parameter",
+    "zh-CN": "冗余参数。"
+  },
+  "DiagnosticCode.redundant-return-value": {
+    "en": "Redundant return value",
+    "zh-CN": "冗余的返回值。"
+  },
+  "DiagnosticCode.require-module-not-visible": {
+    "en": "require-module-not-visible",
+    "zh-CN": "require 模块不可见。"
+  },
+  "DiagnosticCode.return-type-mismatch": {
+    "en": "Return type mismatch",
+    "zh-CN": "返回类型不匹配。"
+  },
+  "DiagnosticCode.syntax-error": {
+    "en": "Syntax error",
+    "zh-CN": "语法错误。"
+  },
+  "DiagnosticCode.type-not-found": {
+    "en": "Type not found",
+    "zh-CN": "类型未找到。"
+  },
+  "DiagnosticCode.unbalanced-assignments": {
+    "en": "Unbalanced assignments",
+    "zh-CN": "不平衡的赋值。"
+  },
+  "DiagnosticCode.undefined-doc-param": {
+    "en": "Undefined Doc Param",
+    "zh-CN": "未使用注解定义的参数。"
+  },
+  "DiagnosticCode.undefined-field": {
+    "en": "Undefined field",
+    "zh-CN": "未定义的字段。"
+  },
+  "DiagnosticCode.undefined-global": {
+    "en": "Undefined global",
+    "zh-CN": "未定义的全局变量。"
+  },
+  "DiagnosticCode.unknown-doc-tag": {
+    "en": "Unknown doc annotation",
+    "zh-CN": "未知文档注解。"
+  },
+  "DiagnosticCode.unnecessary-assert": {
+    "en": "unnecessary-assert",
+    "zh-CN": "不必要的 assert。"
+  },
+  "DiagnosticCode.unnecessary-if": {
+    "en": "unnecessary-if",
+    "zh-CN": "不必要的 if。"
+  },
+  "DiagnosticCode.unreachable-code": {
+    "en": "Unreachable code",
+    "zh-CN": "不可达的代码。"
+  },
+  "DiagnosticCode.unused": {
+    "en": "Unused",
+    "zh-CN": "未使用的变量。"
+  },
+  "DiagnosticSeveritySetting.error": {
+    "en": "Represents an error diagnostic severity.",
+    "zh-CN": "诊断严重性: 错误。"
+  },
+  "DiagnosticSeveritySetting.hint": {
+    "en": "Represents a hint diagnostic severity.",
+    "zh-CN": "诊断严重性: 提示。"
+  },
+  "DiagnosticSeveritySetting.information": {
+    "en": "Represents an information diagnostic severity.",
+    "zh-CN": "诊断严重性: 信息。"
+  },
+  "DiagnosticSeveritySetting.warning": {
+    "en": "Represents a warning diagnostic severity.",
+    "zh-CN": "诊断严重性: 警告。"
+  },
+  "EmmyrcCodeAction.insertSpace": {
+    "en": "Add space after `---` comments when inserting `@diagnostic disable-next-line`.",
+    "zh-CN": "是否在 '---' 后插入空格。"
+  },
+  "EmmyrcCodeLens.enable": {
+    "en": "Enable code lens."
+  },
+  "EmmyrcCompletion": {
+    "en": "Configuration for EmmyLua code completion.",
+    "zh-CN": "EmmyLua 代码补全配置。"
+  },
+  "EmmyrcCompletion.autoRequire": {
+    "en": "Automatically insert call to `require` when autocompletion\ninserts objects from other modules.",
+    "zh-CN": "自动补全 require 语句。"
+  },
+  "EmmyrcCompletion.autoRequireFunction": {
+    "en": "The function used for auto-requiring modules.",
+    "zh-CN": "自动补全 require 语句时使用的函数名。"
+  },
+  "EmmyrcCompletion.autoRequireNamingConvention": {
+    "en": "The naming convention for auto-required filenames.",
+    "zh-CN": "自动补全 require 语句时使用的命名规范。"
+  },
+  "EmmyrcCompletion.autoRequireSeparator": {
+    "en": "A separator used in auto-require paths.",
+    "zh-CN": "自动补全 require 语句时使用的分隔符。"
+  },
+  "EmmyrcCompletion.baseFunctionIncludesName": {
+    "en": "Whether to include the name in the base function completion. Effect: `function () end` -> `function name() end`.",
+    "zh-CN": "是否在基本函数补全中包含函数名。效果: `function () end` -> `function name() end`。"
+  },
+  "EmmyrcCompletion.callSnippet": {
+    "en": "Whether to use call snippets in completions.",
+    "zh-CN": "是否使用代码片段补全函数调用。"
+  },
+  "EmmyrcCompletion.enable": {
+    "en": "Enable autocompletion.",
+    "zh-CN": "是否启用代码补全。"
+  },
+  "EmmyrcCompletion.postfix": {
+    "en": "Symbol that's used to trigger postfix autocompletion.",
+    "zh-CN": "后缀补全触发关键词。"
+  },
+  "EmmyrcDiagnostic": {
+    "en": "Represents the diagnostic configuration for Emmyrc.",
+    "zh-CN": "Emmyrc 诊断配置。"
+  },
+  "EmmyrcDiagnostic.diagnosticInterval": {
+    "en": "Delay between opening/changing a file and scanning it for errors, in milliseconds.",
+    "zh-CN": "诊断间隔时间(毫秒)。"
+  },
+  "EmmyrcDiagnostic.disable": {
+    "en": "A list of diagnostic codes that are disabled.",
+    "zh-CN": "禁用的诊断代码列表。"
+  },
+  "EmmyrcDiagnostic.enable": {
+    "en": "A flag indicating whether diagnostics are enabled.",
+    "zh-CN": "是否启用诊断。"
+  },
+  "EmmyrcDiagnostic.enables": {
+    "en": "A list of diagnostic codes that are enabled.",
+    "zh-CN": "启用的诊断代码列表。"
+  },
+  "EmmyrcDiagnostic.globals": {
+    "en": "A list of global variables.",
+    "zh-CN": "全局变量列表，在该列表中的全局变量不会被诊断为未定义。"
+  },
+  "EmmyrcDiagnostic.globalsRegex": {
+    "en": "A list of regular expressions for global variables.",
+    "zh-CN": "全局变量正则表达式列表，符合正则表达式的全局变量不会被诊断为未定义。"
+  },
+  "EmmyrcDiagnostic.severity": {
+    "en": "A map of diagnostic codes to their severity settings.",
+    "zh-CN": "诊断代码与严重性设置的映射。"
+  },
+  "EmmyrcDoc.knownTags": {
+    "en": "List of known documentation tags.",
+    "zh-CN": "已知文档标签列表。"
+  },
+  "EmmyrcDoc.privateName": {
+    "en": "Treat specific field names as private, e.g. `m_*` means `XXX.m_id` and `XXX.m_type` are private, witch can only be accessed in the class where the definition is located.",
+    "zh-CN": "将特定字段名视为私有，例如 `m_*` 表示 `XXX.m_id` 和 `XXX.m_type` 是私有字段，只能在定义所在的类中访问。"
+  },
+  "EmmyrcDocumentColor.enable": {
+    "en": "Enable parsing strings for color tags and showing a color picker next to them.",
+    "zh-CN": "是否启用文档颜色。"
+  },
+  "EmmyrcFilenameConvention.camel-case": {
+    "en": "Convert the filename to camelCase.",
+    "zh-CN": "将文件名转换为驼峰(camelCase)命名。"
+  },
+  "EmmyrcFilenameConvention.keep": {
+    "en": "Keep the original filename.",
+    "zh-CN": "保持原始文件名。"
+  },
+  "EmmyrcFilenameConvention.keep-class": {
+    "en": "When returning class definition, use class name, otherwise keep original name.",
+    "zh-CN": "返回类定义时，使用类名，否则保持原始名称。"
+  },
+  "EmmyrcFilenameConvention.pascal-case": {
+    "en": "Convert the filename to PascalCase.",
+    "zh-CN": "将文件名转换为帕斯卡(PascalCase)命名。"
+  },
+  "EmmyrcFilenameConvention.snake-case": {
+    "en": "Convert the filename to snake_case.",
+    "zh-CN": "将文件名转换为蛇形(snake_case)命名。"
+  },
+  "EmmyrcHover.enable": {
+    "en": "Enable showing documentation on hover.",
+    "zh-CN": "是否启用悬浮提示。"
+  },
+  "EmmyrcInlayHint.enable": {
+    "en": "Enable inlay hints.",
+    "zh-CN": "是否启用内联提示。"
+  },
+  "EmmyrcInlayHint.enumParamHint": {
+    "en": "Show name of enumerator when passing a literal value to a function\nthat expects an enum.\n\nExample:\n\n```lua\n--- @enum Level\nlocal Foo = {\n   Info = 1,\n   Error = 2,\n}\n\n--- @param l Level\nfunction print_level(l) end\n\nprint_level(1 --[[ Hint: Level.Info ]])\n```",
+    "zh-CN": "是否启用枚举参数提示。"
+  },
+  "EmmyrcInlayHint.indexHint": {
+    "en": "Show named array indexes.\n\nExample:\n\n```lua\nlocal array = {\n   [1] = 1, -- [name]\n}\n\nprint(array[1] --[[ Hint: name ]])\n```",
+    "zh-CN": "在索引表达式跨行时，显示提示。"
+  },
+  "EmmyrcInlayHint.localHint": {
+    "en": "Show types of local variables.",
+    "zh-CN": "是否启用局部变量提示。"
+  },
+  "EmmyrcInlayHint.metaCallHint": {
+    "en": "Show hint when calling an object results in a call to\nits meta table's `__call` function.",
+    "zh-CN": "是否启用 `__call` 调用提示。"
+  },
+  "EmmyrcInlayHint.overrideHint": {
+    "en": "Show methods that override functions from base class.",
+    "zh-CN": "是否启用重写提示。"
+  },
+  "EmmyrcInlayHint.paramHint": {
+    "en": "Show parameter names in function calls and parameter types in function definitions.",
+    "zh-CN": "是否启用参数提示。"
+  },
+  "EmmyrcInlineValues.enable": {
+    "en": "Show inline values during debug.",
+    "zh-CN": "是否启用内联值。用于在调试断点时显示变量值。"
+  },
+  "EmmyrcLuaVersion.Lua5.1": {
+    "en": "Lua 5.1"
+  },
+  "EmmyrcLuaVersion.Lua5.2": {
+    "en": "Lua 5.2"
+  },
+  "EmmyrcLuaVersion.Lua5.3": {
+    "en": "Lua 5.3"
+  },
+  "EmmyrcLuaVersion.Lua5.4": {
+    "en": "Lua 5.4"
+  },
+  "EmmyrcLuaVersion.Lua5.5": {
+    "en": "Lua 5.5"
+  },
+  "EmmyrcLuaVersion.LuaJIT": {
+    "en": "LuaJIT"
+  },
+  "EmmyrcLuaVersion.LuaLatest": {
+    "en": "Lua Latest"
+  },
+  "EmmyrcReference.enable": {
+    "en": "Enable searching for symbol usages.",
+    "zh-CN": "是否启用引用搜索。"
+  },
+  "EmmyrcReference.fuzzySearch": {
+    "en": "Use fuzzy search when searching for symbol usages\nand normal search didn't find anything.",
+    "zh-CN": "是否启用模糊搜索。"
+  },
+  "EmmyrcReference.shortStringSearch": {
+    "en": "Also search for usages in strings.",
+    "zh-CN": "缓存短字符串用于搜索。"
+  },
+  "EmmyrcRuntime.classDefaultCall": {
+    "en": "class default overload function.",
+    "zh-CN": "类默认重载函数。"
+  },
+  "EmmyrcRuntime.extensions": {
+    "en": "file Extensions. eg: .lua, .lua.txt",
+    "zh-CN": "文件扩展名。例如：.lua, .lua.txt"
+  },
+  "EmmyrcRuntime.frameworkVersions": {
+    "en": "Framework versions.",
+    "zh-CN": "框架版本列表。"
+  },
+  "EmmyrcRuntime.requireLikeFunction": {
+    "en": "Functions that like require.",
+    "zh-CN": "类似 require 的函数列表。"
+  },
+  "EmmyrcRuntime.requirePattern": {
+    "en": "Require pattern. eg. \"?.lua\", \"?/init.lua\"",
+    "zh-CN": "require 模式。例如：\"?.lua\", \"?/init.lua\""
+  },
+  "EmmyrcRuntime.version": {
+    "en": "Lua version.",
+    "zh-CN": "Lua 版本。"
+  },
+  "EmmyrcSemanticToken.enable": {
+    "en": "Enable semantic tokens.",
+    "zh-CN": "是否启用语义标记。"
+  },
+  "EmmyrcSignature.detailSignatureHelper": {
+    "en": "Whether to enable signature help.",
+    "zh-CN": "是否启用签名帮助。"
+  },
+  "EmmyrcStrict.arrayIndex": {
+    "en": "Whether to enable strict mode array indexing.",
+    "zh-CN": "是否启用严格模式数组索引，严格模式下数组取值返回将包含 nil。"
+  },
+  "EmmyrcStrict.docBaseConstMatchBaseType": {
+    "en": "Base constant types defined in doc can match base types, allowing int to match `---@alias id 1|2|3`, same for string.",
+    "zh-CN": "doc定义的基础常量类型可以匹配基础类型，使 int 可以匹配 `---@alias id 1|2|3`，string 同理。"
+  },
+  "EmmyrcStrict.metaOverrideFileDefine": {
+    "en": "meta define overrides file define",
+    "zh-CN": "`---@meta`文件的定义完全覆盖真实文件的定义。"
+  },
+  "EmmyrcStrict.requirePath": {
+    "en": "Whether to enable strict mode require path.",
+    "zh-CN": "是否启用严格模式 require 路径。严格模式时 require 必须从指定的根目录开始。"
+  },
+  "EmmyrcWorkspace.enableReindex": {
+    "en": "Enable full project reindex after changing a file.",
+    "zh-CN": "启用重新索引。"
+  },
+  "EmmyrcWorkspace.encoding": {
+    "en": "Encoding. eg: \"utf-8\"",
+    "zh-CN": "编码。例如：\"utf-8\""
+  },
+  "EmmyrcWorkspace.ignoreDir": {
+    "en": "Ignore directories.",
+    "zh-CN": "忽略的目录。"
+  },
+  "EmmyrcWorkspace.ignoreGlobs": {
+    "en": "Ignore globs. eg: [\"**/*.lua\"]",
+    "zh-CN": "忽略的文件。例如：[\"**/*.lua\"]"
+  },
+  "EmmyrcWorkspace.library": {
+    "en": "Library paths. eg: \"/usr/local/share/lua/5.1\"",
+    "zh-CN": "库路径。例如：\"/usr/local/share/lua/5.1\""
+  },
+  "EmmyrcWorkspace.moduleMap": {
+    "en": "Module map. key is regex, value is new module regex\neg: {\n    \"^(.*)$\": \"module_$1\"\n    \"^lib(.*)$\": \"script$1\"\n}",
+    "zh-CN": "模块映射列表。key 是正则表达式，value 是新的模块正则表达式\n 例如：{\n    \"^(.*)$\": \"module_$1\"\n    \"^lib(.*)$\": \"script$1\"\n}"
+  },
+  "EmmyrcWorkspace.reindexDuration": {
+    "en": "Delay between changing a file and full project reindex, in milliseconds.",
+    "zh-CN": "当保存文件时，ls 将在指定毫秒后重新索引工作区。"
+  },
+  "EmmyrcWorkspace.workspaceRoots": {
+    "en": "Workspace roots. eg: [\"src\", \"test\"]",
+    "zh-CN": "工作区根目录列表。例如：[\"src\", \"test\"]"
+  }
+}

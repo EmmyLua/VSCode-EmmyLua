@@ -106,6 +106,16 @@
                 "language": "lua"
             }
         ],
+        "jsonValidation": [
+            {
+                "fileMatch": ".emmyrc.json",
+                "url": "emmyrc-schema://schemas/emmyrc"
+            },
+            {
+                "fileMatch": ".emmyrc.json",
+                "url": "./syntaxes/schema.json"
+            }
+        ],
         "debuggers": [
             {
                 "type": "emmylua_attach",
@@ -1059,12 +1069,6 @@
                 "editor.wordBasedSuggestions": "off"
             }
         },
-        "jsonValidation": [
-            {
-                "fileMatch": ".emmyrc.json",
-                "url": "./syntaxes/schema.json"
-            }
-        ],
         "colors": [],
         "semanticTokenScopes": [
             {

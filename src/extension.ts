@@ -18,6 +18,7 @@ import { get } from './configRenames';
 import * as Annotator from './annotator';
 import { LuaRocksManager } from './luarocks/LuaRocksManager';
 import { LuaRocksTreeProvider, PackageTreeItem } from './luarocks/LuaRocksTreeProvider';
+import { EmmyrcSchemaContentProvider } from './emmyrcSchemaContentProvider';
 interface DebuggerConfig {
     readonly type: string;
     readonly provider: vscode.DebugConfigurationProvider;
@@ -31,6 +32,11 @@ let luaRocksTreeProvider: LuaRocksTreeProvider | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('EmmyLua extension activated!');
+
+    // 提供`.emmyrc.json`的 i18n
+    context.subscriptions.push(
+        vscode.workspace.registerTextDocumentContentProvider('emmyrc-schema', new EmmyrcSchemaContentProvider(context))
+    );
 
     extensionContext = new EmmyContext(
         process.env['EMMY_DEV'] === 'true',
@@ -433,7 +439,7 @@ async function showPackageInfo(item: PackageTreeItem): Promise<void> {
     const quickPick = vscode.window.createQuickPick();
     quickPick.title = `Package: ${packageInfo.name}`;
     quickPick.placeholder = 'Package Information';
-    
+
     const items: vscode.QuickPickItem[] = [
         {
             label: `$(package) ${packageInfo.name}`,
