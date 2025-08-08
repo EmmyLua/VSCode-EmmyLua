@@ -1196,7 +1196,8 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "test": "npm run compile && node ./node_modules/vscode/bin/test",
+        "release": "node --disable-warning=ExperimentalWarning ./build/release.js"
     },
     "devDependencies": {
         "@types/mocha": "^9.1.0",
