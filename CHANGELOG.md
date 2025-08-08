@@ -2,6 +2,85 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.27] - 2025-8-8
+
+### 🐛 Fixed
+- **Fixed a stack overflow crash**: Resolved an issue that caused the language server to crash due to excessive recursion.
+- **Fixed a deadlock issue**: Resolved an issue that caused the language server to hang indefinitely in Neovim.
+- **Fixed workspace libraries**: Resolved an issue where libraries in subdirectories were incorrectly added to the main workspace.
+- **Fixed error reporting**: Resolved an issue where error reports were not being generated correctly for table fields.
+
+### ✨ Added
+- **Support for Markdown/MarkdownRst**: Added support for Markdown and reStructuredText (RST) formats highlighted in documentation comments.
+This feature is disabled by default and can be enabled with the following configuration:
+```json
+{
+  "semanticTokens": {
+    "renderDocumentationMarkup": true
+  },
+  "doc": {
+    "syntax": "md"
+  }
+}
+```
+
+- **Support for external formatting tools**: Added support for external formatting tools. You can now configure an external formatter to format your Lua code. This feature can be enabled with the following configuration:
+```json
+{
+  "format": {
+    "externalTool": {
+      "program": "stylua",
+      "args": [
+        "-",
+        "--stdin-filepath",
+        "${file}",
+        "--indent-width=${indent_size}",
+        "--indent-type",
+        "${use_tabs:Tabs:Spaces}"
+      ]
+    }
+  }
+}
+```
+Note: The built-in formatter is not stylua, but emmyluacodestyle. This feature simply provides an extension point, allowing users to use their preferred formatting tool. In terms of performance, using this extension may be faster than using other plugins.
+
+- **Support for non-standard symbols**: Added support for non-standard symbols in Lua.
+
+```json
+{
+  "runtime": {
+    "nonstandardSymbol": [
+      "//",
+      "/**/",
+      "`",
+      "+=",
+      "-=",
+      "*=",
+      "/=",
+      "%=",
+      "^=",
+      "//=",
+      "|=",
+      "&=",
+      "<<=",
+      ">>=",
+      "||",
+      "&&",
+      "!",
+      "!=",
+      "continue"
+    ]
+  }
+}
+```
+
+- **LuaRocks Integration Support**: Now supports integrating LuaRocks. When the plugin starts, it will check for the presence of LuaRocks-related configuration files. If it is a LuaRocks project, a tree view of LuaRocks packages will be generated in the lower left corner of the explorer. Features such as search, install, and uninstall are supported.
+This feature is entirely AI-generated; I have no particular preference for it. Contributions to improve it via PR are welcome.
+
+- **Configuration File Localization Support**: Now supports providing localized translations (Chinese/English) in the configuration file.
+
+- **Configuration Delegation to Plugin**: Some `.emmyrc` configurations can now also be managed through the VSCode plugin's configuration system.
+
 ## [0.9.26] - 2025-7-27
 ### 🐛 Fixed
 - **Fix create an empty directory**:  Fixed an issue where the language server would create an empty directory.

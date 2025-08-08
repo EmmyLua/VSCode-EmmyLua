@@ -50,13 +50,21 @@
       "$ref": "#/$defs/EmmyrcDoc",
       "default": {
         "knownTags": [],
-        "privateName": []
+        "privateName": [],
+        "syntax": "none"
       }
     },
     "documentColor": {
       "$ref": "#/$defs/EmmyrcDocumentColor",
       "default": {
         "enable": true
+      }
+    },
+    "format": {
+      "$ref": "#/$defs/EmmyrcReformat",
+      "default": {
+        "externalTool": null,
+        "useDiff": false
       }
     },
     "hint": {
@@ -107,6 +115,7 @@
         },
         "extensions": [],
         "frameworkVersions": [],
+        "nonstandardSymbol": [],
         "requireLikeFunction": [],
         "requirePattern": [],
         "version": "LuaLatest"
@@ -115,7 +124,8 @@
     "semanticTokens": {
       "$ref": "#/$defs/EmmyrcSemanticToken",
       "default": {
-        "enable": true
+        "enable": true,
+        "renderDocumentationMarkup": false
       }
     },
     "signature": {
@@ -434,6 +444,15 @@
         }
       ]
     },
+    "DocSyntax": {
+      "type": "string",
+      "enum": [
+        "none",
+        "md",
+        "myst",
+        "rst"
+      ]
+    },
     "EmmyrcCodeAction": {
       "type": "object",
       "properties": {
@@ -603,6 +622,25 @@
           "items": {
             "type": "string"
           }
+        },
+        "rstDefaultRole": {
+          "description": "When `syntax` is `Myst` or `Rst`, specifies default role used\nwith RST processor.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rstPrimaryDomain": {
+          "description": "When `syntax` is `Myst` or `Rst`, specifies primary domain used\nwith RST processor.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "syntax": {
+          "description": "Syntax for highlighting documentation.",
+          "$ref": "#/$defs/DocSyntax",
+          "default": "none"
         }
       }
     },
@@ -614,6 +652,30 @@
           "type": "boolean",
           "default": true,
           "x-vscode-setting": true
+        }
+      }
+    },
+    "EmmyrcExternalTool": {
+      "type": "object",
+      "properties": {
+        "args": {
+          "description": "The arguments to pass to the external tool.",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "program": {
+          "description": "The command to run the external tool.",
+          "type": "string",
+          "default": ""
+        },
+        "timeout": {
+          "type": "integer",
+          "format": "uint64",
+          "default": 5000,
+          "minimum": 0
         }
       }
     },
@@ -754,6 +816,30 @@
         }
       ]
     },
+    "EmmyrcNonStdSymbol": {
+      "type": "string",
+      "enum": [
+        "//",
+        "/**/",
+        "`",
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        "%=",
+        "^=",
+        "//=",
+        "|=",
+        "&=",
+        "<<=",
+        ">>=",
+        "||",
+        "&&",
+        "!",
+        "!=",
+        "continue"
+      ]
+    },
     "EmmyrcReference": {
       "type": "object",
       "properties": {
@@ -774,6 +860,28 @@
           "type": "boolean",
           "default": false,
           "x-vscode-setting": true
+        }
+      }
+    },
+    "EmmyrcReformat": {
+      "type": "object",
+      "properties": {
+        "externalTool": {
+          "description": "Whether to enable internal code reformatting.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EmmyrcExternalTool"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "useDiff": {
+          "description": "Whether to use the diff algorithm for formatting.",
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -817,6 +925,14 @@
             "type": "string"
           }
         },
+        "nonstandardSymbol": {
+          "description": "Non-standard symbols.",
+          "type": "array",
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/EmmyrcNonStdSymbol"
+          }
+        },
         "requireLikeFunction": {
           "description": "Functions that like require.",
           "type": "array",
@@ -847,6 +963,12 @@
           "description": "Enable semantic tokens.",
           "type": "boolean",
           "default": true,
+          "x-vscode-setting": true
+        },
+        "renderDocumentationMarkup": {
+          "description": "Render Markdown/RST in documentation. Set `doc.syntax` for this option to have effect.",
+          "type": "boolean",
+          "default": false,
           "x-vscode-setting": true
         }
       }
