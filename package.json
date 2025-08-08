@@ -961,7 +961,10 @@
                         "markdownDescription": "%config.emmylua.colors.local.description%"
                     },
                     "emmylua.colors.mutable_underline": {
-                        "type": ["boolean", "null"],
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
                         "default": null,
                         "markdownDescription": "%config.emmylua.colors.mutableUnderline.description%",
                         "markdownDeprecationMessage": "Use `emmylua.colors.mutableUnderline` instead"
@@ -977,10 +980,10 @@
                 "title": "Misc",
                 "order": 12,
                 "properties": {
-                    "emmylua.misc.autoInsertTripleDash": {
+                    "emmylua.language.completeAnnotation": {
                         "type": "boolean",
                         "default": true,
-                        "markdownDescription": "%config.emmylua.misc.autoInsertTripleDash.description%"
+                        "markdownDescription": "%config.emmylua.language.completeAnnotation.description%"
                     }
                 }
             },
@@ -1002,7 +1005,10 @@
                         "markdownDescription": "%config.emmylua.ls.executablePath.description%"
                     },
                     "emmylua.misc.executablePath": {
-                        "type": ["string", "null"],
+                        "type": [
+                            "string",
+                            "null"
+                        ],
                         "default": null,
                         "markdownDescription": "%config.emmylua.ls.executablePath.description%",
                         "markdownDeprecationMessage": "Use `emmylua.ls.executablePath` instead"
@@ -1013,7 +1019,10 @@
                         "markdownDescription": "%config.emmylua.ls.globalConfigPath.description%"
                     },
                     "emmylua.misc.globalConfigPath": {
-                        "type": ["string", "null"],
+                        "type": [
+                            "string",
+                            "null"
+                        ],
                         "default": null,
                         "markdownDescription": "%config.emmylua.ls.globalConfigPath.description%",
                         "markdownDeprecationMessage": "Use `emmylua.ls.globalConfigPath` instead"
@@ -1030,7 +1039,10 @@
                         "markdownDescription": "%config.lua.trace.server.description%"
                     },
                     "emmylua.ls.debugPort": {
-                        "type": ["integer", "null"],
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
                         "default": null,
                         "markdownDescription": "Look for language server on this port instead of starting it from an executable"
                     }
