@@ -32,6 +32,11 @@ let luaRocksTreeProvider: LuaRocksTreeProvider | undefined;
 export async function activate(context: vscode.ExtensionContext) {
     console.log('EmmyLua extension activated!');
 
+    // 提供`.emmyrc.json`的 i18n
+    context.subscriptions.push(
+        vscode.workspace.registerTextDocumentContentProvider('emmyrc-schema', new EmmyrcSchemaContentProvider(context))
+    );
+
     extensionContext = new EmmyContext(
         process.env['EMMY_DEV'] === 'true',
         context
@@ -433,7 +438,7 @@ async function showPackageInfo(item: PackageTreeItem): Promise<void> {
     const quickPick = vscode.window.createQuickPick();
     quickPick.title = `Package: ${packageInfo.name}`;
     quickPick.placeholder = 'Package Information';
-    
+
     const items: vscode.QuickPickItem[] = [
         {
             label: `$(package) ${packageInfo.name}`,
@@ -551,6 +556,59 @@ async function checkLuaRocksInstallation(): Promise<void> {
         );
         if (action === 'Install Guide') {
             vscode.env.openExternal(vscode.Uri.parse('https://luarocks.org/#quick-start'));
+        }
+    }
+}
+
+
+
+/**
+ * 提供`.emmyrc.json`的 i18n
+ */
+class EmmyrcSchemaContentProvider implements vscode.TextDocumentContentProvider {
+    private readonly schemaBaseDir: string;
+
+    constructor(context: vscode.ExtensionContext) {
+        this.schemaBaseDir = path.join(context.extensionPath, 'syntaxes');
+    }
+
+    async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
+        const schemaIdentifier = path.posix.basename(uri.path);
+        const locale = vscode.env.language;
+        let schemaFileName: string;
+
+        if (schemaIdentifier === 'emmyrc') {
+            switch (locale) {
+                case 'zh-cn':
+                case 'zh-CN':
+                case 'zh':
+                    schemaFileName = 'schema.zh-cn.json';
+                    break;
+                case 'en':
+                case 'en-US':
+                case 'en-GB':
+                default:
+                    schemaFileName = 'schema.json';
+                    break;
+            }
+        } else {
+            return '';
+        }
+
+        // 检查schema文件是否存在, 如果不存在则使用默认的
+        let schemaFilePath = path.join(this.schemaBaseDir, schemaFileName);
+        if (!fs.existsSync(schemaFilePath)) {
+            schemaFilePath = path.join(this.schemaBaseDir, 'schema.json');
+        }
+
+        try {
+            return await fs.promises.readFile(schemaFilePath, 'utf8');
+        } catch (error: any) {
+            return JSON.stringify({
+                "$schema": "https://json-schema.org/draft/2020-12/schema#",
+                "title": "Error Loading Schema",
+                "description": `Could not load schema: ${schemaFileName}. Error: ${error.message}.`
+            });
         }
     }
 }
