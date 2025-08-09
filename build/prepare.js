@@ -32,7 +32,8 @@ async function downloadDepends() {
             `${config.newLanguageServerUrl}/${config.newLanguageServerVersion}/${args[2]}`,
             `temp/${args[2]}`
         ),
-        downloadTo(`${newLanguageServerSchemaUrl}`, schemaPath),
+        // revert wrong url and path
+        // downloadTo(`${newLanguageServerSchemaUrl}`, schemaPath),
     ]);
 }
 
