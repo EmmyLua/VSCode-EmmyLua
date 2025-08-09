@@ -31,6 +31,7 @@
     "config.emmylua.references.fuzzySearch.description": "当普通搜索未找到任何内容时，使用模糊搜索查找符号用法。",
     "config.emmylua.references.shortStringSearch.description": "也在字符串中搜索用法。",
     "config.emmylua.semanticTokens.enable.description": "启用语义标记。",
+    "config.emmylua.semanticTokens.renderDocumentationMarkup.description": "Render Markdown/RST in documentation. Set `doc.syntax` for this option to have effect.",
     "config.emmylua.workspace.enableReindex.description": "更改文件后启用整个项目的重新索引。",
     "config.emmylua.workspace.reindexDuration.description": "更改文件与整个项目重新索引之间的延迟（毫秒）。",
     "config.lua.trace.server.description": "在输出视图中跟踪 VSCode 与 EmmyLua 语言服务器之间的通信。默认值为 `off`",

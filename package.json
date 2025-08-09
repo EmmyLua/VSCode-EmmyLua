@@ -910,6 +910,29 @@
                         ],
                         "default": null,
                         "markdownDescription": "%config.emmylua.semanticTokens.enable.description%"
+                    },
+                    "emmylua.semanticTokens.renderDocumentationMarkup": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "enum": [
+                            null,
+                            true,
+                            false
+                        ],
+                        "enumItemLabels": [
+                            "Default",
+                            "On",
+                            "Off"
+                        ],
+                        "markdownEnumDescriptions": [
+                            "%config.common.enum.default.description%",
+                            "%config.common.enum.on.description%",
+                            "%config.common.enum.off.description%"
+                        ],
+                        "default": null,
+                        "markdownDescription": "%config.emmylua.semanticTokens.renderDocumentationMarkup.description%"
                     }
                 }
             },
@@ -1202,7 +1225,8 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "test": "npm run compile && node ./node_modules/vscode/bin/test",
+        "release": "node --disable-warning=ExperimentalWarning ./build/release.js"
     },
     "devDependencies": {
         "@types/mocha": "^9.1.0",
