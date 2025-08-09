@@ -304,13 +304,18 @@ async function initializeLuaRocks(): Promise<void> {
         return;
     }
 
-    // Initialize LuaRocks manager
-    luaRocksManager = new LuaRocksManager(workspaceFolder);
-    let workspace = await luaRocksManager.detectLuaRocksWorkspace();
-    if (!workspace.hasRockspec) {
+    const rockspecFiles = await vscode.workspace.findFiles(
+        new vscode.RelativePattern(workspaceFolder, '*.rockspec'),
+        null,
+        10
+    );
+
+    if (rockspecFiles.length === 0) {
         return;
     }
 
+    // Initialize LuaRocks manager
+    luaRocksManager = new LuaRocksManager(workspaceFolder);
     luaRocksTreeProvider = new LuaRocksTreeProvider(luaRocksManager);
 
     // Register tree view
@@ -328,7 +333,10 @@ async function initializeLuaRocks(): Promise<void> {
     // Check if LuaRocks is installed
     const isInstalled = await luaRocksManager.checkLuaRocksInstallation();
     if (isInstalled) {
-        vscode.window.showInformationMessage(`Found ${workspace.rockspecFiles.length} rockspec file(s) in workspace`);
+        let workspace = await luaRocksManager.detectLuaRocksWorkspace();
+        if (workspace) {
+            vscode.window.showInformationMessage(`Found ${workspace.rockspecFiles.length} rockspec file(s) in workspace`);
+        }
     }
 }
 
