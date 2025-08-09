@@ -1,5 +1,6 @@
 import { LanguageConfiguration, IndentAction, IndentationRule } from "vscode";
 import { workspace } from "vscode";
+import { get } from "./configRenames";
 export class LuaLanguageConfiguration implements LanguageConfiguration {
     public onEnterRules: any[];
 
@@ -36,7 +37,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             undefined,
             workspace.workspaceFolders?.[0]
         );
-        const completeAnnotation = config.get<boolean>('emmylua.language.completeAnnotation', true);
+        const completeAnnotation = get<boolean>(config, 'emmylua.language.completeAnnotation') ?? true;
         // 第二个参数是默认值（当配置不存在时使用）
         if (completeAnnotation) {
             this.onEnterRules = [
