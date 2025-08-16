@@ -145,6 +145,10 @@ function renderSetting(key, path, setting, result, descriptions) {
         return null;
     }
 
+    if (setting.deprecated) {
+        rendered.deprecationMessage = "%config.common.deprecated%";
+    }
+
     if (!setting.description) {
         console.warn(`Found undocumented option: ${key}`);
     }
