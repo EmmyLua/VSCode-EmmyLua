@@ -1,4 +1,5 @@
 {
+    "config.common.deprecated": "This option is deprecated",
     "config.common.enum.default.description": "Use value from `.emmyrc.json` or fall back to default",
     "config.common.enum.off.description": "Override `.emmyrc.json` and disable this option",
     "config.common.enum.on.description": "Override `.emmyrc.json` and enable this option",

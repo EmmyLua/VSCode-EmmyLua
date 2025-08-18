@@ -1,4 +1,5 @@
 {
+    "config.common.deprecated": "This option is deprecated",
     "config.common.enum.default.description": "使用 `.emmyrc.json` 中的值，或回退到默认值",
     "config.common.enum.off.description": "覆盖 `.emmyrc.json` 并禁用此选项",
     "config.common.enum.on.description": "覆盖 `.emmyrc.json` 并启用此选项",
