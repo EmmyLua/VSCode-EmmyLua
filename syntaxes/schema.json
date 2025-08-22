@@ -51,7 +51,7 @@
       "default": {
         "knownTags": [],
         "privateName": [],
-        "syntax": "none"
+        "syntax": "md"
       }
     },
     "documentColor": {
@@ -118,6 +118,7 @@
         "nonstandardSymbol": [],
         "requireLikeFunction": [],
         "requirePattern": [],
+        "special": {},
         "version": "LuaLatest"
       }
     },
@@ -125,7 +126,7 @@
       "$ref": "#/$defs/EmmyrcSemanticToken",
       "default": {
         "enable": true,
-        "renderDocumentationMarkup": false
+        "renderDocumentationMarkup": true
       }
     },
     "signature": {
@@ -417,6 +418,11 @@
           "description": "enum-value-mismatch",
           "type": "string",
           "const": "enum-value-mismatch"
+        },
+        {
+          "description": "preferred-local-alias",
+          "type": "string",
+          "const": "preferred-local-alias"
         }
       ]
     },
@@ -640,7 +646,7 @@
         "syntax": {
           "description": "Syntax for highlighting documentation.",
           "$ref": "#/$defs/DocSyntax",
-          "default": "none"
+          "default": "md"
         }
       }
     },
@@ -949,6 +955,14 @@
             "type": "string"
           }
         },
+        "special": {
+          "description": "Special symbols.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/EmmyrcSpecialSymbol"
+          },
+          "default": {}
+        },
         "version": {
           "description": "Lua version.",
           "$ref": "#/$defs/EmmyrcLuaVersion",
@@ -982,6 +996,17 @@
           "default": true
         }
       }
+    },
+    "EmmyrcSpecialSymbol": {
+      "type": "string",
+      "enum": [
+        "none",
+        "require",
+        "error",
+        "assert",
+        "type",
+        "setmetatable"
+      ]
     },
     "EmmyrcStrict": {
       "type": "object",

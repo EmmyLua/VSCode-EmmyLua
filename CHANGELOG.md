@@ -2,6 +2,36 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.28] - 2025-8-22
+
+### 🐛 Fixed
+- **Crash issue fixed**: Fixed a crash caused by parsing Unicode characters in comments.
+- **Large table performance issue fixed**: Fixed a performance issue where parsing large array tables in projects caused severe slowdowns.
+- **Generic type matching fixed**: Fixed an issue with incorrect matching of `constTpl<T>` types affecting generic type hints.
+
+### ✨ Added
+- **Markdown syntax highlighting enabled by default**: Markdown syntax highlighting in comments is now enabled by default, including partial syntax highlighting for code blocks within comments.
+- **Support for `@language`**: Added support for using `@language` in comments to specify the language of code blocks, for example:
+  ```lua
+  ---@language lua
+  local d = [[
+    print("Hello, world!")
+  ]]
+  ```
+  This enables syntax highlighting for Lua code.
+
+- **Support for `Language<T>` generic type**: You can now use `Language<T: string>` in parameter comments to specify the language of a parameter, for example:
+  ```lua
+  ---@param lang Language<"vim">
+  function vim_run(lang)
+  end
+
+  vim_run [[set ft=lua]]
+  ```
+  Supported injected languages: lua, vim, sql, json, shell, protobuf.
+
+- **Support for `keyof type`**: When a function parameter is `keyof type`, corresponding code completion is provided.
+
 ## [0.9.27] - 2025-8-8
 
 ### 🐛 Fixed

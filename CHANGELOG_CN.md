@@ -1,5 +1,35 @@
 # 🚀 Change Log
 
+## [0.9.28] - 2025-8-22
+
+### 🐛 问题修复
+- **崩溃问题修复**：修复了解析注释中的 Unicode 字符导致的崩溃问题。
+- **大型表性能问题修复**：修复了解析项目中大型数组表时导致严重性能下降的问题。
+- **泛型类型匹配修复**：修复了 `constTpl<T>` 类型匹配错误影响泛型类型提示的问题。
+
+### ✨ 新增功能
+- **Markdown 语法高亮默认启用**：注释中的 Markdown 语法高亮现已默认启用，包括对注释内代码块的部分语法高亮。
+- **支持 `@language`**：新增对注释中使用 `@language` 指定代码块语言的支持，例如：
+  ```lua
+  ---@language lua
+  local d = [[
+    print("Hello, world!")
+  ]]
+  ```
+  可为 Lua 代码块启用语法高亮。
+
+- **支持 `Language<T>` 泛型类型**：现在可在参数注释中使用 `Language<T: string>` 指定参数语言，例如：
+  ```lua
+  ---@param lang Language<"vim">
+  function vim_run(lang)
+  end
+
+  vim_run [[set ft=lua]]
+  ```
+  支持注入的语言包括：lua、vim、sql、json、shell、protobuf。
+
+- **支持 `keyof type`**：当函数参数为 `keyof type` 时，提供对应的代码补全。
+
 ## [0.9.27] - 2025-8-8
 
 ### 🐛 问题修复
