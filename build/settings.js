@@ -1,5 +1,12 @@
-const fs = require("fs");
-const path = require("path");
+import {
+    readSchema,
+    readLocaleDefault,
+    writeLocaleDefault,
+    readLocaleZhCn,
+    writeLocaleZhCn,
+    readPackage,
+    writePackage,
+} from "./util.js";
 
 function re(input) {
     // See https://keleshev.com/verbose-regular-expressions-in-javascript
@@ -33,10 +40,8 @@ function toTitleCase(s) {
     return t.charAt(0).toUpperCase() + t.substr(1);
 }
 
-function main() {
-    const schemaPath = path.join(__dirname, "..", "syntaxes", "schema.json");
-    const schemaContent = fs.readFileSync(schemaPath, "utf-8");
-    const schema = JSON.parse(schemaContent);
+export function main() {
+    const schema = readSchema();
     const definitions = schema.$defs || {};
     const properties = schema.properties;
     const settings = extractSettings(definitions, properties);
@@ -140,6 +145,10 @@ function renderSetting(key, path, setting, result, descriptions) {
         return null;
     }
 
+    if (setting.deprecated) {
+        rendered.deprecationMessage = "%config.common.deprecated%";
+    }
+
     if (!setting.description) {
         console.warn(`Found undocumented option: ${key}`);
     }
@@ -154,9 +163,7 @@ function renderSetting(key, path, setting, result, descriptions) {
 }
 
 function dumpLocalesEn(descriptions) {
-    const localePath = path.join(__dirname, "..", "package.nls.json");
-    const localeContent = fs.readFileSync(localePath, "utf-8");
-    const locale = JSON.parse(localeContent);
+    const locale = readLocaleDefault();
 
     for (const [key, value] of Object.entries(descriptions)) {
         if (locale[key] && locale[key] !== value) {
@@ -174,13 +181,11 @@ function dumpLocalesEn(descriptions) {
             newLocaleSorted[key] = locale[key];
         });
 
-    fs.writeFileSync(localePath, ensureNl(JSON.stringify(newLocaleSorted, null, 4)));
+    writeLocaleDefault(newLocaleSorted);
 }
 
 function dumpLocalesZhCn(descriptions) {
-    const localePath = path.join(__dirname, "..", "package.nls.zh-cn.json");
-    const localeContent = fs.readFileSync(localePath, "utf-8");
-    const locale = JSON.parse(localeContent);
+    const locale = readLocaleZhCn();
 
     for (const [key, value] of Object.entries(descriptions)) {
         if (!locale[key]) {
@@ -196,15 +201,13 @@ function dumpLocalesZhCn(descriptions) {
             newLocaleSorted[key] = locale[key];
         });
 
-    fs.writeFileSync(localePath, ensureNl(JSON.stringify(newLocaleSorted, null, 4)));
+    writeLocaleZhCn(newLocaleSorted);
 }
 
 function dumpPackageJson(rendered) {
-    const packagePath = path.join(__dirname, "..", "package.json");
-    const packageContent = fs.readFileSync(packagePath, "utf-8");
-    const package = JSON.parse(packageContent);
+    const packageJson = readPackage();
 
-    const configuration = package.contributes.configuration;
+    const configuration = packageJson.contributes.configuration;
 
     const configurationByTitle = {};
     const configurationByTitleAlwaysLast = {};
@@ -248,16 +251,7 @@ function dumpPackageJson(rendered) {
         });
     }
 
-    package.contributes.configuration = newConfiguration;
+    packageJson.contributes.configuration = newConfiguration;
 
-    fs.writeFileSync(packagePath, ensureNl(JSON.stringify(package, null, 4)));
+    writePackage(packageJson);
 }
-
-function ensureNl(s) {
-    if (!s.endsWith("\n")) {
-        s += "\n";
-    }
-    return s;
-}
-
-main();

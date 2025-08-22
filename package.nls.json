@@ -1,4 +1,5 @@
 {
+    "config.common.deprecated": "This option is deprecated",
     "config.common.enum.default.description": "Use value from `.emmyrc.json` or fall back to default",
     "config.common.enum.off.description": "Override `.emmyrc.json` and disable this option",
     "config.common.enum.on.description": "Override `.emmyrc.json` and enable this option",
@@ -31,6 +32,7 @@
     "config.emmylua.references.fuzzySearch.description": "Use fuzzy search when searching for symbol usages\nand normal search didn't find anything.",
     "config.emmylua.references.shortStringSearch.description": "Also search for usages in strings.",
     "config.emmylua.semanticTokens.enable.description": "Enable semantic tokens.",
+    "config.emmylua.semanticTokens.renderDocumentationMarkup.description": "Render Markdown/RST in documentation. Set `doc.syntax` for this option to have effect.",
     "config.emmylua.workspace.enableReindex.description": "Enable full project reindex after changing a file.",
     "config.emmylua.workspace.reindexDuration.description": "Delay between changing a file and full project reindex, in milliseconds.",
     "config.lua.trace.server.description": "Traces the communication between VSCode and the EmmyLua language server in the Output view. Default is `off`",

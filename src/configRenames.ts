@@ -4,6 +4,7 @@ const RENAMES: Record<string, string> = {
     "emmylua.colors.mutableUnderline": "emmylua.colors.mutable_underline",
     "emmylua.ls.executablePath": "emmylua.misc.executablePath",
     "emmylua.ls.globalConfigPath": "emmylua.misc.globalConfigPath",
+    "emmylua.language.completeAnnotation": "emmylua.misc.autoInsertTripleDash",
 };
 
 export function get<T>(
