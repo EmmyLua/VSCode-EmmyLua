@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { IProgressReport, ServerStatusParams } from './lspExtension';
+import { ServerStatusParams } from './lspExtension';
 
 type ServerHealth = 'ok' | 'warning' | 'error' | 'stop';
 
@@ -16,7 +16,6 @@ export class EmmyContext implements vscode.Disposable {
     
     private _client?: LanguageClient;
     private readonly _statusBar: vscode.StatusBarItem;
-    private readonly _loadBar: vscode.StatusBarItem;
     private readonly _disposables: vscode.Disposable[] = [];
 
     constructor(
@@ -24,10 +23,8 @@ export class EmmyContext implements vscode.Disposable {
         public readonly vscodeContext: vscode.ExtensionContext,
     ) {
         this._statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
-        this._loadBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
         
-        this._disposables.push(this._statusBar, this._loadBar);
-        
+        this._disposables.push(this._statusBar);
         this.setServerStatus({ health: "ok" });
     }
 
@@ -37,9 +34,6 @@ export class EmmyContext implements vscode.Disposable {
 
     set client(value: LanguageClient | undefined) {
         this._client = value;
-        if (value) {
-            this.registerProtocol();
-        }
     }
 
     setServerStatus(status: ServerStatusParams): void {
@@ -100,31 +94,6 @@ export class EmmyContext implements vscode.Disposable {
         }
 
         return tooltip;
-    }
-
-    private registerProtocol(): void {
-        if (!this._client) return;
-
-        this._disposables.push(
-            this._client.onNotification("emmy/progressReport", (data: IProgressReport) => {
-                this.handleProgressReport(data);
-            }),
-            
-            this._client.onNotification("emmy/setServerStatus", (param: ServerStatusParams) => {
-                this.setServerStatus(param);
-            })
-        );
-    }
-
-    private handleProgressReport(data: IProgressReport): void {
-        this._loadBar.show();
-        this._loadBar.text = `$(sync~spin) ${data.text}`;
-        
-        if (data.percent >= 1) {
-            setTimeout(() => {
-                this._loadBar.hide();
-            }, 1000);
-        }
     }
 
     stopServer(): void {

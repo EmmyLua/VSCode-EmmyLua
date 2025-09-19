@@ -64,6 +64,7 @@
       "$ref": "#/$defs/EmmyrcReformat",
       "default": {
         "externalTool": null,
+        "externalToolRangeFormat": null,
         "useDiff": false
       }
     },
@@ -82,6 +83,7 @@
     "hover": {
       "$ref": "#/$defs/EmmyrcHover",
       "default": {
+        "customDetail": null,
         "enable": true
       }
     },
@@ -678,6 +680,7 @@
           "default": ""
         },
         "timeout": {
+          "description": "The timeout for the external tool in milliseconds.",
           "type": "integer",
           "format": "uint64",
           "default": 5000,
@@ -717,6 +720,17 @@
     "EmmyrcHover": {
       "type": "object",
       "properties": {
+        "customDetail": {
+          "description": "The detail number of hover information.\nDefault is `None`, which means using the default detail level.\nYou can set it to a number between `1` and `255` to customize",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint8",
+          "default": null,
+          "maximum": 255,
+          "minimum": 0
+        },
         "enable": {
           "description": "Enable showing documentation on hover.",
           "type": "boolean",
@@ -873,7 +887,19 @@
       "type": "object",
       "properties": {
         "externalTool": {
-          "description": "Whether to enable internal code reformatting.",
+          "description": "Whether to enable external tool formatting.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EmmyrcExternalTool"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "externalToolRangeFormat": {
+          "description": "Whether to enable external tool range formatting.",
           "anyOf": [
             {
               "$ref": "#/$defs/EmmyrcExternalTool"

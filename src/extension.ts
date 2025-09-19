@@ -144,6 +144,7 @@ function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined): voi
 
 async function startServer(): Promise<void> {
     try {
+        extensionContext.setServerStatus({ health: 'ok'});
         await doStartServer();
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     } catch (reason) {

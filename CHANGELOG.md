@@ -2,6 +2,66 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.29] - 2025-9-19
+
+### 🔧 Changed
+
+- **Refactor LSP Handler**: Refactored LSP handler to improve performance and maintainability.
+- **Refactor Folding Range**: Refactored folding range to support `Intellij`
+- **Add More Semantic Token**: Added more semantic tokens to improve syntax highlighting.
+- **Parser Optimization**: The parser now reports syntax errors more accurately and has improved error recovery.
+- **@type Support for Return Statements**: You can now use `@type` above a return statement to specify the return value type, for example:
+```lua
+---@return vim.lsp.Config
+return {}
+```
+- **Type Checking Optimization**: Improved type checking algorithms for better performance.
+
+### 🐛 Fixed
+- **Fix create progress**: Fixed an issue with the `window/workDoneProgress/create` protocol; it must be sent as a request, not a notification.
+- **Fix Function Overload Algorithm**: Rewrote the function overload algorithm to better handle variadic function parameters.
+- **LSP Handler Order**: Fixed an issue where LSP request donot handle during initialization.it will be handle after initialization complete.
+
+### ✨ Added
+- **Support @link in comment**: You can now use `@link` in comments to create clickable links. For example:
+```lua
+--- This is a link to {@link string.format}
+```
+- **Support `--editor` directive**: You can now use the `--editor` directive to specify the editor type. For example:
+```shell
+emmylua_ls --editor intellij
+```
+- **Support range foramt for external tool**: You can now use the `rangeFormat` request to format a specific range of code using an external tool. This feature can be enabled with the following configuration:
+```json
+{
+  "format": {
+    "externalToolRangeFormat": {
+        "program": "stylua",
+        "args": [
+            "-",
+            "--stdin-filepath",
+            "${file}",
+            "--indent-width=${indent_size}",
+            "--indent-type",
+            "${use_tabs?Tabs:Spaces}",
+            "--range-start=${start_offset}",
+            "--range-end=${end_offset}"
+        ],
+        "timeout": 5000
+    }
+  }
+}
+```
+for more information, please refer to [External Formatter Options](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/external_format/external_formatter_options_EN.md).
+- **Add Basic EmmyLua Annotation Documentation**: Added more documentation for EmmyLua annotations, please refer to [EmmyLua Annotation Documentation](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/emmylua_doc/annotations_EN/README.md).
+
+- **SARIF Format for emmyLua_check**: `emmyLua_check` now supports SARIF format output, enabled via the `--format sarif` command line option.
+- **Generic List Supports T... Syntax**: Generic lists now support the `T...` syntax, for example:
+```lua
+---@alias MyTuple<T...> [T...]
+```
+
+
 ## [0.9.28] - 2025-8-22
 
 ### 🐛 Fixed

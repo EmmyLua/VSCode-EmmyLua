@@ -1,5 +1,65 @@
 # 🚀 Change Log
 
+## [0.9.29] - 2025-9-19
+
+### 🔧 变更
+
+- **重构 LSP 处理器**：重构了 LSP 处理器以提升性能和可维护性。
+- **重构折叠区间**：折叠区间功能已重构，现支持 `Intellij`。
+- **新增语义标记**：增加了更多语义标记以提升语法高亮效果。
+- **解析器优化**：解析器现在能更准确地报告语法错误，并提升了错误恢复能力。
+- **支持返回语句上的 @type**：现在可以在 return 语句上方使用 `@type` 指定返回值类型，例如：
+```lua
+---@return vim.lsp.Config
+return {}
+```
+- **类型检查优化**：优化了类型检查算法，提升了性能。
+
+### 🐛 问题修复
+- **修复进度创建协议**：修复了 `window/workDoneProgress/create` 协议，必须以请求方式发送而非通知。
+- **修复函数重载算法**：重写了函数重载算法，更好地处理可变参数函数。
+- **LSP 处理顺序修复**：修复了初始化期间 LSP 请求未处理的问题，现会在初始化完成后处理。
+
+### ✨ 新增功能
+- **支持注释中的 @link**：现在可以在注释中使用 `@link` 创建可点击链接，例如：
+```lua
+--- 这是一个指向 {@link string.format} 的链接
+```
+- **支持 `--editor` 指令**：现在可以使用 `--editor` 指定编辑器类型，例如：
+```shell
+emmylua_ls --editor intellij
+```
+- **支持外部工具区间格式化**：现在可以通过 `rangeFormat` 请求，使用外部工具格式化指定代码区间。可通过如下配置启用：
+```json
+{
+  "format": {
+    "externalToolRangeFormat": {
+        "program": "stylua",
+        "args": [
+            "-",
+            "--stdin-filepath",
+            "${file}",
+            "--indent-width=${indent_size}",
+            "--indent-type",
+            "${use_tabs?Tabs:Spaces}",
+            "--range-start=${start_offset}",
+            "--range-end=${end_offset}"
+        ],
+        "timeout": 5000
+    }
+  }
+}
+```
+更多信息请参考 [外部格式化工具选项](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/external_format/external_formatter_options_CN.md)。
+- **新增 EmmyLua 注解文档**：补充了 EmmyLua 注解相关文档，详见 [EmmyLua 注解文档](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/emmylua_doc/annotations_CN/README.md)。
+
+- **emmyLua_check 支持 SARIF 格式**：`emmyLua_check` 现支持 SARIF 格式输出，可通过命令行参数 `--format sarif` 启用。
+- **泛型列表支持 T... 语法**：泛型列表现已支持 `T...` 语法，例如：
+```lua
+---@alias MyTuple<T...> [T...]
+```
+
+
 ## [0.9.28] - 2025-8-22
 
 ### 🐛 问题修复
