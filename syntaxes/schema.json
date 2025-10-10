@@ -425,6 +425,16 @@
           "description": "preferred-local-alias",
           "type": "string",
           "const": "preferred-local-alias"
+        },
+        {
+          "description": "readonly",
+          "type": "string",
+          "const": "read-only"
+        },
+        {
+          "description": "Global variable defined in non-module scope",
+          "type": "string",
+          "const": "global-in-non-module"
         }
       ]
     },
