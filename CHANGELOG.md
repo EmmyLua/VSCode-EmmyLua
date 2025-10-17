@@ -2,6 +2,33 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+
+## [0.9.31] - 2025-10-17
+
+### ✨ Added
+- **Support `workspace/diagnostic`**: Added support for the `workspace/diagnostic` request, allowing clients to fetch diagnostics for the entire workspace.
+- **Support global function overload**: You can now define overloads for global functions in `@meta` files. For example:
+```lua
+---@meta
+
+
+function overload(a: integer): integer
+end
+
+function overload(a: string): string
+end
+```
+
+### 🔧 Changed
+- **Update lsp-server dependency**: Updated the `lsp-server` dependency to version 0.7.9 to leverage the latest features and improvements.
+- **Migrate `lsp-types` to `emmy-lsp-types`**: Migrated from using the `lsp-types` crate to the `emmy-lsp-types` crate, which is a fork tailored for EmmyLua Analyzer Rust. This change allows for better customization and alignment with the project's specific needs.
+
+### 🐛 Fixed
+- **Fix deadlock issue**: Resolved a deadlock issue that could occur during certain operations, improving the stability of the language server.
+- **Fix diagnostic reporting**: Fixed an issue where some diagnostics never cleaned up after files were change information.
+- **Fix overload description issue**: Fixed an issue where descriptions for overloaded functions were not displayed correctly in completion and hover tooltips.
+
+
 ## [0.9.30] - 2025-10-10
 
 ### ✨ Added

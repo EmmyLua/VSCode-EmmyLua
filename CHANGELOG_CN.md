@@ -1,5 +1,30 @@
 # 🚀 Change Log
 
+## [0.9.31] - 2025-10-17
+
+### ✨ 新增
+- **支持 `workspace/diagnostic`**：新增对 `workspace/diagnostic` 请求的支持，允许客户端获取整个工作区的诊断信息。
+- **支持全局函数重载**：现在可以在 `@meta` 文件中为全局函数定义重载。例如：
+```lua
+---@meta
+
+
+function overload(a: integer): integer
+end
+
+function overload(a: string): string
+end
+```
+
+### 🔧 变更
+- **更新 lsp-server 依赖**：将 `lsp-server` 依赖更新到 0.7.9，以利用最新功能和改进。
+- **将 `lsp-types` 迁移到 `emmy-lsp-types`**：将使用的 `lsp-types` crate 迁移为为 EmmyLua Analyzer Rust 定制的 `emmy-lsp-types` crate，此改动便于更好地定制并与项目需求对齐。
+
+### 🐛 修复
+- **修复死锁问题**：解决在某些操作中可能发生的死锁问题，提升语言服务器的稳定性。
+- **修复诊断上报问题**：修复文件更改后某些诊断未被清理的问题。
+- **修复重载描述问题**：修复重载函数的描述在补全和悬停提示中未正确显示的问题。
+
 ## [0.9.30] - 2025-10-10
 
 ### ✨ 新增
