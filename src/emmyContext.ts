@@ -243,6 +243,11 @@ export class EmmyContext implements vscode.Disposable {
                 label: '$(output) Show Output',
                 description: 'Open output channel',
                 detail: 'View server logs and output',
+            },
+            {
+                label: '$(symbol-structure) Show Syntax Tree',
+                description: 'View syntax tree for current file',
+                detail: 'Display the syntax tree of the active Lua file',
             }
         );
 
@@ -266,6 +271,8 @@ export class EmmyContext implements vscode.Disposable {
             this.showServerInfo();
         } else if (selected.label.includes('Output')) {
             this._client?.outputChannel?.show();
+        } else if (selected.label.includes('Syntax Tree')) {
+            await vscode.commands.executeCommand('emmy.showSyntaxTree');
         }
     }
 

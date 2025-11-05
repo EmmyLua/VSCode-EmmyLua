@@ -43,6 +43,11 @@
                 "title": "EmmyLua: Stop EmmyLua Language Server"
             },
             {
+                "command": "emmy.showSyntaxTree",
+                "title": "EmmyLua: Show Syntax Tree",
+                "icon": "$(symbol-structure)"
+            },
+            {
                 "command": "emmylua.luarocks.searchPackages",
                 "title": "Search Packages",
                 "category": "LuaRocks",

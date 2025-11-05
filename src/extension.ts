@@ -19,6 +19,7 @@ import * as Annotator from './annotator';
 import { LuaRocksManager } from './luarocks/LuaRocksManager';
 import { LuaRocksTreeProvider, PackageTreeItem } from './luarocks/LuaRocksTreeProvider';
 import { EmmyrcSchemaContentProvider } from './emmyrcSchemaContentProvider';
+import { SyntaxTreeManager, setClientGetter } from './syntaxTreeProvider';
 
 /**
  * Debugger configuration interface
@@ -41,6 +42,7 @@ export let extensionContext: EmmyContext;
 let activeEditor: vscode.TextEditor | undefined;
 let luaRocksManager: LuaRocksManager | undefined;
 let luaRocksTreeProvider: LuaRocksTreeProvider | undefined;
+let syntaxTreeManager: SyntaxTreeManager | undefined;
 
 /**
  * Extension activation entry point
@@ -90,6 +92,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         { id: 'emmy.showServerMenu', handler: showServerMenu },
         { id: 'emmy.showReferences', handler: showReferences },
         { id: 'emmy.insertEmmyDebugCode', handler: insertEmmyDebugCode },
+        { id: 'emmy.showSyntaxTree', handler: showSyntaxTree },
         // LuaRocks commands
         { id: 'emmylua.luarocks.searchPackages', handler: searchPackages },
         { id: 'emmylua.luarocks.installPackage', handler: installPackage },
@@ -138,6 +141,13 @@ function registerLanguageConfiguration(context: vscode.ExtensionContext): void {
  * Initialize all extension features
  */
 async function initializeExtension(): Promise<void> {
+    // Initialize syntax tree manager
+    syntaxTreeManager = new SyntaxTreeManager();
+    extensionContext.vscodeContext.subscriptions.push(syntaxTreeManager);
+    
+    // Set up client getter for syntax tree provider
+    setClientGetter(() => extensionContext.client);
+    
     await startServer();
     registerDebuggers();
     await initializeLuaRocks();
@@ -423,6 +433,39 @@ async function insertEmmyDebugCode() {
     ins.appendText(`local dbg = require("emmy_core")\n`);
     ins.appendText(`dbg.tcpListen("${host}", ${port})`);
     activeEditor.insertSnippet(ins);
+}
+
+/**
+ * Show syntax tree for current document
+ * Similar to rust-analyzer's "View Syntax Tree" feature
+ */
+async function showSyntaxTree(): Promise<void> {
+    const editor = vscode.window.activeTextEditor;
+    
+    if (!editor) {
+        vscode.window.showWarningMessage('No active editor');
+        return;
+    }
+
+    const document = editor.document;
+    
+    if (document.languageId !== extensionContext.LANGUAGE_ID) {
+        vscode.window.showWarningMessage('Current file is not a Lua file');
+        return;
+    }
+
+    if (!extensionContext.client) {
+        vscode.window.showWarningMessage('Language server is not running');
+        return;
+    }
+
+    if (!syntaxTreeManager) {
+        vscode.window.showErrorMessage('Syntax tree manager is not initialized');
+        return;
+    }
+
+    // Show syntax tree using the manager
+    await syntaxTreeManager.show(document.uri, editor.selection);
 }
 
 // LuaRocks Integration Functions

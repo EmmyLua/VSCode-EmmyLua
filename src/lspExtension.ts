@@ -45,3 +45,21 @@ export interface IServerLocation {
     uri: string;
     range: IServerRange;
 }
+
+/**
+ * Syntax tree request parameters
+ */
+export interface SyntaxTreeParams {
+    /** Document URI to get syntax tree for */
+    uri: string;
+    /** Optional range to get syntax tree for (if not specified, entire document) */
+    range?: IServerRange;
+}
+
+/**
+ * Syntax tree response
+ */
+export interface SyntaxTreeResponse {
+    /** The syntax tree as text */
+    content: string;
+}
