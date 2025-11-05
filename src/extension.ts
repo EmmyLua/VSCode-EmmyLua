@@ -47,6 +47,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const commands = [
         vscode.commands.registerCommand('emmy.stopServer', stopServer),
         vscode.commands.registerCommand('emmy.restartServer', restartServer),
+        vscode.commands.registerCommand('emmy.showServerMenu', showServerMenu),
         vscode.commands.registerCommand('emmy.showReferences', showReferences),
         vscode.commands.registerCommand('emmy.insertEmmyDebugCode', insertEmmyDebugCode),
         // LuaRocks commands
@@ -144,14 +145,26 @@ function onDidChangeActiveTextEditor(editor: vscode.TextEditor | undefined): voi
 
 async function startServer(): Promise<void> {
     try {
-        extensionContext.setServerStatus({ health: 'ok'});
+        extensionContext.setServerStarting();
         await doStartServer();
+        extensionContext.setServerRunning();
         onDidChangeActiveTextEditor(vscode.window.activeTextEditor);
     } catch (reason) {
-        extensionContext.setServerStatus({
-            health: 'error',
-            message: `Failed to start "EmmyLua" language server!\n${reason}`,
-            command: 'emmy.restartServer'
+        const errorMessage = reason instanceof Error ? reason.message : String(reason);
+        extensionContext.setServerError(
+            'Failed to start EmmyLua language server',
+            errorMessage
+        );
+        vscode.window.showErrorMessage(
+            `Failed to start EmmyLua language server: ${errorMessage}`,
+            'Retry',
+            'Show Logs'
+        ).then(action => {
+            if (action === 'Retry') {
+                restartServer();
+            } else if (action === 'Show Logs') {
+                extensionContext.client?.outputChannel?.show();
+            }
         });
     }
 }
@@ -229,13 +242,25 @@ async function doStartServer(): Promise<void> {
     console.log('EmmyLua client ready');
 }
 
-function restartServer(): void {
+async function restartServer(): Promise<void> {
     const client = extensionContext.client;
     if (!client) {
-        startServer();
+        await startServer();
     } else {
-        client.stop().then(() => startServer());
+        extensionContext.setServerStopping('Restarting server...');
+        try {
+            await client.stop();
+            await startServer();
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            extensionContext.setServerError('Failed to restart server', errorMessage);
+            vscode.window.showErrorMessage(`Failed to restart server: ${errorMessage}`);
+        }
     }
+}
+
+function showServerMenu(): void {
+    extensionContext.showServerMenu();
 }
 
 function showReferences(uri: string, pos: IServerPosition, locations: IServerLocation[]) {
@@ -251,8 +276,14 @@ function showReferences(uri: string, pos: IServerPosition, locations: IServerLoc
     vscode.commands.executeCommand("editor.action.showReferences", u, p, vscodeLocations);
 }
 
-function stopServer() {
-    extensionContext.stopServer();
+async function stopServer(): Promise<void> {
+    try {
+        await extensionContext.stopServer();
+        vscode.window.showInformationMessage('EmmyLua language server stopped');
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        vscode.window.showErrorMessage(`Failed to stop server: ${errorMessage}`);
+    }
 }
 
 async function insertEmmyDebugCode() {
