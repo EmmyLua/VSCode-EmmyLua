@@ -5,7 +5,7 @@ import * as process from 'process';
 import * as os from 'os';
 import * as fs from 'fs';
 
-import { integer, LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, ServerOptions, StreamInfo } from 'vscode-languageclient/node';
 import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyNewDebuggerProvider } from './debugger/new_debugger/EmmyNewDebuggerProvider';
 import { EmmyAttachDebuggerProvider } from './debugger/attach/EmmyAttachDebuggerProvider';
@@ -14,14 +14,26 @@ import { EmmyContext } from './emmyContext';
 import { InlineDebugAdapterFactory } from './debugger/DebugFactory';
 import { IServerLocation, IServerPosition } from './lspExtension';
 import { onDidChangeConfiguration } from './annotator';
-import { get } from './configRenames';
+import { ConfigurationManager } from './configRenames';
 import * as Annotator from './annotator';
 import { LuaRocksManager } from './luarocks/LuaRocksManager';
 import { LuaRocksTreeProvider, PackageTreeItem } from './luarocks/LuaRocksTreeProvider';
 import { EmmyrcSchemaContentProvider } from './emmyrcSchemaContentProvider';
+
+/**
+ * Debugger configuration interface
+ */
 interface DebuggerConfig {
     readonly type: string;
     readonly provider: vscode.DebugConfigurationProvider;
+}
+
+/**
+ * Command registration entry
+ */
+interface CommandEntry {
+    readonly id: string;
+    readonly handler: (...args: any[]) => any;
 }
 
 // Global state
@@ -30,63 +42,105 @@ let activeEditor: vscode.TextEditor | undefined;
 let luaRocksManager: LuaRocksManager | undefined;
 let luaRocksTreeProvider: LuaRocksTreeProvider | undefined;
 
-export async function activate(context: vscode.ExtensionContext) {
+/**
+ * Extension activation entry point
+ */
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
     console.log('EmmyLua extension activated!');
 
-    // 提供`.emmyrc.json`的 i18n
+    // Provide `.emmyrc.json` schema with i18n support
     context.subscriptions.push(
-        vscode.workspace.registerTextDocumentContentProvider('emmyrc-schema', new EmmyrcSchemaContentProvider(context))
+        vscode.workspace.registerTextDocumentContentProvider(
+            'emmyrc-schema',
+            new EmmyrcSchemaContentProvider(context)
+        )
     );
 
+    // Initialize extension context
     extensionContext = new EmmyContext(
         process.env['EMMY_DEV'] === 'true',
         context
     );
 
-    // Register commands
-    const commands = [
-        vscode.commands.registerCommand('emmy.stopServer', stopServer),
-        vscode.commands.registerCommand('emmy.restartServer', restartServer),
-        vscode.commands.registerCommand('emmy.showServerMenu', showServerMenu),
-        vscode.commands.registerCommand('emmy.showReferences', showReferences),
-        vscode.commands.registerCommand('emmy.insertEmmyDebugCode', insertEmmyDebugCode),
+    // Register all components
+    registerCommands(context);
+    registerEventListeners(context);
+    registerLanguageConfiguration(context);
+
+    // Initialize features
+    await initializeExtension();
+}
+
+/**
+ * Extension deactivation
+ */
+export function deactivate(): void {
+    extensionContext?.dispose();
+    Annotator.dispose();
+}
+
+/**
+ * Register all commands
+ */
+function registerCommands(context: vscode.ExtensionContext): void {
+    const commandEntries: CommandEntry[] = [
+        // Server commands
+        { id: 'emmy.stopServer', handler: stopServer },
+        { id: 'emmy.restartServer', handler: restartServer },
+        { id: 'emmy.showServerMenu', handler: showServerMenu },
+        { id: 'emmy.showReferences', handler: showReferences },
+        { id: 'emmy.insertEmmyDebugCode', handler: insertEmmyDebugCode },
         // LuaRocks commands
-        vscode.commands.registerCommand('emmylua.luarocks.searchPackages', searchPackages),
-        vscode.commands.registerCommand('emmylua.luarocks.installPackage', installPackage),
-        vscode.commands.registerCommand('emmylua.luarocks.uninstallPackage', uninstallPackage),
-        vscode.commands.registerCommand('emmylua.luarocks.showPackageInfo', showPackageInfo),
-        vscode.commands.registerCommand('emmylua.luarocks.refreshPackages', refreshPackages),
-        vscode.commands.registerCommand('emmylua.luarocks.showPackages', showPackagesView),
-        vscode.commands.registerCommand('emmylua.luarocks.clearSearch', clearSearch),
-        vscode.commands.registerCommand('emmylua.luarocks.checkInstallation', checkLuaRocksInstallation),
+        { id: 'emmylua.luarocks.searchPackages', handler: searchPackages },
+        { id: 'emmylua.luarocks.installPackage', handler: installPackage },
+        { id: 'emmylua.luarocks.uninstallPackage', handler: uninstallPackage },
+        { id: 'emmylua.luarocks.showPackageInfo', handler: showPackageInfo },
+        { id: 'emmylua.luarocks.refreshPackages', handler: refreshPackages },
+        { id: 'emmylua.luarocks.showPackages', handler: showPackagesView },
+        { id: 'emmylua.luarocks.clearSearch', handler: clearSearch },
+        { id: 'emmylua.luarocks.checkInstallation', handler: checkLuaRocksInstallation },
     ];
 
-    // Register event listeners
+    // Register all commands
+    const commands = commandEntries.map(({ id, handler }) =>
+        vscode.commands.registerCommand(id, handler)
+    );
+
+    context.subscriptions.push(...commands);
+}
+
+/**
+ * Register event listeners
+ */
+function registerEventListeners(context: vscode.ExtensionContext): void {
     const eventListeners = [
         vscode.workspace.onDidChangeTextDocument(onDidChangeTextDocument),
         vscode.window.onDidChangeActiveTextEditor(onDidChangeActiveTextEditor),
         vscode.workspace.onDidChangeConfiguration(onConfigurationChanged),
     ];
 
-    // Register language configuration
-    const languageConfig = vscode.languages.setLanguageConfiguration('lua', new LuaLanguageConfiguration());
+    context.subscriptions.push(...eventListeners);
+}
 
-    // Add all subscriptions
-    context.subscriptions.push(
-        ...commands,
-        ...eventListeners,
-        languageConfig,
-        extensionContext
+/**
+ * Register language configuration
+ */
+function registerLanguageConfiguration(context: vscode.ExtensionContext): void {
+    const languageConfig = vscode.languages.setLanguageConfiguration(
+        'lua',
+        new LuaLanguageConfiguration()
     );
 
-    // Initialize
+    context.subscriptions.push(languageConfig);
+}
+
+/**
+ * Initialize all extension features
+ */
+async function initializeExtension(): Promise<void> {
     await startServer();
     registerDebuggers();
     await initializeLuaRocks();
-}
-
-export function deactivate(): void {
-    extensionContext?.dispose();
 }
 
 function onConfigurationChanged(e: vscode.ConfigurationChangeEvent): void {
@@ -169,77 +223,120 @@ async function startServer(): Promise<void> {
     }
 }
 
+/**
+ * Start the language server
+ */
 async function doStartServer(): Promise<void> {
     const context = extensionContext.vscodeContext;
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    const configManager = new ConfigurationManager(workspaceFolder);
+    
     const clientOptions: LanguageClientOptions = {
         documentSelector: [{ scheme: 'file', language: extensionContext.LANGUAGE_ID }],
         initializationOptions: {},
     };
 
     let serverOptions: ServerOptions;
-    const config = vscode.workspace.getConfiguration(
-        undefined,
-        vscode.workspace.workspaceFolders?.[0]
-    );
-    const debugPort = config.get<integer | null>("emmylua.ls.debugPort");
+    const debugPort = configManager.getDebugPort();
+    
     if (debugPort || extensionContext.debugMode) {
-        // The server is a started as a separate app and listens on port 5007
-        const connectionInfo = {
-            port: debugPort || 5007,
-        };
-        serverOptions = () => {
-            // Connect to language server via socket
-            let socket = net.connect(connectionInfo);
-            let result: StreamInfo = {
-                writer: socket,
-                reader: socket as NodeJS.ReadableStream
-            };
-            socket.on("close", () => {
-                console.log("client connect error!");
-            });
-            return Promise.resolve(result);
-        };
+        // Connect to language server via socket (debug mode)
+        serverOptions = createDebugServerOptions(debugPort || 5007);
     } else {
-        let configExecutablePath = get<string>(config, "emmylua.ls.executablePath")?.trim();
-        if (!configExecutablePath || configExecutablePath.length == 0) {
-            let platform = os.platform();
-            let executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
-            configExecutablePath = path.join(context.extensionPath, 'server', executableName);
-
-            if (platform !== 'win32') {
-                fs.chmodSync(configExecutablePath, '777');
-            }
-        }
-
-        serverOptions = {
-            command: configExecutablePath,
-            args: [],
-            options: { env: process.env }
-        };
-
-        let parameters = config.get<string[]>("emmylua.ls.startParameters");
-        if (parameters && parameters.length > 0) {
-            serverOptions.args = parameters;
-        }
-
-        let globalConfigPath = get<string>(config, "emmylua.ls.globalConfigPath")?.trim();
-        if (globalConfigPath && globalConfigPath.length > 0) {
-            if (!serverOptions.options || !serverOptions.options.env) {
-                serverOptions.options = { env: {} }
-            }
-            serverOptions.options.env['EMMYLUALS_CONFIG'] = globalConfigPath;
-        }
+        // Start language server as external process
+        serverOptions = createProcessServerOptions(context, configManager);
     }
 
     extensionContext.client = new LanguageClient(
         extensionContext.LANGUAGE_ID,
-        'EmmyLua plugin for vscode.',
+        'EmmyLua Language Server',
         serverOptions,
         clientOptions
     );
 
     await extensionContext.client.start();
-    console.log('EmmyLua client ready');
+    console.log('EmmyLua language server started successfully');
+}
+
+/**
+ * Create server options for debug mode (socket connection)
+ */
+function createDebugServerOptions(port: number): ServerOptions {
+    return () => {
+        const socket = net.connect({ port });
+        const result: StreamInfo = {
+            writer: socket,
+            reader: socket as NodeJS.ReadableStream
+        };
+        
+        socket.on('close', () => {
+            console.error(`Language server connection closed (port ${port})`);
+        });
+        
+        socket.on('error', (error) => {
+            console.error(`Language server connection error:`, error);
+        });
+        
+        return Promise.resolve(result);
+    };
+}
+
+/**
+ * Create server options for process mode
+ */
+function createProcessServerOptions(
+    context: vscode.ExtensionContext,
+    configManager: ConfigurationManager
+): ServerOptions {
+    const executablePath = resolveExecutablePath(context, configManager);
+    const startParameters = configManager.getStartParameters();
+    const globalConfigPath = configManager.getGlobalConfigPath();
+    
+    const serverOptions: ServerOptions = {
+        command: executablePath,
+        args: startParameters,
+        options: { env: { ...process.env } }
+    };
+
+    // Set global config path if specified
+    if (globalConfigPath?.trim()) {
+        if (!serverOptions.options) {
+            serverOptions.options = { env: {} };
+        }
+        if (!serverOptions.options.env) {
+            serverOptions.options.env = {};
+        }
+        serverOptions.options.env['EMMYLUALS_CONFIG'] = globalConfigPath;
+    }
+
+    return serverOptions;
+}
+
+/**
+ * Resolve the language server executable path
+ */
+function resolveExecutablePath(
+    context: vscode.ExtensionContext,
+    configManager: ConfigurationManager
+): string {
+    let executablePath = configManager.getExecutablePath()?.trim();
+    
+    if (!executablePath) {
+        // Use bundled language server
+        const platform = os.platform();
+        const executableName = platform === 'win32' ? 'emmylua_ls.exe' : 'emmylua_ls';
+        executablePath = path.join(context.extensionPath, 'server', executableName);
+        // Make executable on Unix-like systems
+        if (platform !== 'win32') {
+            try {
+                fs.chmodSync(executablePath, '777');
+            } catch (error) {
+                console.warn(`Failed to chmod language server:`, error);
+            }
+        }
+    }
+
+    return executablePath;
 }
 
 async function restartServer(): Promise<void> {
