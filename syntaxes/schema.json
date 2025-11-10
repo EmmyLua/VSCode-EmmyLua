@@ -110,11 +110,6 @@
     "runtime": {
       "$ref": "#/$defs/EmmyrcRuntime",
       "default": {
-        "classDefaultCall": {
-          "forceNonColon": false,
-          "forceReturnSelf": false,
-          "functionName": ""
-        },
         "extensions": [],
         "frameworkVersions": [],
         "nonstandardSymbol": [],
@@ -163,26 +158,6 @@
     }
   },
   "$defs": {
-    "ClassDefaultCall": {
-      "type": "object",
-      "properties": {
-        "forceNonColon": {
-          "description": "Mandatory non`:` definition. When `function_name` is not empty, it takes effect.",
-          "type": "boolean",
-          "default": true
-        },
-        "forceReturnSelf": {
-          "description": "Force to return `self`.",
-          "type": "boolean",
-          "default": true
-        },
-        "functionName": {
-          "description": "class default overload function. eg. \"__init\".",
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "DiagnosticCode": {
       "oneOf": [
         {
@@ -214,7 +189,7 @@
         {
           "description": "Param Type not match",
           "type": "string",
-          "const": "param-type-not-match"
+          "const": "param-type-mismatch"
         },
         {
           "description": "Missing parameter",
@@ -435,6 +410,21 @@
           "description": "Global variable defined in non-module scope",
           "type": "string",
           "const": "global-in-non-module"
+        },
+        {
+          "description": "attribute-param-type-mismatch",
+          "type": "string",
+          "const": "attribute-param-type-mismatch"
+        },
+        {
+          "description": "attribute-missing-parameter",
+          "type": "string",
+          "const": "attribute-missing-parameter"
+        },
+        {
+          "description": "attribute-redundant-parameter",
+          "type": "string",
+          "const": "attribute-redundant-parameter"
         }
       ]
     },
@@ -942,15 +932,6 @@
     "EmmyrcRuntime": {
       "type": "object",
       "properties": {
-        "classDefaultCall": {
-          "description": "class default overload function.",
-          "$ref": "#/$defs/ClassDefaultCall",
-          "default": {
-            "forceNonColon": false,
-            "forceReturnSelf": false,
-            "functionName": ""
-          }
-        },
         "extensions": {
           "description": "file Extensions. eg: .lua, .lua.txt",
           "type": "array",

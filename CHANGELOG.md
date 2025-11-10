@@ -2,6 +2,85 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.32] - 2025-11-10
+### 🔧 Changed
+- **Refactor IndexAliasName**: Removed the original index alias implementation (`-- [IndexAliasName]`), now use `---@[index_alias("name")]`.
+- **Refactor ClassDefaultCall**: Removed the configuration item `runtime.class_default_call`, now use `---@[constructor("<constructor_method_name>")]`.
+- **Rename ParamTypeNotMatch to ParamTypeMismatch**: Renamed the diagnostic `ParamTypeNotMatch` to `ParamTypeMismatch` for better clarity.
+- **Optimize comment parsing logic**: Comments now preserve leading spaces at the start of each line, maintaining the original formatting as much as possible when returned to the LSP client.
+
+
+### ✨ Added
+- **Attribute**: Introduced the new feature `---@attribute` for defining additional metadata, with several built-in attributes:
+```lua
+--- Deprecated. Accepts an optional message parameter.
+---@attribute deprecated(message: string?)
+
+--- Language Server Optimization Items.
+---
+--- Parameters:
+--- - `check_table_field`: Skips assignment checks for table fields. Recommended for large configuration tables.
+--- - `delayed_definition`: Indicates the variable type is determined by the first assignment.
+---   Only valid for `local` declarations without an initial value.
+---@attribute lsp_optimization(code: "check_table_field"|"delayed_definition")
+
+--- Index field alias, displayed in `hint` and `completion`.
+---
+--- Accepts a string parameter for the alias name.
+---@attribute index_alias(name: string)
+
+--- This attribute must be applied to function parameters, and the parameter type must be a string template generic.
+--- Used to specify the default constructor of a class.
+---
+--- Parameters:
+--- - `name`: The method name as a constructor.
+--- - `root_class`: Marks the root class, will be implicitly inherited, e.g., `System.Object` in C#. Defaults to empty.
+--- - `strip_self`: Whether the `self` parameter can be omitted when calling the constructor, defaults to `true`.
+--- - `return_self`: Whether the constructor is forced to return `self`, defaults to `true`.
+---@attribute constructor(name: string, root_class: string?, strip_self: boolean?, return_self: boolean?)
+
+--- Associates `getter` and `setter` methods with a field. Currently only provides definition navigation functionality.
+--- The target methods must be within the same class.
+---
+--- Parameters:
+--- - `convention`: Naming convention, defaults to `camelCase`. Implicitly adds `get` and `set` prefixes. e.g., `_age` -> `getAge`, `setAge`.
+--- - `getter`: Getter method name. Takes precedence over `convention`.
+--- - `setter`: Setter method name. Takes precedence over `convention`.
+---@attribute field_accessor(convention: "camelCase"|"PascalCase"|"snake_case"|nil, getter: string?, setter: string?)
+```
+
+The syntax is `---@[attribute_name_1(arg...), attribute_name_2(arg...), ...]`, and multiple attributes can be used simultaneously. Example:
+```lua
+---@class A
+---@[deprecated] # If the attribute can omit parameters, `()` can be omitted
+---@field b string # b is now marked as deprecated
+---@[index_alias("b")]
+---@field [1] string # This will be shown as `b` in hints and completion
+```
+- **More Generic Type**: support generic like:
+```lua
+--- Get the parameters of a function as a tuple
+---@alias Parameters<T extends function> T extends (fun(...: infer P): any) and P or never
+
+--- Get the parameters of a constructor as a tuple
+---@alias ConstructorParameters<T> T extends new (fun(...: infer P): any) and P or never
+
+--- Make all properties in T optional
+---@alias Partial<T> { [P in keyof T]?: T[P]; }
+```
+
+- **Support gutter request for intellij**: Added support for gutter requests in IntelliJ, allowing for better integration with the IDE's features.
+
+### 🐛 Fixed
+- **Fix completion**: Fixed an issue where certain completions were not being suggested, like:
+```lua
+if not self:<|>
+```
+- **Fix '~' Replace error in config**: Fixed an issue where using '~' in configuration paths did not correctly expand to the user's home directory.
+- **Fix enum completion issue**: Fixed an issue where enum members were not being suggested in completions.
+- **Fix workspace load status bar**: Fixed an issue where the workspace load status bar always display in empty lua workspace.
+- **Fix some condition narrow**: Fixed some issues with condition-based type narrowing not working as expected.
+
 
 ## [0.9.31] - 2025-10-17
 

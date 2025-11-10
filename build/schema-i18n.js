@@ -166,3 +166,5 @@ export function main() {
     writeSchemaZhCn(translatedSchema);
     console.log(`已生成中文版 schema.zh-cn.json 文件`);
 }
+
+main()

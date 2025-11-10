@@ -51,7 +51,7 @@
             "default": {
                 "knownTags": [],
                 "privateName": [],
-                "syntax": "none"
+                "syntax": "md"
             }
         },
         "documentColor": {
@@ -64,6 +64,7 @@
             "$ref": "#/$defs/EmmyrcReformat",
             "default": {
                 "externalTool": null,
+                "externalToolRangeFormat": null,
                 "useDiff": false
             }
         },
@@ -82,6 +83,7 @@
         "hover": {
             "$ref": "#/$defs/EmmyrcHover",
             "default": {
+                "customDetail": null,
                 "enable": true
             }
         },
@@ -108,16 +110,12 @@
         "runtime": {
             "$ref": "#/$defs/EmmyrcRuntime",
             "default": {
-                "classDefaultCall": {
-                    "forceNonColon": false,
-                    "forceReturnSelf": false,
-                    "functionName": ""
-                },
                 "extensions": [],
                 "frameworkVersions": [],
                 "nonstandardSymbol": [],
                 "requireLikeFunction": [],
                 "requirePattern": [],
+                "special": {},
                 "version": "LuaLatest"
             }
         },
@@ -125,7 +123,7 @@
             "$ref": "#/$defs/EmmyrcSemanticToken",
             "default": {
                 "enable": true,
-                "renderDocumentationMarkup": false
+                "renderDocumentationMarkup": true
             }
         },
         "signature": {
@@ -160,26 +158,6 @@
         }
     },
     "$defs": {
-        "ClassDefaultCall": {
-            "type": "object",
-            "properties": {
-                "forceNonColon": {
-                    "description": "强制非冒号定义。当 `function_name` 不为空时生效。",
-                    "type": "boolean",
-                    "default": true
-                },
-                "forceReturnSelf": {
-                    "description": "强制返回 `self`。",
-                    "type": "boolean",
-                    "default": true
-                },
-                "functionName": {
-                    "description": "类默认重载函数。例如：\"__init\"。",
-                    "type": "string",
-                    "default": ""
-                }
-            }
-        },
         "DiagnosticCode": {
             "oneOf": [
                 {
@@ -209,9 +187,9 @@
                     "const": "missing-return"
                 },
                 {
-                    "description": "参数类型不匹配。",
+                    "description": "Param Type not match",
                     "type": "string",
-                    "const": "param-type-not-match"
+                    "const": "param-type-mismatch"
                 },
                 {
                     "description": "缺少参数。",
@@ -417,6 +395,36 @@
                     "description": "枚举值不匹配。",
                     "type": "string",
                     "const": "enum-value-mismatch"
+                },
+                {
+                    "description": "preferred-local-alias",
+                    "type": "string",
+                    "const": "preferred-local-alias"
+                },
+                {
+                    "description": "readonly",
+                    "type": "string",
+                    "const": "read-only"
+                },
+                {
+                    "description": "Global variable defined in non-module scope",
+                    "type": "string",
+                    "const": "global-in-non-module"
+                },
+                {
+                    "description": "attribute-param-type-mismatch",
+                    "type": "string",
+                    "const": "attribute-param-type-mismatch"
+                },
+                {
+                    "description": "attribute-missing-parameter",
+                    "type": "string",
+                    "const": "attribute-missing-parameter"
+                },
+                {
+                    "description": "attribute-redundant-parameter",
+                    "type": "string",
+                    "const": "attribute-redundant-parameter"
                 }
             ]
         },
@@ -640,7 +648,7 @@
                 "syntax": {
                     "description": "Syntax for highlighting documentation.",
                     "$ref": "#/$defs/DocSyntax",
-                    "default": "none"
+                    "default": "md"
                 }
             }
         },
@@ -672,6 +680,7 @@
                     "default": ""
                 },
                 "timeout": {
+                    "description": "The timeout for the external tool in milliseconds.",
                     "type": "integer",
                     "format": "uint64",
                     "default": 5000,
@@ -711,6 +720,17 @@
         "EmmyrcHover": {
             "type": "object",
             "properties": {
+                "customDetail": {
+                    "description": "The detail number of hover information.\nDefault is `None`, which means using the default detail level.\nYou can set it to a number between `1` and `255` to customize",
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "format": "uint8",
+                    "default": null,
+                    "maximum": 255,
+                    "minimum": 0
+                },
                 "enable": {
                     "description": "是否启用悬浮提示。",
                     "type": "boolean",
@@ -867,7 +887,19 @@
             "type": "object",
             "properties": {
                 "externalTool": {
-                    "description": "Whether to enable internal code reformatting.",
+                    "description": "Whether to enable external tool formatting.",
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/EmmyrcExternalTool"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null
+                },
+                "externalToolRangeFormat": {
+                    "description": "Whether to enable external tool range formatting.",
                     "anyOf": [
                         {
                             "$ref": "#/$defs/EmmyrcExternalTool"
@@ -900,15 +932,6 @@
         "EmmyrcRuntime": {
             "type": "object",
             "properties": {
-                "classDefaultCall": {
-                    "description": "类默认重载函数。",
-                    "$ref": "#/$defs/ClassDefaultCall",
-                    "default": {
-                        "forceNonColon": false,
-                        "forceReturnSelf": false,
-                        "functionName": ""
-                    }
-                },
                 "extensions": {
                     "description": "文件扩展名。例如：.lua, .lua.txt",
                     "type": "array",
@@ -949,6 +972,14 @@
                         "type": "string"
                     }
                 },
+                "special": {
+                    "description": "Special symbols.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/$defs/EmmyrcSpecialSymbol"
+                    },
+                    "default": {}
+                },
                 "version": {
                     "description": "Lua 版本。",
                     "$ref": "#/$defs/EmmyrcLuaVersion",
@@ -982,6 +1013,17 @@
                     "default": true
                 }
             }
+        },
+        "EmmyrcSpecialSymbol": {
+            "type": "string",
+            "enum": [
+                "none",
+                "require",
+                "error",
+                "assert",
+                "type",
+                "setmetatable"
+            ]
         },
         "EmmyrcStrict": {
             "type": "object",

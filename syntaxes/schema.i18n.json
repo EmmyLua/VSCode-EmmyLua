@@ -1,16 +1,4 @@
 {
-    "ClassDefaultCall.forceNonColon": {
-        "en": "Mandatory non`:` definition. When `function_name` is not empty, it takes effect.",
-        "zh-CN": "强制非冒号定义。当 `function_name` 不为空时生效。"
-    },
-    "ClassDefaultCall.forceReturnSelf": {
-        "en": "Force to return `self`.",
-        "zh-CN": "强制返回 `self`。"
-    },
-    "ClassDefaultCall.functionName": {
-        "en": "class default overload function. eg. \"__init\".",
-        "zh-CN": "类默认重载函数。例如：\"__init\"。"
-    },
     "DiagnosticCode.access-invisible": {
         "en": "Access invisible",
         "zh-CN": "成员可见性检查。"
@@ -22,6 +10,15 @@
     "DiagnosticCode.assign-type-mismatch": {
         "en": "Assign type mismatch",
         "zh-CN": "赋值类型不匹配。"
+    },
+    "DiagnosticCode.attribute-missing-parameter": {
+        "en": "attribute-missing-parameter"
+    },
+    "DiagnosticCode.attribute-param-type-mismatch": {
+        "en": "attribute-param-type-mismatch"
+    },
+    "DiagnosticCode.attribute-redundant-parameter": {
+        "en": "attribute-redundant-parameter"
     },
     "DiagnosticCode.await-in-sync": {
         "en": "Await in sync",
@@ -78,6 +75,9 @@
         "en": "generic-constraint-mismatch",
         "zh-CN": "泛型约束不匹配。"
     },
+    "DiagnosticCode.global-in-non-module": {
+        "en": "Global variable defined in non-module scope"
+    },
     "DiagnosticCode.incomplete-signature-doc": {
         "en": "Incomplete signature doc",
         "zh-CN": "不完整的签名文档。"
@@ -122,9 +122,14 @@
         "en": "non-literal-expressions-in-assert",
         "zh-CN": "在 assert 中使用了非字面量表达式。"
     },
-    "DiagnosticCode.param-type-not-match": {
-        "en": "Param Type not match",
-        "zh-CN": "参数类型不匹配。"
+    "DiagnosticCode.param-type-mismatch": {
+        "en": "Param Type not match"
+    },
+    "DiagnosticCode.preferred-local-alias": {
+        "en": "preferred-local-alias"
+    },
+    "DiagnosticCode.read-only": {
+        "en": "readonly"
     },
     "DiagnosticCode.redefined-label": {
         "en": "Redefined label",
@@ -312,6 +317,9 @@
     "EmmyrcExternalTool.program": {
         "en": "The command to run the external tool."
     },
+    "EmmyrcExternalTool.timeout": {
+        "en": "The timeout for the external tool in milliseconds."
+    },
     "EmmyrcFilenameConvention.camel-case": {
         "en": "Convert the filename to camelCase.",
         "zh-CN": "将文件名转换为驼峰(camelCase)命名。"
@@ -331,6 +339,9 @@
     "EmmyrcFilenameConvention.snake-case": {
         "en": "Convert the filename to snake_case.",
         "zh-CN": "将文件名转换为蛇形(snake_case)命名。"
+    },
+    "EmmyrcHover.customDetail": {
+        "en": "The detail number of hover information.\nDefault is `None`, which means using the default detail level.\nYou can set it to a number between `1` and `255` to customize"
     },
     "EmmyrcHover.enable": {
         "en": "Enable showing documentation on hover.",
@@ -402,14 +413,13 @@
         "zh-CN": "缓存短字符串用于搜索。"
     },
     "EmmyrcReformat.externalTool": {
-        "en": "Whether to enable internal code reformatting."
+        "en": "Whether to enable external tool formatting."
+    },
+    "EmmyrcReformat.externalToolRangeFormat": {
+        "en": "Whether to enable external tool range formatting."
     },
     "EmmyrcReformat.useDiff": {
         "en": "Whether to use the diff algorithm for formatting."
-    },
-    "EmmyrcRuntime.classDefaultCall": {
-        "en": "class default overload function.",
-        "zh-CN": "类默认重载函数。"
     },
     "EmmyrcRuntime.extensions": {
         "en": "file Extensions. eg: .lua, .lua.txt",
@@ -429,6 +439,9 @@
     "EmmyrcRuntime.requirePattern": {
         "en": "Require pattern. eg. \"?.lua\", \"?/init.lua\"",
         "zh-CN": "require 模式。例如：\"?.lua\", \"?/init.lua\""
+    },
+    "EmmyrcRuntime.special": {
+        "en": "Special symbols."
     },
     "EmmyrcRuntime.version": {
         "en": "Lua version.",
