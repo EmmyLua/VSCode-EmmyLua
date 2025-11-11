@@ -40,18 +40,24 @@ interface StatusBarConfig {
     readonly backgroundColor?: vscode.ThemeColor;
 }
 
+interface TooltipAction {
+    readonly label: string;
+    readonly command: string;
+    readonly icon: string;
+    readonly tooltip?: string;
+}
+
 /**
  * EmmyLua extension context manager
  * Manages language client, status bar, and extension state
  */
 export class EmmyContext implements vscode.Disposable {
     public readonly LANGUAGE_ID = 'lua' as const;
-    
+
     private _client?: LanguageClient;
     private _serverStatus: ServerStatus;
     private readonly _statusBar: vscode.StatusBarItem;
     private readonly _disposables: vscode.Disposable[] = [];
-    private _startTime?: Date;
 
     constructor(
         public readonly debugMode: boolean,
@@ -62,10 +68,10 @@ export class EmmyContext implements vscode.Disposable {
             vscode.StatusBarAlignment.Left,
             100
         );
-        
+
         // Status bar click shows quick pick menu instead of direct action
         this._statusBar.command = 'emmy.showServerMenu';
-        
+
         this._disposables.push(this._statusBar);
         this.updateStatusBar();
     }
@@ -108,16 +114,6 @@ export class EmmyContext implements vscode.Disposable {
     }
 
     /**
-     * Get server uptime in seconds (if running)
-     */
-    get serverUptime(): number | undefined {
-        if (!this._startTime || !this.isServerRunning) {
-            return undefined;
-        }
-        return Math.floor((Date.now() - this._startTime.getTime()) / 1000);
-    }
-
-    /**
      * Update server status to starting
      */
     setServerStarting(message?: string): void {
@@ -132,7 +128,6 @@ export class EmmyContext implements vscode.Disposable {
      * Update server status to running
      */
     setServerRunning(message?: string): void {
-        this._startTime = new Date();
         this._serverStatus = {
             state: ServerState.Running,
             message: message || 'EmmyLua language server is running',
@@ -155,7 +150,6 @@ export class EmmyContext implements vscode.Disposable {
      * Update server status to stopped
      */
     setServerStopped(message?: string): void {
-        this._startTime = undefined;
         this._serverStatus = {
             state: ServerState.Stopped,
             message: message || 'EmmyLua language server is stopped',
@@ -179,7 +173,6 @@ export class EmmyContext implements vscode.Disposable {
      * Update server status to error
      */
     setServerError(message: string, details?: string): void {
-        this._startTime = undefined;
         this._serverStatus = {
             state: ServerState.Error,
             message,
@@ -266,7 +259,7 @@ export class EmmyContext implements vscode.Disposable {
         } else if (selected.label.includes('Stop')) {
             await vscode.commands.executeCommand('emmy.stopServer');
         } else if (selected.label.includes('Start')) {
-            await vscode.commands.executeCommand('emmy.restartServer');
+            await vscode.commands.executeCommand('emmy.startServer');
         } else if (selected.label.includes('Server Info')) {
             this.showServerInfo();
         } else if (selected.label.includes('Output')) {
@@ -290,15 +283,6 @@ export class EmmyContext implements vscode.Disposable {
             info.push(`**Message:** ${this._serverStatus.message}`);
         }
 
-        if (this.serverUptime !== undefined) {
-            const uptime = this.formatUptime(this.serverUptime);
-            info.push(`**Uptime:** ${uptime}`);
-        }
-
-        if (this._startTime) {
-            info.push(`**Started:** ${this._startTime.toLocaleString()}`);
-        }
-
         if (this.debugMode) {
             info.push('', `**Debug Mode:** Enabled`);
         }
@@ -320,24 +304,6 @@ export class EmmyContext implements vscode.Disposable {
         });
     }
 
-    /**
-     * Format uptime in human-readable format
-     */
-    private formatUptime(seconds: number): string {
-        const days = Math.floor(seconds / 86400);
-        const hours = Math.floor((seconds % 86400) / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
-
-        const parts: string[] = [];
-        if (days > 0) parts.push(`${days}d`);
-        if (hours > 0) parts.push(`${hours}h`);
-        if (minutes > 0) parts.push(`${minutes}m`);
-        if (secs > 0 || parts.length === 0) parts.push(`${secs}s`);
-
-        return parts.join(' ');
-    }
-
     // ==================== Private Methods ====================
 
     /**
@@ -345,7 +311,7 @@ export class EmmyContext implements vscode.Disposable {
      */
     private updateStatusBar(): void {
         const config = this.getStatusBarConfig();
-        
+
         this._statusBar.text = `${config.icon}EmmyLua`;
         this._statusBar.color = config.color;
         this._statusBar.backgroundColor = config.backgroundColor;
@@ -394,27 +360,49 @@ export class EmmyContext implements vscode.Disposable {
 
         // Title
         tooltip.appendMarkdown('**EmmyLua Language Server**\n\n');
+        tooltip.appendMarkdown('---\n\n');
 
         // Status
         tooltip.appendMarkdown(`Status: \`${this._serverStatus.state}\`\n\n`);
 
-        // Message
-        if (this._serverStatus.message) {
-            tooltip.appendText(this._serverStatus.message);
-            tooltip.appendText('\n\n');
+        const actions = this.getTooltipActions();
+        if (actions.length) {
+            const links = actions.map((action) => {
+                const tooltipText = action.tooltip
+                    ? ` "${action.tooltip.replace(/"/g, '\\"')}"`
+                    : '';
+                return `[${action.icon} ${action.label}](command:${action.command}${tooltipText})`;
+            });
+            tooltip.appendMarkdown(links.join('\n\n'));
+            tooltip.appendMarkdown('\n\n');
         }
-
-        // Uptime
-        if (this.serverUptime !== undefined) {
-            const uptime = this.formatUptime(this.serverUptime);
-            tooltip.appendMarkdown(`Uptime: \`${uptime}\`\n\n`);
-        }
-
-        // Actions hint
-        tooltip.appendMarkdown('---\n\n');
-        tooltip.appendMarkdown('*Click to show server menu*');
 
         return tooltip;
+    }
+
+    /**
+     * Quick actions shown in the tooltip
+     */
+    private getTooltipActions(): TooltipAction[] {
+        const actions: TooltipAction[] = [];
+        const state = this._serverStatus.state;
+
+        if (state !== ServerState.Stopped && state !== ServerState.Stopping) {
+            actions.push({
+                label: 'Stop server',
+                command: 'emmy.stopServer',
+                icon: '$(stop-circle)',
+                tooltip: 'Stop the EmmyLua language server',
+            });
+        }
+
+        actions.push({
+            label: 'Restart server',
+            command: 'emmy.restartServer',
+            icon: '$(debug-restart)',
+            tooltip: 'Restart the EmmyLua language server',
+        });
+        return actions;
     }
 
     /**
