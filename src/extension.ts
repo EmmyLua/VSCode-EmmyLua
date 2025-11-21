@@ -317,7 +317,9 @@ async function restartServer(): Promise<void> {
     } else {
         extensionContext.setServerStopping('Restarting server...');
         try {
-            await client.stop();
+            if (client.isRunning()) {
+                await client.stop();
+            }
             await startServer();
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
