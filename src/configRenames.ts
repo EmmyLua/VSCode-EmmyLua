@@ -100,14 +100,14 @@ export class ConfigurationManager {
      * Get language server executable path
      */
     getExecutablePath(): string | undefined {
-        return this.get<string>('ls.executablePath');
+        return this.get<string>('misc.executablePath');
     }
     
     /**
      * Get language server global config path
      */
     getGlobalConfigPath(): string | undefined {
-        return this.get<string>('ls.globalConfigPath');
+        return this.get<string>('misc.globalConfigPath');
     }
     
     /**
