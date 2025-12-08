@@ -14,6 +14,7 @@ import { ConfigurationManager } from './configRenames';
 import * as Annotator from './annotator';
 import { EmmyrcSchemaContentProvider } from './emmyrcSchemaContentProvider';
 import { SyntaxTreeManager, setClientGetter } from './syntaxTreeProvider';
+import { registerTerminalLinkProvider } from './luaTerminalLinkProvider';
 import { insertEmmyDebugCode, registerDebuggers } from './debugger';
 import * as LuaRocks from './luarocks';
 
@@ -55,6 +56,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     registerCommands(context);
     registerEventListeners(context);
     registerLanguageConfiguration(context);
+    registerTerminalLinkProvider(context);
 
     // Initialize features
     await initializeExtension();

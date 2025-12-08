@@ -39,12 +39,16 @@ export async function initializeLuaRocks(): Promise<void> {
         luaRocksTreeProvider
     );
 
-    // Check if LuaRocks is installed
     const isInstalled = await luaRocksManager.checkLuaRocksInstallation();
     if (isInstalled) {
         let workspace = await luaRocksManager.detectLuaRocksWorkspace();
         if (workspace) {
-            vscode.window.showInformationMessage(`Found ${workspace.rockspecFiles.length} rockspec file(s) in workspace`);
+            // 只有在第一次打开工作区时才显示提示
+            const hasShownMessage = extensionContext.vscodeContext.workspaceState.get('luarocks.rockspecMessageShown', false);
+            if (!hasShownMessage) {
+                vscode.window.showInformationMessage(`Found ${workspace.rockspecFiles.length} rockspec file(s) in workspace`);
+                await extensionContext.vscodeContext.workspaceState.update('luarocks.rockspecMessageShown', true);
+            }
         }
     }
 }
