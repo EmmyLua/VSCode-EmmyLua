@@ -151,6 +151,7 @@
         "ignoreGlobs": [],
         "library": [],
         "moduleMap": [],
+        "packageDirs": [],
         "preloadFileSize": 0,
         "reindexDuration": 5000,
         "workspaceRoots": []
@@ -1098,6 +1099,14 @@
           "default": [],
           "items": {
             "$ref": "#/$defs/EmmyrcWorkspaceModuleMap"
+          }
+        },
+        "packageDirs": {
+          "description": "Package directories. Treat the parent directory as a `library`, but only add files from the specified directory.\neg: `/usr/local/share/lua/5.1/module`",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
           }
         },
         "preloadFileSize": {

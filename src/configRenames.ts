@@ -5,7 +5,6 @@ import * as vscode from 'vscode';
  * Maps new keys to old keys for backward compatibility
  */
 const CONFIG_RENAMES: ReadonlyMap<string, string> = new Map([
-    ['emmylua.colors.mutableUnderline', 'emmylua.colors.mutable_underline'],
     ['emmylua.ls.executablePath', 'emmylua.misc.executablePath'],
     ['emmylua.ls.globalConfigPath', 'emmylua.misc.globalConfigPath'],
     ['emmylua.language.completeAnnotation', 'emmylua.misc.autoInsertTripleDash'],

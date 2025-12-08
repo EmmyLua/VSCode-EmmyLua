@@ -2,6 +2,48 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.33] - 2025-12-8
+
+An experimental Lua 5.4 interpreter implemented in Rust: https://github.com/CppCXY/lua-rs
+
+### ✨ Added
+
+- **Type narrowing with union types using field checks**: Changed the behavior when using a field of a union type in an `if` statement for type narrowing. Now, if the field exists in some types of the union but not in others, the types without that field will be excluded from the narrowed type. For example:
+```lua
+local a --- @type string|{foo:boolean, bar:string}
+
+if a.foo then
+  local _ = a.bar -- a will be narrowed to {foo:boolean, bar:string}
+end
+```
+- **Support generic in @field**: You can now use declaration generic type in `@field` annotations. For example:
+```lua
+---@class GetType
+---@field get_type fun<T>(name:`T`): T
+local MyClass = {}
+
+local d = MyClass.get_type("Car") -- d: "Car"
+```
+
+### 🔧 Changed
+
+- **Refactor Document Symbols**: Refactored the `textDocument/documentSymbol` request to improve performance and accuracy. The new implementation provides better handling of nested symbols and improves the overall structure of the returned symbol tree.
+
+
+### 🐛 Fixed
+- **Fix Lazyvim.dev integration issue**: Fixed an issue where Lazyvim.dev integration did not work correctly due to ignore `workspace/didConfiguration` changes.
+- **Fix Completion**: Fixed an issue where certain completions were not being suggested, like:
+`Partial<Type>`
+- **Fix nil propagation in consecutive field access**: Fixed an issue where, during consecutive field access, if a previous field could be nil, subsequent fields would incorrectly propagate the nil type. For example:
+```lua
+local a --- @type { foo? : { bar: { baz: number } } }
+
+local b = a.foo.bar -- a.foo may be nil (correct)
+
+local _ = b.baz -- b is number
+```
+
+
 ## [0.9.32] - 2025-11-10
 ### 🔧 Changed
 - **Refactor IndexAliasName**: Removed the original index alias implementation (`-- [IndexAliasName]`), now use `---@[index_alias("name")]`.

@@ -1,5 +1,44 @@
 # 🚀 Change Log
 
+## [0.9.33] - 2025-12-8
+
+一个实验性的Lua解释器项目: https://github.com/CppCXY/lua-rs
+
+### ✨ Added
+- **联合类型字段检查收窄类型**：变更了在 `if` 语句中通过联合类型字段进行类型收窄的行为。现在，如果某字段只存在于联合类型的部分类型中，则收窄后会排除没有该字段的类型。例如：
+```lua
+local a --- @type string|{foo:boolean, bar:string}
+
+if a.foo then
+  local _ = a.bar -- 此时 a 被收窄为 {foo:boolean, bar:string}
+end
+```
+- **@field 支持泛型类型**：现在可以在 `@field` 注解中使用声明泛型类型。例如：
+```lua
+---@class GetType
+---@field get_type fun<T>(name:`T`): T
+local MyClass = {}
+
+local d = MyClass.get_type("Car") -- d: "Car"
+```
+
+### 🔧 变更
+
+- **重构文档符号**：重构了 `textDocument/documentSymbol` 请求，提升了性能和准确性。新实现更好地处理嵌套符号，并优化了返回的符号树结构。
+
+### 🐛 修复
+- **修复 Lazyvim.dev 集成问题**：修复了因忽略 `workspace/didConfiguration` 变更导致 Lazyvim.dev 集成失效的问题。
+- **修复补全问题**：修复了某些补全项未能正确提示的问题，例如：
+`Partial<Type>`
+- **修复连续字段访问时 nil 传播问题**：修复了连续字段访问时，前一个字段可能为 nil 导致后续字段错误传播 nil 类型的问题。例如：
+```lua
+local a --- @type { foo? : { bar: { baz: number } } }
+
+local b = a.foo.bar -- a.foo 可能为 nil（正确）
+
+local _ = b.baz -- b 是 number
+```
+
 ## [0.9.32] - 2025-11-10
 ### 🔧 变更
 - **重构 IndexAliasName**：移除原有的索引别名实现（`-- [IndexAliasName]`），现统一使用 `---@[index_alias("name")]`。
