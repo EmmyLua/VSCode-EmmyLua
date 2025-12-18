@@ -63,10 +63,9 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             }
         ];
 
-        // Add annotation completion rules if enabled
         if (enableAnnotationCompletion) {
             const annotationRules: OnEnterRule[] = [
-                // Continue annotation with space (---)
+                // 当前行以`--- `开头时, 自动补全`--- `
                 {
                     beforeText: /^---\s+/,
                     action: {
@@ -74,14 +73,38 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
                         appendText: '--- '
                     }
                 },
-                // Continue annotation without space (---)
+                // 当前行以`---`开头时且后面没有任何内容时, 自动补全`---`
                 {
                     beforeText: /^---$/,
                     action: {
                         indentAction: IndentAction.None,
                         appendText: '---'
                     }
-                }
+                },
+                // 当前行以`-- `开头时, 自动补全`-- `
+                {
+                    beforeText: /^--\s+/,
+                    action: {
+                        indentAction: IndentAction.None,
+                        appendText: '-- '
+                    }
+                },
+                // 当前行以一些注解标识符开头时, 自动补全`---@`
+                {
+                    beforeText: /^---@(class|field|param|generic|overload)\b.*/,
+                    action: {
+                        indentAction: IndentAction.None,
+                        appendText: '---@'
+                    }
+                },
+                // 对`---@alias`多行格式的处理, 我们认为以`---|`开头的行都是`---@alias`的续行
+                {
+                    beforeText: /^---\|.*/,
+                    action: {
+                        indentAction: IndentAction.None,
+                        appendText: '---| '
+                    }
+                },
             ];
 
             return [...annotationRules, ...baseRules];
