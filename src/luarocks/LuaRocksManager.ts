@@ -112,11 +112,12 @@ export class LuaRocksManager {
                     const match = line.match(/["']([^"']+)["']/);
                     if (match) {
                         const depString = match[1];
-                        const [name, version] = depString.split(/\s+/);
+                        const [name, ...versionParts] = depString.split(/\s+/);
+                        const version = versionParts.join(' ').trim();
                         if (name && name !== 'lua') {
                             dependencies.push({
                                 name: name.trim(),
-                                version: version?.trim() || 'latest',
+                                version: version || 'latest',
                                 installed: false
                             });
                         }
@@ -135,6 +136,7 @@ export class LuaRocksManager {
      * 搜索包
      */
     async searchPackages(query: string): Promise<LuaPackage[]> {
+        // 使用临时状态栏消息显示进度（不再使用常驻的状态栏图标）
         const status = vscode.window.setStatusBarMessage('$(sync~spin) LuaRocks: Searching packages...');
         try {
             const command = this.buildLuaRocksCommand([
@@ -147,7 +149,7 @@ export class LuaRocksManager {
                 windowsHide: true
             });
             const packages = this.parseSearchResults(stdout);
-            
+
             return packages;
         } catch (error) {
             this.showError('Failed to search packages', error);
@@ -191,10 +193,11 @@ export class LuaRocksManager {
             return false;
         }
 
+        // 使用临时状态栏消息显示进度
         const status = vscode.window.setStatusBarMessage('$(sync~spin) LuaRocks: Installing...');
         try {
             this.isInstalling = true;
-            
+
             const installArgs = [
                 'install',
                 this.quoteArg(packageName),
@@ -231,6 +234,7 @@ export class LuaRocksManager {
      * 卸载包
      */
     async uninstallPackage(packageName: string): Promise<boolean> {
+        // 使用临时状态栏消息显示进度
         const status = vscode.window.setStatusBarMessage('$(sync~spin) LuaRocks: Uninstalling...');
         try {
             const command = this.buildLuaRocksCommand([
@@ -376,6 +380,7 @@ export class LuaRocksManager {
     }
 
     private quoteArg(value: string): string {
+        // 简单的引号封装，避免空格路径/参数导致命令解析错误
         const trimmed = value.trim().replace(/[\\/]+$/, '');
         const escapedQuotes = trimmed.replace(/"/g, '\\"');
         return `"${escapedQuotes}"`;
