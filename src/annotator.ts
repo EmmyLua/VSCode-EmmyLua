@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { AnnotatorType } from './lspExtension';
 import { LanguageClient } from 'vscode-languageclient/node';
 import * as notifications from "./lspExtension";
-import { get } from './configRenames';
+import { get } from './configManager';
 
 // 装饰器类型映射接口
 interface DecorationMap {

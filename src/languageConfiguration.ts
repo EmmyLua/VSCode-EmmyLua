@@ -1,5 +1,5 @@
 import { LanguageConfiguration, IndentAction, IndentationRule, OnEnterRule } from 'vscode';
-import { ConfigurationManager } from './configRenames';
+import { ConfigurationManager } from './configManager';
 
 /**
  * Lua language configuration for VS Code
@@ -14,7 +14,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
         // Configure annotation completion rules based on user settings
         const configManager = new ConfigurationManager();
         const completeAnnotation = configManager.isCompleteAnnotationEnabled();
-        
+
         this.onEnterRules = this.buildOnEnterRules(completeAnnotation);
         this.indentationRules = this.buildIndentationRules();
         this.wordPattern = this.buildWordPattern();
@@ -29,7 +29,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*function\s+\w*\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -38,7 +38,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*local\s+\w+\s*=\s*function\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -47,7 +47,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*.*\s*=\s*function\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -56,7 +56,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*local\s+function\s+\w*\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -69,7 +69,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
                 // Continue annotation with space (---)
                 {
                     beforeText: /^---\s+/,
-                    action: { 
+                    action: {
                         indentAction: IndentAction.None,
                         appendText: '--- '
                     }
@@ -77,13 +77,13 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
                 // Continue annotation without space (---)
                 {
                     beforeText: /^---$/,
-                    action: { 
+                    action: {
                         indentAction: IndentAction.None,
                         appendText: '---'
                     }
                 }
             ];
-            
+
             return [...annotationRules, ...baseRules];
         }
 
