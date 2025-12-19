@@ -6,6 +6,8 @@ export class LuaRocksTreeProvider implements vscode.TreeDataProvider<PackageTree
     readonly onDidChangeTreeData: vscode.Event<PackageTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     private installedPackages: LuaPackage[] = [];
+    private installedLoaded = false;
+    private installedLoading: Promise<void> | undefined;
     private searchResults: LuaPackage[] = [];
     private isSearchMode = false;
 
@@ -16,7 +18,7 @@ export class LuaRocksTreeProvider implements vscode.TreeDataProvider<PackageTree
     }
 
     async refreshInstalled(): Promise<void> {
-        this.installedPackages = await this.manager.getInstalledPackages(true);
+        await this.ensureInstalledLoaded(true);
         this.refresh();
     }
 
@@ -44,6 +46,7 @@ export class LuaRocksTreeProvider implements vscode.TreeDataProvider<PackageTree
                     new PackageTreeItem('Search Results', vscode.TreeItemCollapsibleState.Expanded, 'category', undefined, this.searchResults.length)
                 ];
             } else {
+                await this.ensureInstalledLoaded(false);
                 return [
                     new PackageTreeItem('Installed Packages', vscode.TreeItemCollapsibleState.Expanded, 'category', undefined, this.installedPackages.length),
                     new PackageTreeItem('Search Packages', vscode.TreeItemCollapsibleState.None, 'search')
@@ -53,9 +56,7 @@ export class LuaRocksTreeProvider implements vscode.TreeDataProvider<PackageTree
 
         if (element.type === 'category') {
             if (element.label === 'Installed Packages') {
-                if (this.installedPackages.length === 0) {
-                    this.installedPackages = await this.manager.getInstalledPackages();
-                }
+                await this.ensureInstalledLoaded(false);
                 return this.installedPackages.map(pkg => 
                     new PackageTreeItem(pkg.name, vscode.TreeItemCollapsibleState.None, 'installed', pkg)
                 );
@@ -67,6 +68,27 @@ export class LuaRocksTreeProvider implements vscode.TreeDataProvider<PackageTree
         }
 
         return [];
+    }
+
+    private async ensureInstalledLoaded(forceRefresh: boolean): Promise<void> {
+        if (!forceRefresh && this.installedLoaded) {
+            return;
+        }
+
+        if (this.installedLoading) {
+            return this.installedLoading;
+        }
+
+        this.installedLoading = (async () => {
+            this.installedPackages = await this.manager.getInstalledPackages(forceRefresh);
+            this.installedLoaded = true;
+        })();
+
+        try {
+            await this.installedLoading;
+        } finally {
+            this.installedLoading = undefined;
+        }
     }
 
     dispose(): void {

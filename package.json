@@ -327,7 +327,7 @@
                 {
                     "id": "emmylua.luarocks",
                     "name": "LuaRocks",
-                    "when": "resourceExtname == .lua",
+                    "when": "resourceExtname == .lua || resourceExtname == .rockspec",
                     "icon": "$(package)"
                 }
             ]
@@ -379,15 +379,15 @@
             "commandPalette": [
                 {
                     "command": "emmylua.luarocks.installPackage",
-                    "when": "resourceExtname == .lua"
+                    "when": "resourceExtname == .lua || resourceExtname == .rockspec"
                 },
                 {
                     "command": "emmylua.luarocks.searchPackages",
-                    "when": "resourceExtname == .lua"
+                    "when": "resourceExtname == .lua || resourceExtname == .rockspec"
                 },
                 {
                     "command": "emmylua.luarocks.checkInstallation",
-                    "when": "resourceExtname == .lua"
+                    "when": "resourceExtname == .lua || resourceExtname == .rockspec"
                 }
             ]
         },
