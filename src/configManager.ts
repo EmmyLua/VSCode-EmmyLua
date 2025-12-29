@@ -4,7 +4,6 @@ import * as vscode from 'vscode';
 /**
  * 获取配置值, 且支持重命名的键名.
  * 
- * 会自动回退至旧配置键名, 确保向后兼容性.
  * 
  * @param config - 配置
  * @param key - 必须传入最新的配置键名以正确获取配置值

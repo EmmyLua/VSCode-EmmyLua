@@ -99,43 +99,91 @@ class LuaTerminalLinkProvider implements vscode.TerminalLinkProvider {
         _token: vscode.CancellationToken
     ): vscode.ProviderResult<LuaTerminalLink[]> {
         const line = context.line;
+        
+        // 快速预检查：行中是否包含 .lua 文件引用
+        // 这比正则匹配快得多
+        if (!line.includes('.lua')) {
+            return [];
+        }
+        
+        // 进一步检查：是否包含行号标记（冒号+数字）
+        // 大多数 Lua 错误都有行号
+        const hasLineNumber = /\.lua:\d+/.test(line);
+        
         const allMatches: Array<{
             link: LuaTerminalLink;
             priority: number;
         }> = [];
 
-        // 尝试所有模式
-        for (const pattern of this.patterns) {
-            pattern.regex.lastIndex = 0;
-            
-            let match: RegExpExecArray | null;
-            while ((match = pattern.regex.exec(line)) !== null) {
-                const fullMatch = match[0];
-                const filePath = match[1];
-                const lineNumber = match[2] ? parseInt(match[2], 10) : undefined;
-                const columnNumber = match[3] ? parseInt(match[3], 10) : undefined;
+        // 根据是否有行号选择不同的匹配策略
+        if (hasLineNumber) {
+            // 优先匹配带行号的模式（更精确，性能更好）
+            for (let i = 0; i < this.patterns.length - 1; i++) {
+                const pattern = this.patterns[i];
+                pattern.regex.lastIndex = 0;
+                
+                let match: RegExpExecArray | null;
+                while ((match = pattern.regex.exec(line)) !== null) {
+                    const fullMatch = match[0];
+                    const filePath = match[1];
+                    const lineNumber = match[2] ? parseInt(match[2], 10) : undefined;
+                    const columnNumber = match[3] ? parseInt(match[3], 10) : undefined;
 
-                // 验证文件路径的合理性
-                if (!this.isValidLuaPath(filePath, line, match.index)) {
-                    continue;
+                    // 验证文件路径的合理性
+                    if (!this.isValidLuaPath(filePath, line, match.index)) {
+                        continue;
+                    }
+
+                    // 创建链接
+                    const tooltip = this.createTooltip(filePath, lineNumber, columnNumber);
+                    const link = new LuaTerminalLink(
+                        match.index,
+                        fullMatch.length,
+                        tooltip,
+                        filePath,
+                        lineNumber,
+                        columnNumber,
+                        fullMatch
+                    );
+
+                    allMatches.push({
+                        link,
+                        priority: pattern.priority
+                    });
                 }
+            }
+        } else {
+            // 如果没有行号，尝试所有模式（但这种情况很少）
+            for (const pattern of this.patterns) {
+                pattern.regex.lastIndex = 0;
+                
+                let match: RegExpExecArray | null;
+                while ((match = pattern.regex.exec(line)) !== null) {
+                    const fullMatch = match[0];
+                    const filePath = match[1];
+                    const lineNumber = match[2] ? parseInt(match[2], 10) : undefined;
+                    const columnNumber = match[3] ? parseInt(match[3], 10) : undefined;
 
-                // 创建链接
-                const tooltip = this.createTooltip(filePath, lineNumber, columnNumber);
-                const link = new LuaTerminalLink(
-                    match.index,
-                    fullMatch.length,
-                    tooltip,
-                    filePath,
-                    lineNumber,
-                    columnNumber,
-                    fullMatch
-                );
+                    if (!this.isValidLuaPath(filePath, line, match.index)) {
+                        continue;
+                    }
 
-                allMatches.push({
-                    link,
-                    priority: pattern.priority
-                });
+                    const tooltip = this.createTooltip(filePath, lineNumber, columnNumber);
+                    const link = new LuaTerminalLink(
+                        match.index,
+                        fullMatch.length,
+                        tooltip,
+                        filePath,
+                        lineNumber,
+                        columnNumber,
+                        fullMatch
+                    );
+
+                    allMatches.push({
+                        link,
+                        priority: pattern.priority
+                    });
+                }
             }
         }
 

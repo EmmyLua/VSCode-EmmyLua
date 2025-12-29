@@ -2,6 +2,33 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.34] - 2025-12-29
+
+### ✨ Added
+- **Support Lua5.5**: Added support for Lua 5.5 syntax and features, including global declarations, table.create, and named vararg. For example:
+```lua
+global *
+global <const> a, b, c
+global d, e, f = 1, 2, 3
+table.create(10, 0)
+function func(...args)
+end
+```
+
+- **Support format Lua 5.5 syntax**: The built-in formatter now supports formatting Lua 5.5 syntax.
+- **Add new stdlib i18n translation**: Added new internationalization functions to the standard library.
+- **Support call argument snippet completion**: When `"completion.callSnippet": true` is enabled, provide snippet completions for function arguments during function calls.
+- **Support param/@return completion**: Typing `---@` above a function will show `param/@return` completion suggestions; accepting a suggestion will automatically fill parameter names and types.
+
+### 🔧 Changed
+
+- **Workspace variable search optimization**: Optimized workspace-wide variable search to decide whether to use case-sensitive or case-insensitive matching based on the input's casing.
+
+### 🐛 Fixed
+
+- **Fix integer literal parsing issue**: Integers exceeding int64 are now recognized as floats instead of being treated as 0.
+- **Fix typecheck**: Fixed several type checking issues.
+
 ## [0.9.33] - 2025-12-8
 
 An experimental Lua 5.4 interpreter implemented in Rust: https://github.com/CppCXY/lua-rs
