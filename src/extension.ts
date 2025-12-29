@@ -10,7 +10,7 @@ import { LuaLanguageConfiguration } from './languageConfiguration';
 import { EmmyContext } from './emmyContext';
 import { IServerLocation, IServerPosition } from './lspExtension';
 import { onDidChangeConfiguration } from './annotator';
-import { ConfigurationManager } from './configRenames';
+import { ConfigurationManager } from './configManager';
 import * as Annotator from './annotator';
 import { EmmyrcSchemaContentProvider } from './emmyrcSchemaContentProvider';
 import { SyntaxTreeManager, setClientGetter } from './syntaxTreeProvider';

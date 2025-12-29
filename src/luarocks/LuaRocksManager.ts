@@ -31,18 +31,12 @@ export interface LuaRocksWorkspace {
 export class LuaRocksManager {
     private readonly workspaceFolder: vscode.WorkspaceFolder;
     private readonly outputChannel: vscode.OutputChannel;
-    private readonly statusBarItem: vscode.StatusBarItem;
     private isInstalling = false;
     private installedPackagesCache: LuaPackage[] = [];
 
     constructor(workspaceFolder: vscode.WorkspaceFolder) {
         this.workspaceFolder = workspaceFolder;
         this.outputChannel = vscode.window.createOutputChannel('LuaRocks');
-        this.statusBarItem = vscode.window.createStatusBarItem(
-            vscode.StatusBarAlignment.Left,
-            100
-        );
-        this.updateStatusBar();
     }
 
     /**
@@ -50,7 +44,7 @@ export class LuaRocksManager {
      */
     async checkLuaRocksInstallation(): Promise<boolean> {
         try {
-            const { stdout } = await exec('luarocks --version');
+            const { stdout } = await exec('luarocks --version', { windowsHide: true });
             return stdout.includes('LuaRocks');
         } catch {
             return false;
@@ -75,7 +69,7 @@ export class LuaRocksManager {
                 null,
                 10
             );
-            
+
             workspace.hasRockspec = rockspecFiles.length > 0;
             workspace.rockspecFiles = rockspecFiles.map(uri => uri.fsPath);
 
@@ -107,29 +101,30 @@ export class LuaRocksManager {
         try {
             const content = await readFile(rockspecPath, 'utf8');
             const dependencies: LuaPackage[] = [];
-            
+
             // 简单的正则解析依赖（实际应该使用 Lua 解析器）
             const depMatch = content.match(/dependencies\s*=\s*\{([^}]*)\}/);
             if (depMatch) {
                 const depContent = depMatch[1];
                 const depLines = depContent.split(',').map(line => line.trim());
-                
+
                 for (const line of depLines) {
                     const match = line.match(/["']([^"']+)["']/);
                     if (match) {
                         const depString = match[1];
-                        const [name, version] = depString.split(/\s+/);
+                        const [name, ...versionParts] = depString.split(/\s+/);
+                        const version = versionParts.join(' ').trim();
                         if (name && name !== 'lua') {
                             dependencies.push({
                                 name: name.trim(),
-                                version: version?.trim() || 'latest',
+                                version: version || 'latest',
                                 installed: false
                             });
                         }
                     }
                 }
             }
-            
+
             return dependencies;
         } catch (error) {
             console.error('Error parsing rockspec dependencies:', error);
@@ -141,18 +136,26 @@ export class LuaRocksManager {
      * 搜索包
      */
     async searchPackages(query: string): Promise<LuaPackage[]> {
+        // 使用临时状态栏消息显示进度（不再使用常驻的状态栏图标）
+        const status = vscode.window.setStatusBarMessage('$(sync~spin) LuaRocks: Searching packages...');
         try {
-            this.showProgress('Searching packages...');
-            
-            const { stdout } = await exec(`luarocks search ${query} --porcelain`);
+            const command = this.buildLuaRocksCommand([
+                'search',
+                this.quoteArg(query),
+                '--porcelain'
+            ]);
+            const { stdout } = await exec(command, {
+                cwd: this.workspaceFolder.uri.fsPath,
+                windowsHide: true
+            });
             const packages = this.parseSearchResults(stdout);
-            
-            this.hideProgress();
+
             return packages;
         } catch (error) {
-            this.hideProgress();
             this.showError('Failed to search packages', error);
             return [];
+        } finally {
+            status.dispose();
         }
     }
 
@@ -165,8 +168,14 @@ export class LuaRocksManager {
         }
 
         try {
-            const localFlag = await this.shouldUseLocal() ? '--local' : '';
-            const { stdout } = await exec(`luarocks list --porcelain ${localFlag}`.trim());
+            const command = this.buildLuaRocksCommand([
+                'list',
+                '--porcelain'
+            ]);
+            const { stdout } = await exec(command, {
+                cwd: this.workspaceFolder.uri.fsPath,
+                windowsHide: true
+            });
             this.installedPackagesCache = this.parseInstalledPackages(stdout);
             return this.installedPackagesCache;
         } catch (error) {
@@ -184,28 +193,32 @@ export class LuaRocksManager {
             return false;
         }
 
+        // 使用临时状态栏消息显示进度
+        const status = vscode.window.setStatusBarMessage('$(sync~spin) LuaRocks: Installing...');
         try {
             this.isInstalling = true;
-            this.updateStatusBar('Installing...');
-            
-            const versionSpec = version && version !== 'latest' ? `${packageName} ${version}` : packageName;
-            const localFlag = await this.shouldUseLocal() ? '--local' : '';
-            
-            const command = `luarocks install ${versionSpec} ${localFlag}`.trim();
-            
+
+            const installArgs = [
+                'install',
+                this.quoteArg(packageName),
+                ...(version && version !== 'latest' ? [this.quoteArg(version)] : [])
+            ];
+            const command = this.buildLuaRocksCommand(installArgs);
+
             this.outputChannel.show();
             this.outputChannel.appendLine(`Installing: ${command}`);
-            
+
             const { stdout, stderr } = await exec(command, {
-                cwd: this.workspaceFolder.uri.fsPath
+                cwd: this.workspaceFolder.uri.fsPath,
+                windowsHide: true
             });
-            
+
             this.outputChannel.appendLine(stdout);
             if (stderr) this.outputChannel.appendLine(stderr);
-            
+
             // 清除缓存
             this.installedPackagesCache = [];
-            
+
             vscode.window.showInformationMessage(`Successfully installed ${packageName}`);
             return true;
         } catch (error) {
@@ -213,7 +226,7 @@ export class LuaRocksManager {
             return false;
         } finally {
             this.isInstalling = false;
-            this.updateStatusBar();
+            status.dispose();
         }
     }
 
@@ -221,30 +234,35 @@ export class LuaRocksManager {
      * 卸载包
      */
     async uninstallPackage(packageName: string): Promise<boolean> {
+        // 使用临时状态栏消息显示进度
+        const status = vscode.window.setStatusBarMessage('$(sync~spin) LuaRocks: Uninstalling...');
         try {
-            this.updateStatusBar('Uninstalling...');
-            
-            const localFlag = await this.shouldUseLocal() ? '--local' : '';
-            const command = `luarocks remove ${packageName} ${localFlag}`.trim();
-            
+            const command = this.buildLuaRocksCommand([
+                'remove',
+                this.quoteArg(packageName)
+            ]);
+
             this.outputChannel.show();
             this.outputChannel.appendLine(`Uninstalling: ${command}`);
-            
-            const { stdout, stderr } = await exec(command);
-            
+
+            const { stdout, stderr } = await exec(command, {
+                cwd: this.workspaceFolder.uri.fsPath,
+                windowsHide: true
+            });
+
             this.outputChannel.appendLine(stdout);
             if (stderr) this.outputChannel.appendLine(stderr);
-            
+
             // 清除缓存
             this.installedPackagesCache = [];
-            
+
             vscode.window.showInformationMessage(`Successfully uninstalled ${packageName}`);
             return true;
         } catch (error) {
             this.showError(`Failed to uninstall ${packageName}`, error);
             return false;
         } finally {
-            this.updateStatusBar();
+            status.dispose();
         }
     }
 
@@ -253,7 +271,14 @@ export class LuaRocksManager {
      */
     async getPackageInfo(packageName: string): Promise<LuaPackage | null> {
         try {
-            const { stdout } = await exec(`luarocks show ${packageName}`);
+            const command = this.buildLuaRocksCommand([
+                'show',
+                this.quoteArg(packageName)
+            ]);
+            const { stdout } = await exec(command, {
+                cwd: this.workspaceFolder.uri.fsPath,
+                windowsHide: true
+            });
             return this.parsePackageInfo(stdout, packageName);
         } catch (error) {
             // 尝试从搜索结果获取信息
@@ -280,7 +305,7 @@ export class LuaRocksManager {
     private parseSearchResults(output: string): LuaPackage[] {
         const packages: LuaPackage[] = [];
         const lines = output.trim().split('\n').filter(line => line.trim());
-        
+
         for (const line of lines) {
             const parts = line.split('\t');
             if (parts.length >= 2) {
@@ -293,26 +318,26 @@ export class LuaRocksManager {
                 });
             }
         }
-        
+
         return packages;
     }
 
     private parseInstalledPackages(output: string): LuaPackage[] {
         const packages: LuaPackage[] = [];
         const lines = output.trim().split('\n').filter(line => line.trim());
-        
+
         for (const line of lines) {
             const parts = line.split('\t');
             if (parts.length >= 2) {
                 packages.push({
                     name: parts[0].trim(),
                     version: parts[1].trim(),
-                    location: parts[2]?.trim() || '',
+                    location: (parts[3] ?? parts[2] ?? '').trim(),
                     installed: true
                 });
             }
         }
-        
+
         return packages;
     }
 
@@ -322,14 +347,14 @@ export class LuaRocksManager {
             name: packageName,
             installed: true
         };
-        
+
         for (const line of lines) {
             const colonIndex = line.indexOf(':');
             if (colonIndex === -1) continue;
-            
+
             const key = line.substring(0, colonIndex).trim().toLowerCase();
             const value = line.substring(colonIndex + 1).trim();
-            
+
             switch (key) {
                 case 'version':
                     info.version = value;
@@ -350,13 +375,19 @@ export class LuaRocksManager {
                     break;
             }
         }
-        
+
         return info as LuaPackage;
     }
 
-    private async shouldUseLocal(): Promise<boolean> {
-        const config = vscode.workspace.getConfiguration('emmylua.luarocks');
-        return config.get<boolean>('preferLocalInstall', true);
+    private quoteArg(value: string): string {
+        // 简单的引号封装，避免空格路径/参数导致命令解析错误
+        const trimmed = value.trim().replace(/[\\/]+$/, '');
+        const escapedQuotes = trimmed.replace(/"/g, '\\"');
+        return `"${escapedQuotes}"`;
+    }
+
+    private buildLuaRocksCommand(args: string[]): string {
+        return ['luarocks', ...args.filter(Boolean)].join(' ').trim();
     }
 
     private showError(message: string, error: any): void {
@@ -366,27 +397,7 @@ export class LuaRocksManager {
         vscode.window.showErrorMessage(message);
     }
 
-    private showProgress(message: string): void {
-        this.updateStatusBar(message);
-    }
-
-    private hideProgress(): void {
-        this.updateStatusBar();
-    }
-
-    private updateStatusBar(text?: string): void {
-        if (text) {
-            this.statusBarItem.text = `$(sync~spin) ${text}`;
-            this.statusBarItem.show();
-        } else {
-            this.statusBarItem.text = '$(package) LuaRocks';
-            this.statusBarItem.command = 'emmylua.luarocks.showPackages';
-            this.statusBarItem.show();
-        }
-    }
-
     dispose(): void {
         this.outputChannel.dispose();
-        this.statusBarItem.dispose();
     }
 }

@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 
 /**
- * Configuration key rename mappings
- * Maps new keys to old keys for backward compatibility
+ * 配置项重命名映射, 新键名 -> 旧键名.
+ * 
+ * 用于将旧配置键名映射到新配置键名, 以确保向后兼容性
  */
 const CONFIG_RENAMES: ReadonlyMap<string, string> = new Map([
     ['emmylua.ls.executablePath', 'emmylua.misc.executablePath'],
@@ -11,18 +12,19 @@ const CONFIG_RENAMES: ReadonlyMap<string, string> = new Map([
 ]);
 
 /**
- * Track which deprecated configs have been warned about
+ * 已警告的废弃配置项
  */
 const warnedDeprecations = new Set<string>();
 
 /**
- * Get configuration value with support for renamed keys
- * Automatically falls back to old configuration keys for backward compatibility
+ * 获取配置值, 且支持重命名的键名.
  * 
- * @param config - Workspace configuration
- * @param key - Configuration key to retrieve
- * @param defaultValue - Optional default value if config doesn't exist
- * @returns Configuration value or default
+ * 会自动回退至旧配置键名, 确保向后兼容性.
+ * 
+ * @param config - 配置
+ * @param key - 必须传入最新的配置键名以正确获取配置值
+ * @param defaultValue - 可选的默认值
+ * @returns 配置值或默认值
  */
 export function get<T>(
     config: vscode.WorkspaceConfiguration,
@@ -31,11 +33,11 @@ export function get<T>(
 ): T | undefined {
     const oldKey = CONFIG_RENAMES.get(key);
 
-    // Check if old config exists and has a non-null value
+    // 如果旧键存在且有值, 那么我们需要使用旧键的值并警告用户该配置项已废弃
     if (oldKey && config.has(oldKey)) {
         const oldValue = config.get<T>(oldKey);
         if (oldValue !== undefined && oldValue !== null) {
-            // Warn about deprecated config (only once per session)
+            // 如果用户没有警告过该配置项, 那么我们需要警告用户
             if (!warnedDeprecations.has(oldKey)) {
                 warnedDeprecations.add(oldKey);
                 showDeprecationWarning(oldKey, key);
@@ -44,12 +46,12 @@ export function get<T>(
         }
     }
 
-    // Get from new config key
+    // 如果旧键不存在, 那么我们直接使用新键的值
     return config.get<T>(key, defaultValue as T);
 }
 
 /**
- * Show a deprecation warning for old configuration keys
+ * 显示配置项已废弃的警告
  */
 function showDeprecationWarning(oldKey: string, newKey: string): void {
     const message = `Configuration "${oldKey}" is deprecated. Please use "${newKey}" instead.`;
@@ -66,7 +68,7 @@ function showDeprecationWarning(oldKey: string, newKey: string): void {
 }
 
 /**
- * Get configuration with proper typing and defaults
+ * 配置管理器
  */
 export class ConfigurationManager {
     private readonly config: vscode.WorkspaceConfiguration;
@@ -76,24 +78,25 @@ export class ConfigurationManager {
     }
 
     /**
-     * Get a configuration value with type safety
+     * 获取配置项
      */
     get<T>(section: string, defaultValue?: T): T | undefined {
-        return get<T>(this.config, `${section}`, defaultValue) || get<T>(this.config, `emmylua.${section}`, defaultValue);
+        // `this.config`此时的值是所有`emmylua`配置项的集合(不包含`emmylua`前缀)
+        return get<T>(this.config, `${section}`, defaultValue);
     }
 
     /**
      * Get language server executable path
      */
     getExecutablePath(): string | undefined {
-        return this.get<string>('misc.executablePath');
+        return this.get<string>('ls.executablePath');
     }
 
     /**
      * Get language server global config path
      */
     getGlobalConfigPath(): string | undefined {
-        return this.get<string>('misc.globalConfigPath');
+        return this.get<string>('ls.globalConfigPath');
     }
 
     /**

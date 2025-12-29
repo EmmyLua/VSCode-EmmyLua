@@ -1,5 +1,5 @@
 import { LanguageConfiguration, IndentAction, IndentationRule, OnEnterRule } from 'vscode';
-import { ConfigurationManager } from './configRenames';
+import { ConfigurationManager } from './configManager';
 
 /**
  * Lua language configuration for VS Code
@@ -14,7 +14,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
         // Configure annotation completion rules based on user settings
         const configManager = new ConfigurationManager();
         const completeAnnotation = configManager.isCompleteAnnotationEnabled();
-        
+
         this.onEnterRules = this.buildOnEnterRules(completeAnnotation);
         this.indentationRules = this.buildIndentationRules();
         this.wordPattern = this.buildWordPattern();
@@ -29,7 +29,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*function\s+\w*\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -38,7 +38,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*local\s+\w+\s*=\s*function\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -47,7 +47,7 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*.*\s*=\s*function\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
@@ -56,34 +56,57 @@ export class LuaLanguageConfiguration implements LanguageConfiguration {
             {
                 beforeText: /^\s*local\s+function\s+\w*\s*\(.*\)\s*$/,
                 afterText: /^\s*end\s*$/,
-                action: { 
+                action: {
                     indentAction: IndentAction.IndentOutdent,
                     appendText: '\t'
                 }
             }
         ];
 
-        // Add annotation completion rules if enabled
         if (enableAnnotationCompletion) {
             const annotationRules: OnEnterRule[] = [
-                // Continue annotation with space (---)
+                // 当前行以`--- `开头时, 自动补全`--- `
                 {
                     beforeText: /^---\s+/,
-                    action: { 
+                    action: {
                         indentAction: IndentAction.None,
                         appendText: '--- '
                     }
                 },
-                // Continue annotation without space (---)
+                // 当前行以`---`开头时且后面没有任何内容时, 自动补全`---`
                 {
                     beforeText: /^---$/,
-                    action: { 
+                    action: {
                         indentAction: IndentAction.None,
                         appendText: '---'
                     }
-                }
+                },
+                // 当前行以`-- `开头时, 自动补全`-- `
+                {
+                    beforeText: /^--\s+/,
+                    action: {
+                        indentAction: IndentAction.None,
+                        appendText: '-- '
+                    }
+                },
+                // 当前行以一些注解标识符开头时, 自动补全`---@`
+                {
+                    beforeText: /^---@(class|field|param|generic|overload)\b.*/,
+                    action: {
+                        indentAction: IndentAction.None,
+                        appendText: '---@'
+                    }
+                },
+                // 对`---@alias`多行格式的处理, 我们认为以`---|`开头的行都是`---@alias`的续行
+                {
+                    beforeText: /^---\|.*/,
+                    action: {
+                        indentAction: IndentAction.None,
+                        appendText: '---| '
+                    }
+                },
             ];
-            
+
             return [...annotationRules, ...baseRules];
         }
 
