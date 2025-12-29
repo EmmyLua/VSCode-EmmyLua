@@ -2,7 +2,7 @@
     "name": "emmylua",
     "displayName": "EmmyLua",
     "description": "EmmyLua for vscode",
-    "version": "0.9.33",
+    "version": "0.9.34",
     "icon": "res/icon.png",
     "publisher": "tangzx",
     "engines": {
@@ -1048,28 +1048,10 @@
                         "default": "",
                         "markdownDescription": "%config.emmylua.ls.executablePath.description%"
                     },
-                    "emmylua.misc.executablePath": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "default": null,
-                        "markdownDescription": "%config.emmylua.ls.executablePath.description%",
-                        "markdownDeprecationMessage": "Use `emmylua.ls.executablePath` instead"
-                    },
                     "emmylua.ls.globalConfigPath": {
                         "type": "string",
                         "default": "",
                         "markdownDescription": "%config.emmylua.ls.globalConfigPath.description%"
-                    },
-                    "emmylua.misc.globalConfigPath": {
-                        "type": [
-                            "string",
-                            "null"
-                        ],
-                        "default": null,
-                        "markdownDescription": "%config.emmylua.ls.globalConfigPath.description%",
-                        "markdownDeprecationMessage": "Use `emmylua.ls.globalConfigPath` instead"
                     },
                     "lua.trace.server": {
                         "type": "string",
