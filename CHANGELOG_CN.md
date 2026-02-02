@@ -1,5 +1,59 @@
 # 🚀 Change Log
 
+## [0.9.35] - 2026-2-2
+
+### ✨ 新增
+- **支持 .emmyrc.lua 配置文件**：语言服务器和 emmylua_check 现在除了 `.emmyrc.json` 和 `.luarc.json` 外，还支持从 `.emmyrc.lua` 加载配置。Lua 配置通过 [luars](https://github.com/CppCXY/lua-rs) 库解析。一个基本配置示例如下：
+```lua
+local diagnostics = {
+  disable = { "undefined-global" },
+}
+
+return {
+  diagnostics = diagnostics,
+}
+```
+可以使用 os、table、utf8、string 等标准库编写更复杂的配置逻辑。可使用 `print` 进行调试；其输出会被重定向到语言服务器日志。
+
+注意：当前的 `.emmyrc.lua` 尚无专门的代码补全；将在未来版本中添加。
+
+注意2：`luars` 项目由我在 AI 协助下开发。它是一个接近完整的 Lua 5.5 实现，但仍属实验性质，包含许多 bug，请谨慎使用。
+
+### 🔧 变更
+- **增强 workspace.library**：`workspace.library` 现在支持为每个条目配置忽略项，例如：
+```json
+{
+  "workspace": {
+    "library": [
+      {
+        "path": "/path/to/lib1",
+        "ignoreGlobs": [ "**/test/**" ],
+        "ignoreDir": ["docs"]
+      }
+    ]
+  }
+}
+```
+此外，`workspace.library` 现在也可以直接指向单个文件而不是目录：
+```json
+{
+  "workspace": {
+    "library": [
+      "/path/to/single/file.lua"
+    ]
+  }
+}
+```
+
+- **改进 'and'/'or' 的类型收窄**：在与可空类型及表/字面量表达式配合使用时，改进了对 `and` 与 `or` 运算的类型收窄。
+
+### 🐛 修复
+- 修复了 preferred_local_alias 诊断问题  
+- 修复了一些类型检查问题  
+- 修复引用计算中的递归行为  
+- 优化了与泛型相关的计算
+
+
 ## [0.9.34] - 2025-12-29
 
 ### ✨ 新增

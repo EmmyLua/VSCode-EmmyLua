@@ -138,6 +138,7 @@
         "arrayIndex": true,
         "docBaseConstMatchBaseType": true,
         "metaOverrideFileDefine": true,
+        "requireExportGlobal": false,
         "requirePath": false,
         "typeCall": false
       }
@@ -426,6 +427,11 @@
           "description": "attribute-redundant-parameter",
           "type": "string",
           "const": "attribute-redundant-parameter"
+        },
+        {
+          "description": "invert-if",
+          "type": "string",
+          "const": "invert-if"
         }
       ]
     },
@@ -460,6 +466,46 @@
         "md",
         "myst",
         "rst"
+      ]
+    },
+    "EmmyLibraryConfig": {
+      "type": "object",
+      "properties": {
+        "ignoreDir": {
+          "description": "Ignore directories within this library",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "ignoreGlobs": {
+          "description": "Ignore globs within this library. eg: [\"**/*.lua\"]",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          }
+        },
+        "path": {
+          "description": "Library path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "EmmyLibraryItem": {
+      "anyOf": [
+        {
+          "description": "Simple library path string",
+          "type": "string"
+        },
+        {
+          "description": "Library configuration with path and ignore rules",
+          "$ref": "#/$defs/EmmyLibraryConfig"
+        }
       ]
     },
     "EmmyrcCodeAction": {
@@ -1044,6 +1090,11 @@
           "type": "boolean",
           "default": true
         },
+        "requireExportGlobal": {
+          "description": "This option limits the visibility of third-party libraries.\n\nWhen enabled, third-party libraries must use `---@export global` annotation to be importable (i.e., no diagnostic errors and visible in auto-import).",
+          "type": "boolean",
+          "default": false
+        },
         "requirePath": {
           "description": "Whether to enable strict mode require path.",
           "type": "boolean",
@@ -1086,11 +1137,11 @@
           }
         },
         "library": {
-          "description": "Library paths. eg: \"/usr/local/share/lua/5.1\"",
+          "description": "Library paths. Can be a string path or an object with path and ignore rules.\neg: [\"/usr/local/share/lua/5.1\"] or [{\"path\": \"/usr/local/share/lua/5.1\", \"ignoreDir\": [\"test\"], \"ignoreGlobs\": [\"**/*.spec.lua\"]}]",
           "type": "array",
           "default": [],
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/EmmyLibraryItem"
           }
         },
         "moduleMap": {

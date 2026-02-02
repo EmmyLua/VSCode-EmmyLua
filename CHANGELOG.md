@@ -2,6 +2,61 @@
 
 [中文Log](CHANGELOG_CN.md)
 
+## [0.9.35] - 2026-2-2
+
+### ✨ Added
+- **Support .emmyrc.lua configuration file**: The language server and emmylua_check now support loading configuration from `.emmyrc.lua` in addition to `.emmyrc.json` and `.luarc.json`. Lua configuration is parsed using the [luars](https://github.com/CppCXY/lua-rs) library. A basic config looks like:
+```lua
+local diagnostics = {
+  disable = { "undefined-global" },
+}
+
+return {
+  diagnostics = diagnostics,
+}
+```
+You can use standard libraries such as os, table, utf8, string to write more complex configuration logic. `print` can be used for debugging; its output is redirected to the language server log.
+
+Note: The current `.emmyrc.lua` does not have dedicated code completions; this will be added in a future release.
+
+Note2: The `luars` project was developed by me with AI assistance. It is an almost-complete Lua 5.5 implementation but is still experimental and contains many bugs. Use with caution.
+
+### 🔧 Changed
+- **Enhance workspace.library**: `workspace.library` now supports per-entry ignore configuration, for example:
+```json
+{
+  "workspace": {
+  "library": [
+    {
+    "path": "/path/to/lib1",
+    "ignoreGlobs": [ "**/test/**" ],
+    "ignoreDir": ["docs"]
+    }
+  ]
+  }
+}
+```
+Additionally, `workspace.library` can now point directly to a single file instead of a directory:
+```json
+{
+  "workspace": {
+  "library": [
+    "/path/to/single/file.lua"
+  ]
+  }
+}
+```
+
+- **Improve type narrowing for 'and'/'or'**: Improved type narrowing for the `and` and `or` operators when used with nullable types and table/literal expressions.
+
+### 🐛 Fixed
+- Fixed preferred_local_alias diagnostic
+- Fixed some type checking issues
+- Fixed recursive behavior in reference computation
+- Optimized generic-related computations
+
+
+
 ## [0.9.34] - 2025-12-29
 
 ### ✨ Added
