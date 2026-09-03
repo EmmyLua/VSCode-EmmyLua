@@ -20,6 +20,14 @@
         "emmylua",
         "debugger"
     ],
+    "maintainers": [
+        { "name": "CppCXY", "url": "https://github.com/CppCXY" }
+    ],    
+    "contributors": [
+        { "name": "CppCXY", "url": "https://github.com/CppCXY" },
+        { "name": "tangzx", "url": "https://github.com/tangzx" },
+        { "name": "VSCode-EmmyLua contributors", "url": "https://github.com/EmmyLua/VSCode-EmmyLua/graphs/contributors" }
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/EmmyLua/VSCode-EmmyLua"
