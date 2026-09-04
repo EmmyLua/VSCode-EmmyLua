@@ -1270,6 +1270,7 @@
         "esbuild": "^0.28.0",
         "eslint": "^8.11.0",
         "filecopy": "^4.0.2",
+        "ovsx": "^1.1.1",
         "typescript": "^5.0"
     },
     "dependencies": {
@@ -1281,5 +1282,10 @@
         "smart-buffer": "^4.0.1",
         "vscode-languageclient": "9.0.1",
         "zod": "^3.25"
+    },
+    "allowScripts": {
+        "esbuild@0.28.2": true,
+        "keytar@7.9.0": true,
+        "@vscode/vsce-sign@2.1.0": true
     }
 }
