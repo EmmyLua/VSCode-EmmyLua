@@ -1,15 +1,21 @@
-# EmmyLua for VSCode
+# `Emmy Lua` - Lua Language Server, IntelliSense, and Debugger for VS Code
 
 ![logo](/res/logo.png)
 
-EmmyLua is a powerful Lua language support extension for Visual Studio Code, providing intelligent code completion, debugging, and analysis capabilities.
+`Emmy Lua` is a fast and modern Lua extension for VS Code.  
+Provides support for Lua programming language.  
+
+`Emmy Lua` provides a powerful Lua IDE experience.  
+It is built on the [Language Server Protocol](https://microsoft.github.io/language-server-protocol/specification) and offers a wide range of server features such as intelligent code completion, types declaration and hinting for Lua, code navigation (go to definition, fund usages, references,..), diagnostics, linting, real-time analysis, and also debugging.  
+ 
+`Emmy Lua` written in Rust and built for speed, reliability, and deep Lua support.
 
 ## 📋 Quick Links
 
 - 📖 [Documentation](https://github.com/EmmyLuaLs/emmylua-analyzer-rust/blob/main/docs/config/emmyrc_json_EN.md)
 - 📝 [Changelog (English)](CHANGELOG.md)
 - 📝 [更新日志 (中文)](CHANGELOG_CN.md)
-- 🔧 [Language Server (Rust)](https://github.com/CppCXY/emmylua-analyzer-rust)
+- 🔧 [Language Server (Rust)](https://github.com/EmmyLuaLs/emmylua-analyzer-rust)
 - 💬 QQ Group: `29850775`
 
 [![Online EmmyLua Doc](https://img.shields.io/badge/emmy-doc-46BC99.svg?style=flat-square)](https://emmylua.github.io)
@@ -18,11 +24,11 @@ EmmyLua is a powerful Lua language support extension for Visual Studio Code, pro
 
 ## 🚀 Features
 
-- **Smart Code Completion**: Intelligent auto-completion with type inference
-- **Real-time Diagnostics**: Error detection and warnings as you type
-- **Advanced Debugging**: Support for attach, launch, and remote debugging
+- **Lua IntelliSense**: Smart auto-completion with type inference for Lua
+- **Lua Diagnostics**: Error detection and warnings as you type
+- **Lua Debugging**: Support for attach, launch, and remote debugging
+- **Lua LSP**: Built on Language Server Protocol for reliability
 - **Cross-platform**: Works on Windows, macOS, and Linux
-- **LSP-based**: Built on Language Server Protocol for reliability
 
 ## 📦 Related Extensions
 
