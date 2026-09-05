@@ -1,7 +1,7 @@
 {
     "name": "emmylua",
-    "displayName": "EmmyLua",
-    "description": "EmmyLua for vscode",
+    "displayName": "Emmy Lua",
+    "description": "Fast Lua Language Server & Debugger. IntelliSense, diagnostics, hinting, types, annotations, go to definition, find usages, debugging, completion for Lua.",
     "version": "0.9.41",
     "icon": "res/icon.png",
     "publisher": "tangzx",
@@ -17,8 +17,17 @@
     ],
     "keywords": [
         "lua",
+        "lua language server",
+        "lua lsp",
         "emmylua",
-        "debugger"
+        "emmy lua",
+        "lua debugger",
+        "lua intellisense",
+        "lua completion",
+        "lua diagnostics",
+        "lsp",
+        "debugger",
+        "game development"
     ],
     "repository": {
         "type": "git",
