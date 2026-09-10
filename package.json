@@ -5,6 +5,7 @@
     "version": "0.9.41",
     "icon": "res/icon.png",
     "publisher": "tangzx",
+    "license": "MIT",
     "engines": {
         "vscode": "^1.89.0"
     },
